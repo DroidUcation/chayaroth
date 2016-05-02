@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="app.com.example.android.fish.MainActivity"
+    tools:showIn="@layout/activity_main"
+    android:background="@color/colorBackgroundMain">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/android_thinking"
+        android:scaleType="centerCrop"
+        android:padding="50dp"
+      />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 Cool things you didn't know about android..."
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:padding="30dp"
+        />
+  <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click on me "
+        android:layout_alignParentBottom="true"
+        android:onClick="ShowNextPage"/>
+
+</RelativeLayout>
