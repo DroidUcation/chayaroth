@@ -22,6 +22,10 @@
             android:name=".second"
             android:label="@string/title_activity_second"
             android:theme="@style/AppTheme.NoActionBar" />
+        <provider
+            android:name=".FactsProvider"
+            android:authorities="app.com.example.android.fish.FactsProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

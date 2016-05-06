@@ -1,5 +1,6 @@
 package app.com.example.android.fish;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -10,7 +11,9 @@ public class AndroidContract {
         public static final String TABLE_NAME="FiveFacts";
         public static final String COLUMN_TEXT="text";
         public static final String COLUMN_IMG="img";
-
+        public static final String COLUMN_TITLE="title";
+        public static final String AUTHORITY = "content://app.com.example.android.fish.FactsProvider/DBFiveFacts";
+        public static final Uri URI = Uri.parse(AUTHORITY);
 
     }
 }

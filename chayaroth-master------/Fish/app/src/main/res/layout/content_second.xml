@@ -33,23 +33,28 @@
     <Button
         style="@style/btn"
         android:text="1"
+        android:id="@+id/one"
         android:tag="one"/>
     <Button
         style="@style/btn"
         android:text="2"
+        android:id="@+id/two"
         android:tag="two"/>
     <Button
         style="@style/btn"
         android:text="3"
-        android:tag="three" />
+        android:id="@+id/three"
+        android:tag="three"/>
     <Button
         style="@style/btn"
         android:text="4"
-        android:tag="four" />
+        android:id="@+id/four"
+        android:tag="four"/>
     <Button
         style="@style/btn"
         android:text="5"
-        android:tag="five" />
+        android:id="@+id/five"
+        android:tag="five"/>
 </LinearLayout>
 
     </RelativeLayout>

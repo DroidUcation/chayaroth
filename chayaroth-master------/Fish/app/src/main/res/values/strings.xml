@@ -4,7 +4,11 @@
     <string name="title_activity_second">information</string>
     <string name="title_activity_one">one</string>
     <string name="title_activity_two">two</string>
-
+<string name="title_one">one</string>
+    <string name="title_two">two</string>
+    <string name="title_three">three</string>
+    <string name="title_four">four</string>
+    <string name="title_five">five</string>
    <string name="one">
        Google did not invent the Android.\n
 Android was created in 2003 by four entrepreneurs who founded the start-up Android
@@ -21,7 +25,7 @@ Such satellite price was $ 3,500
     <string name="four">How great Android is?\n
 Android has 1.4 billion active users
 </string>
-  <!-- <string name="five"> So what's Android's green robot name?\n
-   He does not have an official name yet but Google's engineers call it Bugdroid.
-</string>-->
+  <string name="five">How great Android is?\n
+Android has 1.4 billion active users
+</string>
 </resources>
