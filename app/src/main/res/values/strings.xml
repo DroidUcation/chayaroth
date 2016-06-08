@@ -15,4 +15,15 @@
         <string name="onlinevisitors_title">Online visitors</string>
         <string name="inbox_title">Inbox</string>
         <string name="settings_title">Settings</string>
+
+
+<string name="welcome_msg">Hi</string>
+    <!--
+    //לשים לב שיש לבדוק אם זה אחד אז צריךלשנות את הכ-->
+<string name="txt_online_v"><b>Online site visitors</b>\n
+    see who\'s in your site, and invite them for a chat</string>
+
+
+    <string name="forgot_pass">
+        <a href="http://bontact.com/"></a></string>
 </resources>

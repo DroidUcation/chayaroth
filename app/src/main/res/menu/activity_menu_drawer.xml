@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+   <!-- <group android:checkableBehavior="single">-->
+        <item android:title="Navigate">
+            <menu>
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_dashboard"
             android:icon="@drawable/ic_menu_camera"
-            android:title="@string/dashboard_title" />
+            android:title="@string/dashboard_title"
+            />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_online_v"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/onlinevisitors_title" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_inbox"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/inbox_title" />
-       <!-- <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />-->
-    </group>
+            </menu>
+        </item>
+   <!-- </group>-->
 
-    <item android:title="Communicate">
+    <item android:title="Options">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Settings" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_exit"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Exit" />
         </menu>
     </item>
 

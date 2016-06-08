@@ -1,4 +1,4 @@
-package com.example.chaya.bontactapp.Data;
+package com.example.chaya.bontact.Data;
 
 import android.provider.BaseColumns;
 
