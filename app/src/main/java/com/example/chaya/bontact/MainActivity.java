@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                       // String text= Preferences.getString("UserName","")+Preferences.getString("Password","");
                         //Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
-
-                        //btn_login.animate().alpha(0f).scaleX(0f).scaleY(0f);
                         Intent intent =new Intent(MainActivity.this,MenuActivity.class);
                        startActivity(intent);
                 }

@@ -1,6 +1,6 @@
-/*
 
 package com.example.chaya.bontact.Data;
+
 
         import android.content.Context;
         import android.database.Cursor;
@@ -14,12 +14,16 @@ package com.example.chaya.bontact.Data;
         import android.widget.ImageView;
         import android.widget.TextView;
 
-        import com.example.chaya.bontact.R;
 
+        import com.example.chaya.bontact.R;
+/*
         import static android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME;
         import static android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER;
         import static android.provider.ContactsContract.CommonDataKinds.Phone.PHOTO_URI;
-
+*/
+/**
+ * Created by Nauman Zubair on 1/17/2016.
+ */
 public class InboxAdapter extends RecyclerView.Adapter {
 
     Cursor cursor;
@@ -37,7 +41,19 @@ public class InboxAdapter extends RecyclerView.Adapter {
     }
 
     @Override
+    public int getItemCount() {
+        return cursor.getCount();
+    }
+
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+    }
+
+    /*
+    @Override
+    public void onBindViewHolder(ContactHolder holder, int position) {
         cursor.moveToPosition(position);
 
         holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
@@ -51,14 +67,7 @@ public class InboxAdapter extends RecyclerView.Adapter {
             e.printStackTrace();
             holder.ivContactPhoto.setImageBitmap(null);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return cursor.getCount();
-    }
-
-
+    }*/
 
     class InboxHolder extends RecyclerView.ViewHolder {
 
@@ -73,4 +82,3 @@ public class InboxAdapter extends RecyclerView.Adapter {
         }
     }
 }
-*/

@@ -62,12 +62,15 @@ public class DbBontact extends SQLiteOpenHelper {
     Contract.InnerConversation.COLUMN_RECORD_URL+" TEXT,  "+
     "FOREIGN KEY("+Contract.InnerConversation.COLUMN_ID_SURFUR+") REFERENCES "+Contract.Conversation.TABLE_NAME+"("+Contract.Conversation.COLUMN_ID+")"+
             " )";
+    private String DropConversationTable="DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
+    private String DropInnerConversationTable="DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
 
 
     public DbBontact(Context context) {
         super(context,DBName,null,DBVersion);
     }
-private SQLiteDatabase database;
+    private SQLiteDatabase database;
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -78,21 +81,33 @@ private SQLiteDatabase database;
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME);
+        db.execSQL(DropConversationTable);
+        db.execSQL(DropInnerConversationTable);
         onCreate(db);
     }
+    public boolean InsertConversation(ContentValues values){
+
+          return insert(Contract.Conversation.TABLE_NAME,values);
+    }
+    public boolean InsertInnerConversation(ContentValues values)
+    {
+       return insert(Contract.InnerConversation.TABLE_NAME,values);
+    }
+
+
     public boolean insert(String table, ContentValues values)
     {
         database=getWritableDatabase();
         database.insert(table,null,values);
+
         return true;
     }
     public boolean update(String table,ContentValues values)
     {
         database=getWritableDatabase();
-       // database.update(table,values,);
+      //  database.update(table,values,);
         return true;
     }
     public boolean delete(){return true;}
+
 }
