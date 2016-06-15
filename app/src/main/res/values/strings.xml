@@ -15,15 +15,20 @@
         <string name="onlinevisitors_title">Online visitors</string>
         <string name="inbox_title">Inbox</string>
         <string name="settings_title">Settings</string>
-
-
+<string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
+    <string name="conversation_api">getConversations/</string>
+<string name="login_api">login</string>
 <string name="welcome_msg">Hi</string>
+    <string name="empty_deatails">Plese enter User name and password</string>
+    <string name="invalid_deatails">Invalid User name or password</string>
+<string name="agent">agent</string>
+    <string name="token">token</string>
+    <string name="user_not_exist">the user is not found please try again</string>
+    <string name="idCustomer">idCustomer</string>
     <!--
     //לשים לב שיש לבדוק אם זה אחד אז צריךלשנות את הכ-->
 <string name="txt_online_v"><b>Online site visitors</b>\n
     see who\'s in your site, and invite them for a chat</string>
-
-
-    <string name="forgot_pass">
+   <string name="forgot_pass">
         <a href="http://bontact.com/"></a></string>
 </resources>

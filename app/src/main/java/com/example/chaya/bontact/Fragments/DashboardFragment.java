@@ -21,7 +21,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     View RootView=null;
      @Override
     public void onClick(View v) {
-        Fragment fragment=null;
+      /*  Fragment fragment=null;
         switch(v.getId())
         {
             case R.id.onlineVisitors_btn_dashboard:
@@ -30,7 +30,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             case R.id.visitorsRequest_btn_dashboard:
                 fragment=new InboxFragment();
         }
-        ((MenuActivity)getActivity()).ReplaceFragments(fragment);
+        ((MenuActivity)getActivity()).ReplaceFragments(fragment);*/
     }
     public DashboardFragment() {
             }
@@ -54,9 +54,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         RootView= inflater.inflate(R.layout.fragment_dashboard, container, false);
 
       LinearLayout request_v= (LinearLayout) RootView.findViewById(R.id.visitorsRequest_btn_dashboard);
-        request_v.setOnClickListener(this);
+        request_v.setOnClickListener((View.OnClickListener) getActivity());
+        //request_v.setOnClickListener(this);
         LinearLayout online_v= (LinearLayout)RootView.findViewById(R.id.onlineVisitors_btn_dashboard);
-        online_v.setOnClickListener(this);
+        //online_v.setOnClickListener(this);
+        online_v.setOnClickListener((View.OnClickListener) getActivity());
         Log.d("this",this.toString());
 
         SharedPreferences Preferences= getContext().getSharedPreferences("UserDeatails",getContext().MODE_PRIVATE);

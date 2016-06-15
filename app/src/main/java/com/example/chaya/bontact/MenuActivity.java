@@ -18,7 +18,7 @@ import com.example.chaya.bontact.Fragments.InboxFragment;
 import com.example.chaya.bontact.Fragments.OnlineVisitorsFragment;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +93,20 @@ public class MenuActivity extends AppCompatActivity
             return true;
         }
         return  false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Fragment fragment=null;
+        switch(v.getId())
+        {
+            case R.id.onlineVisitors_btn_dashboard:
+                fragment=new OnlineVisitorsFragment();
+                break;
+            case R.id.visitorsRequest_btn_dashboard:
+                fragment=new InboxFragment();
+        }
+       ReplaceFragments(fragment);
     }
 }
 

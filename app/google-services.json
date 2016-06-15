@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1050389997239",
+    "firebase_url": "https://bontact.firebaseio.com",
+    "project_id": "bontact",
+    "storage_bucket": "bontact.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050389997239:android:d9246c76e0796d65",
+        "android_client_info": {
+          "package_name": "com.example.chaya.bontact"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050389997239-80e2091hpqa9nubknu4q39c4uojplp0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chaya.bontact",
+            "certificate_hash": "D70F489BD9249783590F72D4961CC0C6B22BB318"
+          }
+        },
+        {
+          "client_id": "1050389997239-141cok0g0vfahv6mu8i8sccettnm8ee1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATgqBBdX4RkkhDnIDq5UaXg4rys5YmufU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050389997239-141cok0g0vfahv6mu8i8sccettnm8ee1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

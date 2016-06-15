@@ -85,22 +85,22 @@ public class DbBontact extends SQLiteOpenHelper {
         db.execSQL(DropInnerConversationTable);
         onCreate(db);
     }
-    public boolean InsertConversation(ContentValues values){
+    public long InsertConversation(ContentValues values){
 
           return insert(Contract.Conversation.TABLE_NAME,values);
     }
-    public boolean InsertInnerConversation(ContentValues values)
+    public long InsertInnerConversation(ContentValues values)
     {
        return insert(Contract.InnerConversation.TABLE_NAME,values);
     }
 
 
-    public boolean insert(String table, ContentValues values)
+    public long insert(String table, ContentValues values)
     {
         database=getWritableDatabase();
-        database.insert(table,null,values);
+        long result=database.insert(table,null,values);
 
-        return true;
+        return result;
     }
     public boolean update(String table,ContentValues values)
     {

@@ -21,53 +21,43 @@ package com.example.chaya.bontact.Data;
         import static android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER;
         import static android.provider.ContactsContract.CommonDataKinds.Phone.PHOTO_URI;
 */
-/**
- * Created by Nauman Zubair on 1/17/2016.
- */
-public class InboxAdapter extends RecyclerView.Adapter {
 
+public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
     Cursor cursor;
-    Context mContext;
+    Context context;
 
     public InboxAdapter(Context context, Cursor cursor) {
-        mContext = context;
+        this.context = context;
         this.cursor = cursor;
     }
 
     @Override
     public InboxHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.inbox_item, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.inbox_item, null);
         return new InboxHolder(view);
-    }
-
+        }
     @Override
-    public int getItemCount() {
-        return cursor.getCount();
-    }
-
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-    }
-
-    /*
-    @Override
-    public void onBindViewHolder(ContactHolder holder, int position) {
+    public void onBindViewHolder(InboxHolder holder, int position) {
         cursor.moveToPosition(position);
 
-        holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
-        holder.tvContactNumber.setText(cursor.getString(cursor.getColumnIndex(NUMBER)));
-        String imageUri = cursor.getString(cursor.getColumnIndex(PHOTO_URI));
+      //  holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+       // holder.tvContactNumber.setText(cursor.getString(cursor.getColumnIndex(NUMBER)));
+      //  String imageUri = cursor.getString(cursor.getColumnIndex(PHOTO_URI));
 
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(imageUri));
-            holder.ivContactPhoto.setImageBitmap(bitmap);
+         //   Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
+          //  holder.ivContactPhoto.setImageBitmap(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
             holder.ivContactPhoto.setImageBitmap(null);
         }
-    }*/
+    }
+
+        @Override
+    public int getItemCount() {
+        return cursor.getCount();
+    }
+
 
     class InboxHolder extends RecyclerView.ViewHolder {
 
