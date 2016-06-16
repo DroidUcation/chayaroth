@@ -94,13 +94,14 @@ public void  getConversationData()
         public void onResponse(Call call, Response response) throws IOException {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             Headers responseHeaders = response.headers();
-            try {
+            
+           /* try {
                 final JSONObject jsonObject =new JSONObject(response.body().string());
                 Log.d("object",jsonObject.toString());
                pushToDB(jsonObject.getJSONObject("conversations"));
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     };
 
