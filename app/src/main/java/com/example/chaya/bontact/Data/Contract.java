@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,6 +8,9 @@ import android.provider.BaseColumns;
  */
 public class Contract {
     public static class Conversation implements BaseColumns{
+        public static final String AUTHORITY = "com.example.chaya.bontact.Data.InboxProvider";
+        public static final String URL = "content://" + AUTHORITY;
+        public static final Uri INBOX_URI = Uri.parse(URL);
         public static final String TABLE_NAME="Conversation";
         public static final String COLUMN_ID="idSurfer";
         public static final String COLUMN_NAME="visitor_name";

@@ -1,6 +1,7 @@
 package com.example.chaya.bontact.Data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,7 +19,7 @@ public class InboxProvider extends ContentProvider {
     public boolean onCreate() {
 
         dbBontact = new DbBontact(getContext());
-        db = dbBontact.getWritableDatabase();
+       db = dbBontact.getWritableDatabase();
         return (db != null);
     }
 
@@ -46,14 +47,16 @@ public class InboxProvider extends ContentProvider {
 
         long rowID =  dbBontact.insert(Contract.Conversation.TABLE_NAME,values);
         if (rowID > 0) {
-            return null;
+            Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
+            return uri;
           }
         return null;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+     //  return dbBontact.delete(selection,selectionArgs);
+return 0;
     }
 
     @Override

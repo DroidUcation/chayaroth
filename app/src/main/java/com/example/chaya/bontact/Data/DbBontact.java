@@ -13,33 +13,33 @@ public class DbBontact extends SQLiteOpenHelper {
     private static final String DBName= "Bontact.db";
     private static final int DBVersion= 1;
      private String CreateConversationTable="CREATE TABLE "+Contract.Conversation.TABLE_NAME+
-            "( _id INT PRIMARY KEY     NOT NULL, "+
+            "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
             Contract.Conversation.COLUMN_ID+" INT,  "+
             Contract.Conversation.COLUMN_NAME+" TEXT, "+
-            Contract.Conversation.COLUMN_RETURNING+"INT, "+
-            Contract.Conversation.COLUMN_CLOSED+"INT, "+
-            Contract.Conversation.COLUMN_RESOLVED+"INT, "+
-            Contract.Conversation.COLUMN_LAST_DATE+"TEXT,"+
-            Contract.Conversation.COLUMN_LAST_TYPE+"INT, "+
-            Contract.Conversation.COLUMN_ACTION_ID+"INT, "+
-            Contract.Conversation.COLUMN_REPLY+"INT, "+
-            Contract.Conversation.COLUMN_FLAG_CALLBACK+"INT, "+
-            Contract.Conversation.COLUMN_FLAG_SMS+"INT, "+
-            Contract.Conversation.COLUMN_FLAG_CHAT+"INT, "+
-            Contract.Conversation.COLUMN_FLAG_EMAIL+"INT, "+
-            Contract.Conversation.COLUMN_PAGE+"TEXT, "+
-            Contract.Conversation.COLUMN_IP+"TEXT, "+
-            Contract.Conversation.COLUMN_BROWSER+"TEXT, "+
-            Contract.Conversation.COLUMN_TITLE+"TEXT, "+
-            Contract.Conversation.COLUMN_UNREAD+"INT, "+
-            Contract.Conversation.COLUMN_PHONE+"TEXT, "+
-            Contract.Conversation.COLUMN_EMAIL+"TEXT, "+
-            Contract.Conversation.COLUMN_AGENT+"TEXT, "+
-            Contract.Conversation.COLUMN_FLAG+"TEXT, "+
-            Contract.Conversation.COLUMN_CLASS_LAST_CHANNEL+"TEXT, "+
-            Contract.Conversation.COLUMN_DISPLAY_NAME+"TEXT, "+
-            Contract.Conversation.COLUMN_PRIORITY+"TEXT, "+
-            Contract.Conversation.COLUMN_SORT_CHANNEL+"TEXT, "+
+            Contract.Conversation.COLUMN_RETURNING+" INT, "+
+            Contract.Conversation.COLUMN_CLOSED+" INT, "+
+            Contract.Conversation.COLUMN_RESOLVED+" INT, "+
+            Contract.Conversation.COLUMN_LAST_DATE+" TEXT,"+
+            Contract.Conversation.COLUMN_LAST_TYPE+" INT, "+
+            Contract.Conversation.COLUMN_ACTION_ID+" INT, "+
+            Contract.Conversation.COLUMN_REPLY+" INT, "+
+            Contract.Conversation.COLUMN_FLAG_CALLBACK+" INT, "+
+            Contract.Conversation.COLUMN_FLAG_SMS+" INT, "+
+            Contract.Conversation.COLUMN_FLAG_CHAT+" INT, "+
+            Contract.Conversation.COLUMN_FLAG_EMAIL+" INT, "+
+            Contract.Conversation.COLUMN_PAGE+" TEXT, "+
+            Contract.Conversation.COLUMN_IP+" TEXT, "+
+            Contract.Conversation.COLUMN_BROWSER+" TEXT, "+
+            Contract.Conversation.COLUMN_TITLE+" TEXT, "+
+            Contract.Conversation.COLUMN_UNREAD+" INT, "+
+            Contract.Conversation.COLUMN_PHONE+" TEXT, "+
+            Contract.Conversation.COLUMN_EMAIL+" TEXT, "+
+            Contract.Conversation.COLUMN_AGENT+" TEXT, "+
+            Contract.Conversation.COLUMN_FLAG+" TEXT, "+
+            Contract.Conversation.COLUMN_CLASS_LAST_CHANNEL+" TEXT, "+
+            Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT, "+
+            Contract.Conversation.COLUMN_PRIORITY+" TEXT, "+
+            Contract.Conversation.COLUMN_SORT_CHANNEL+" TEXT "+
             " )";
     private String CreateInnerConversationTable="CREATE TABLE "+Contract.InnerConversation.TABLE_NAME+
             "( _id INT PRIMARY KEY     NOT NULL, "+
@@ -59,7 +59,7 @@ public class DbBontact extends SQLiteOpenHelper {
     Contract.InnerConversation.COLUMN_DATA_TYPE+" INT,  "+
     Contract.InnerConversation.COLUMN_NAME+" TEXT,  "+
     Contract.InnerConversation.COLUMN_SYSTEM_MSG+" INT,  "+
-    Contract.InnerConversation.COLUMN_RECORD_URL+" TEXT,  "+
+    Contract.InnerConversation.COLUMN_RECORD_URL+" TEXT ,"+
     "FOREIGN KEY("+Contract.InnerConversation.COLUMN_ID_SURFUR+") REFERENCES "+Contract.Conversation.TABLE_NAME+"("+Contract.Conversation.COLUMN_ID+")"+
             " )";
     private String DropConversationTable="DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
@@ -73,7 +73,6 @@ public class DbBontact extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
       db.execSQL(CreateConversationTable);
       db.execSQL(CreateInnerConversationTable);
 
@@ -108,6 +107,11 @@ public class DbBontact extends SQLiteOpenHelper {
       //  database.update(table,values,);
         return true;
     }
-    public boolean delete(){return true;}
+    public int delete(String selection, String[] selectionArgs){
+
+         return database.delete(Contract.Conversation.TABLE_NAME,selection,selectionArgs);
+
+
+    }
 
 }

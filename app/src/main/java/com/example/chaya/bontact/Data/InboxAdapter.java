@@ -2,7 +2,7 @@
 package com.example.chaya.bontact.Data;
 
 
-        import android.content.Context;
+ import android.content.Context;
         import android.database.Cursor;
         import android.graphics.Bitmap;
         import android.net.Uri;
@@ -16,11 +16,6 @@ package com.example.chaya.bontact.Data;
 
 
         import com.example.chaya.bontact.R;
-/*
-        import static android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME;
-        import static android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER;
-        import static android.provider.ContactsContract.CommonDataKinds.Phone.PHOTO_URI;
-*/
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
     Cursor cursor;
@@ -40,18 +35,20 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public void onBindViewHolder(InboxHolder holder, int position) {
         cursor.moveToPosition(position);
 
-      //  holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
-       // holder.tvContactNumber.setText(cursor.getString(cursor.getColumnIndex(NUMBER)));
-      //  String imageUri = cursor.getString(cursor.getColumnIndex(PHOTO_URI));
+       holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_NAME)));
+        holder.tvContactNumber.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_EMAIL)));
+  /* img:
+   String imageUri = cursor.getString(cursor.getColumnIndex(PHOTO_URI));
 
         try {
-         //   Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
-          //  holder.ivContactPhoto.setImageBitmap(bitmap);
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
+           holder.ivContactPhoto.setImageBitmap(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
             holder.ivContactPhoto.setImageBitmap(null);
-        }
+        }*/
     }
+
 
         @Override
     public int getItemCount() {

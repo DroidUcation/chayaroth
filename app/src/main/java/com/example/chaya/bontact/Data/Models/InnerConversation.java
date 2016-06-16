@@ -1,4 +1,4 @@
-package com.example.chaya.bontactapp.Data.Models;
+package com.example.chaya.bontact.Data.Models;
 
 import java.sql.Time;
 

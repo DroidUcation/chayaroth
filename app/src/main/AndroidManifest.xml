@@ -12,7 +12,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,7 +24,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.chaya.bontact.MainActivity" />
         </activity>
-
+        <provider
+            android:authorities="com.example.chaya.bontact.Data.InboxProvider"
+            android:name=".Data.InboxProvider" />
     </application>
 
 </manifest>

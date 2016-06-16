@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.InboxAdapter;
 import com.example.chaya.bontact.MenuActivity;
 import com.example.chaya.bontact.R;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -41,7 +43,7 @@ import okhttp3.Headers;
 import okhttp3.Response;
 
 
-public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks {
+public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
 
     private static final int INBOX_LOADER = 0;
@@ -57,111 +59,136 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     public static InboxFragment newInstance() {
         InboxFragment fragment = new InboxFragment();
-              return fragment;
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-       // recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
-       // recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       // getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
+       /* recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
+        if(recyclerView != null)
+         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+*/
         current_page=0;
         SharedPreferences Preferences = getContext().getSharedPreferences("UserDeatails", Context.MODE_PRIVATE);
         token= Preferences.getString(getResources().getString(R.string.token),"");
-                     getConversationData();
+        getConversationData();
     }
 
-public void  getConversationData()
-{
-    if(token==null)
+
+    public void  getConversationData()
     {
-        return;
-    }
-        String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.conversation_api)+token;
-    url += "?page="+current_page;
-
-
-    Callback callback= new Callback() {
-        @Override
-        public void onFailure(Call call, IOException e) {
-            Log.d("fail", "onFailure: ");
-
+        if(token==null)
+        {
+            return;
         }
-        @Override
-        public void onResponse(Call call, Response response) throws IOException {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            Headers responseHeaders = response.headers();
-            
-           /* try {
+        String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.conversation_api)+token;
+        url += "?page="+current_page;
+
+
+        Callback callback= new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail", "onFailure: ");
+
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                Headers responseHeaders = response.headers();
+            try {
                 final JSONObject jsonObject =new JSONObject(response.body().string());
                 Log.d("object",jsonObject.toString());
                pushToDB(jsonObject.getJSONObject("conversations"));
             } catch (JSONException e) {
                 e.printStackTrace();
-            }*/
+            }
+            }
+        };
+
+        OkHttpRequests requests = new OkHttpRequests(url,callback);
+
+        try {
+            requests.run();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    };
 
-    OkHttpRequests requests = new OkHttpRequests(url,callback);
+    }
+    public void pushToDB(JSONObject jsonObject) throws JSONException {
 
-    try {
-        requests.run();
+        ContentValues cv = new ContentValues();
+        JSONArray values = jsonObject.getJSONArray("data");
 
-    } catch (Exception e) {
-        e.printStackTrace();
+        Log.d("@@@@", values.toString());
+        for (int i = 0; i < values.length(); i++) {
+            JSONObject row = values.getJSONObject(i);
+            Iterator<String> keys = row.keys();
+
+            while (keys.hasNext())
+            {
+                String key = keys.next();
+                int ValueI=-1;
+                String ValueS="no";
+                ValueI = row.optInt(key, -1);
+                if (ValueI != -1)
+                    {
+                        Log.d(key," int "+ValueI);
+                        cv.put(key,ValueI);
+                    }
+                else
+                    {
+                        ValueS = row.optString(key, "no");
+                             if (ValueS != "no")
+                             {
+                                 Log.d(key,"str "+ValueS);
+                                 cv.put(key,ValueS);
+                             }
+                            else
+                                 //Date ValueD=row.optD
+                                 Log.d("else "+key, row.get(key).toString());
+                    }
+             }
+            //cv.put( "_id",+(i+5));
+            Log.d("cv",cv.toString());
+            Uri uri=getContext().getContentResolver().insert(Contract.Conversation.INBOX_URI,cv);
+            Log.d("uri",uri.toString());
+
+
+
+        }
+
     }
 
-}
-    public void pushToDB(JSONObject jsonObject) throws JSONException {
-        ContentValues cv  = new ContentValues();
 
 
-        JSONArray values= jsonObject.getJSONArray("data");
-        Log.d("@@@@",values.toString());
-        for(int i=0;i<values.length();i++)
-        {
-           JSONObject row= values.getJSONObject(i);
-            //get all key values and put them into the cv in the db
-
-        }
-       /* while(keys.hasNext()){
-            String key = keys.next();
-        Object Value=null;
-            try {
-                 Value = jsonObject.get(key) ;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        if(Value!=null)
-        {
-            cv.put(key,);
-        }*/
-        }
 
 
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        Uri CONTACT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;//content provider uri
-        return new CursorLoader(getContext(), CONTACT_URI, null, null, null, null);
+        return new CursorLoader(getContext(),Contract.Conversation.INBOX_URI, null, null, null, null);
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        //Set
+        recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
+        if(recyclerView != null)
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setVisibility(View.VISIBLE);
 
+        if (cursor != null && cursor.moveToFirst()) {
+            adapter = new InboxAdapter(getContext(), cursor);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+        }
     }
-
-    //don't match the parent's method
-   /* @Override
-    public void onLoadFinished(Loader loader, Cursor cursor) {
-        cursor.moveToFirst();
-        adapter = new InboxAdapter(getContext(), cursor);
-        recyclerView.setAdapter(adapter);
-    }*/
-
 
     @Override
     public void onLoaderReset(Loader loader) {
@@ -183,9 +210,9 @@ public void  getConversationData()
         super.onDetach();
 
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }
-
-
-
-
-
