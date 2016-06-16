@@ -55,8 +55,8 @@ public class InboxProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-     //  return dbBontact.delete(selection,selectionArgs);
-return 0;
+       int result= dbBontact.delete(selection,selectionArgs);
+        return  result;
     }
 
     @Override

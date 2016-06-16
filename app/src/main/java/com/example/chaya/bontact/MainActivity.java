@@ -1,28 +1,22 @@
 package com.example.chaya.bontact;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import com.example.chaya.bontact.ServerCalls.OkHttpRequests;
 
@@ -32,21 +26,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  EditText passEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //TODO:Maybe put this lines when application is starting and also manage accounts...
+        //checks if user is logged in
+      /*  SharedPreferences Preferences = getSharedPreferences(getResources().getString(R.string.sp_user_details), MODE_PRIVATE);
+       if( Preferences.contains(getResources().getString(R.string.token)))//user is logged in
+        {
+            Intent intent =new Intent(MainActivity.this,MenuActivity.class);
+            startActivity(intent);
+        }*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-         Button btn_login = (Button)findViewById(R.id.btn_login);
+        Button btn_login = (Button)findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
-        //setupFloatingLabelError();
-
         }
 
     @Override
     public void onClick(View v) {
-
-               switch (v.getId()) {
-            case R.id.btn_login:
-
+    switch (v.getId())
+    { case R.id.btn_login:
                 //get inputs
                 usernameEditText = (EditText) findViewById(R.id.etxt_user_name);
                 passEditText = (EditText) findViewById(R.id.etxt_password);
@@ -61,47 +59,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else
                 {
-                    //not valid - print invalid msgs
+                    //not valid inputs - print invalid msgs
                      if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password))
-                        Toast.makeText(MainActivity.this, R.string.empty_deatails, Toast.LENGTH_SHORT).show();
+                         reEnterDetails(R.string.empty_deatails);
                      else
-                         Toast.makeText(MainActivity.this, R.string.invalid_deatails, Toast.LENGTH_SHORT).show();
-             reEnterDetails();
+                         reEnterDetails(R.string.invalid_deatails);
                 }
-        }
+     }
     }
-
 
     public void getUserFromServer(String userName,String password)
     {
-
         String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.login_api);
         url += "?username=" + userName + "&pass=" + password;
-
         Callback callback= new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("fail", "onFailure: ");
-
+               reEnterDetails(R.string.connection_problem);
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                Headers responseHeaders = response.headers();
+                if (!response.isSuccessful()) {
+                    //throw new IOException("Unexpected code " + response);
+                    reEnterDetails(R.string.some_problem);
+                }
                 try {
                     final JSONObject jsonObject =new JSONObject(response.body().string());
-                    Log.d("object",jsonObject.toString());
-                    Log.d("msg", jsonObject.getString("message"));
-
-                   if(jsonObject.getString("message").equals("success"))
+                    if(jsonObject.getString("message").equals("success"))//user exists
                     {
-                      SharedPreferences Preferences = getSharedPreferences("UserDeatails", MODE_PRIVATE);
+                      SharedPreferences Preferences = getSharedPreferences(getResources().getString(R.string.sp_user_details), MODE_PRIVATE);
                       SharedPreferences.Editor editor=Preferences.edit();
+                      editor.clear();
                       editor.putString(getResources().getString(R.string.agent),jsonObject.getJSONObject("rep").toString());
+                      editor.putString(getResources().getString(R.string.settings),jsonObject.getJSONObject("settings").toString());
                       editor.putString(getResources().getString(R.string.token),jsonObject.getString("token"));
-
                       editor.apply();
                       finish();
+
                       runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -111,40 +105,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                     }
                     else
-                    {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(MainActivity.this, R.string.user_not_exist, Toast.LENGTH_SHORT).show();
-                              reEnterDetails();
-                            }
+                    {//user not exists
+                       runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                               reEnterDetails(R.string.user_not_exists);}
                         });
                     }
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    reEnterDetails(R.string.some_problem);
                 }
             }
         };
 
         OkHttpRequests requests = new OkHttpRequests(url,callback);
-
         try {
             requests.run();
-
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
+            reEnterDetails(R.string.some_problem);
         }
-
     }
-    public void reEnterDetails()
+
+    public void reEnterDetails(int string_err)
     {
         usernameEditText.setText("");
         passEditText.setText("");
-       // usernameEditText.setBackgroundColor(getResources().getColor(R.color.colorREquierd));
+         final TextView errorString=(TextView) findViewById(R.id.error_details);
+        errorString.setText(getResources().getString(string_err));
+        errorString.setVisibility(View.VISIBLE);
+        passEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()>0)
+                    errorString.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
+
+
  /*   private void setupFloatingLabelError() {
         final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.username_text_input_layout);
         floatingUsernameLabel.getEditText().addTextChangedListener(new TextWatcher() {
@@ -169,6 +179,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });*/
-    }
+}
 
 

@@ -84,15 +84,6 @@ public class DbBontact extends SQLiteOpenHelper {
         db.execSQL(DropInnerConversationTable);
         onCreate(db);
     }
-    public long InsertConversation(ContentValues values){
-
-          return insert(Contract.Conversation.TABLE_NAME,values);
-    }
-    public long InsertInnerConversation(ContentValues values)
-    {
-       return insert(Contract.InnerConversation.TABLE_NAME,values);
-    }
-
 
     public long insert(String table, ContentValues values)
     {
@@ -109,6 +100,7 @@ public class DbBontact extends SQLiteOpenHelper {
     }
     public int delete(String selection, String[] selectionArgs){
 
+        database=getWritableDatabase();
          return database.delete(Contract.Conversation.TABLE_NAME,selection,selectionArgs);
 
 

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -48,14 +49,14 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private static final int INBOX_LOADER = 0;
 
-    RecyclerView recyclerView;
-    InboxAdapter adapter;
-    String token;
-    int current_page;
-
+    private RecyclerView recyclerView;
+    private InboxAdapter adapter;
+    private String token;
+    private int current_page;
+    private  View rootView;
+   // private ProgressBar progressBar;
     public InboxFragment() {
     }
-
 
     public static InboxFragment newInstance() {
         InboxFragment fragment = new InboxFragment();
@@ -66,25 +67,27 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        //have to wait until data is coming back and then put the data.
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
-       /* recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
+      /*  recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
         if(recyclerView != null)
-         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-*/
+         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));*/
+
         current_page=0;
         SharedPreferences Preferences = getContext().getSharedPreferences("UserDeatails", Context.MODE_PRIVATE);
         token= Preferences.getString(getResources().getString(R.string.token),"");
-        getConversationData();
+              getConversationDataFromServer();
     }
 
 
-    public void  getConversationData()
+    public void getConversationDataFromServer()
     {
         if(token==null)
         {
             return;
         }
-        String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.conversation_api)+token;
+        //String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.conversation_api)+token;
+       String url = "https://prd-api01-eus.azurewebsites.net/api" + getResources().getString(R.string.conversation_api)+token;
         url += "?page="+current_page;
 
 
@@ -122,9 +125,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
         ContentValues cv = new ContentValues();
         JSONArray values = jsonObject.getJSONArray("data");
-
+        if(current_page==0)
+            getContext().getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);
         Log.d("@@@@", values.toString());
         for (int i = 0; i < values.length(); i++) {
+            cv.clear();
             JSONObject row = values.getJSONObject(i);
             Iterator<String> keys = row.keys();
 
@@ -154,19 +159,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
              }
             //cv.put( "_id",+(i+5));
             Log.d("cv",cv.toString());
+
             Uri uri=getContext().getContentResolver().insert(Contract.Conversation.INBOX_URI,cv);
             Log.d("uri",uri.toString());
-
-
-
         }
-
     }
-
-
-
-
-
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
@@ -175,12 +172,12 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        //Set
+        //TODO: why after clicking the second time the app is crassing
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
         if(recyclerView != null)
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setVisibility(View.VISIBLE);
-
+        //progressBar.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
             adapter = new InboxAdapter(getContext(), cursor);
             recyclerView.setAdapter(adapter);
@@ -198,7 +195,10 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_inbox, container, false);
+        rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
+       // progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
+        return rootView;
+
     }
     @Override
     public void onAttach(Context context) {
