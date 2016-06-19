@@ -3,6 +3,8 @@ package com.example.chaya.bontact.Data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 /**
  * Created by chaya on 5/25/2016.
  */
@@ -13,6 +15,7 @@ public class Contract {
         public static final Uri INBOX_URI = Uri.parse(URL);
         public static final String TABLE_NAME="Conversation";
         public static final String COLUMN_ID="idSurfer";
+        public static final String COLUMN_AVATAR="avatar";
         public static final String COLUMN_NAME="visitor_name";
         public static final String COLUMN_RETURNING="returning";
         public static final String COLUMN_CLOSED="closed";
@@ -21,10 +24,6 @@ public class Contract {
         public static final String COLUMN_LAST_TYPE="lasttype";
         public static final String COLUMN_ACTION_ID="actionId";
         public static final String COLUMN_REPLY="reply";
-        public static final String COLUMN_FLAG_CALLBACK="flag_callback";
-        public static final String COLUMN_FLAG_SMS="flag_sms";
-        public static final String COLUMN_FLAG_CHAT ="flag_chat";
-        public static final String COLUMN_FLAG_EMAIL="flag_email";
         public static final String COLUMN_PAGE="page";
         public static final String COLUMN_IP="ip";
         public static final String COLUMN_BROWSER="browser";
@@ -33,11 +32,11 @@ public class Contract {
         public static final String COLUMN_PHONE="phone";
         public static final String COLUMN_EMAIL="email";
         public static final String COLUMN_AGENT="agent";
-        public static final String COLUMN_FLAG="flag";
-        public static final String COLUMN_CLASS_LAST_CHANNEL="classLastChannel";
         public static final String COLUMN_DISPLAY_NAME="displayname";
-        public static final String COLUMN_PRIORITY="priority";
-        public static final String COLUMN_SORT_CHANNEL="sortChannel";
+        public static final String FLAG_COUNTRY ="flag";
+        public static final String COLUMN_COUNTRY="country";
+
+
 
     }
     public static class InnerConversation implements BaseColumns{

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by chaya on 5/25/2016.
  */
@@ -16,6 +18,7 @@ public class DbBontact extends SQLiteOpenHelper {
             "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
             Contract.Conversation.COLUMN_ID+" INT,  "+
             Contract.Conversation.COLUMN_NAME+" TEXT, "+
+             Contract.Conversation.COLUMN_AVATAR+" TEXT, "+
             Contract.Conversation.COLUMN_RETURNING+" INT, "+
             Contract.Conversation.COLUMN_CLOSED+" INT, "+
             Contract.Conversation.COLUMN_RESOLVED+" INT, "+
@@ -23,10 +26,6 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_LAST_TYPE+" INT, "+
             Contract.Conversation.COLUMN_ACTION_ID+" INT, "+
             Contract.Conversation.COLUMN_REPLY+" INT, "+
-            Contract.Conversation.COLUMN_FLAG_CALLBACK+" INT, "+
-            Contract.Conversation.COLUMN_FLAG_SMS+" INT, "+
-            Contract.Conversation.COLUMN_FLAG_CHAT+" INT, "+
-            Contract.Conversation.COLUMN_FLAG_EMAIL+" INT, "+
             Contract.Conversation.COLUMN_PAGE+" TEXT, "+
             Contract.Conversation.COLUMN_IP+" TEXT, "+
             Contract.Conversation.COLUMN_BROWSER+" TEXT, "+
@@ -35,11 +34,8 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_PHONE+" TEXT, "+
             Contract.Conversation.COLUMN_EMAIL+" TEXT, "+
             Contract.Conversation.COLUMN_AGENT+" TEXT, "+
-            Contract.Conversation.COLUMN_FLAG+" TEXT, "+
-            Contract.Conversation.COLUMN_CLASS_LAST_CHANNEL+" TEXT, "+
-            Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT, "+
-            Contract.Conversation.COLUMN_PRIORITY+" TEXT, "+
-            Contract.Conversation.COLUMN_SORT_CHANNEL+" TEXT "+
+            Contract.Conversation.COLUMN_COUNTRY +" TEXT, "+
+            Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT "+
             " )";
     private String CreateInnerConversationTable="CREATE TABLE "+Contract.InnerConversation.TABLE_NAME+
             "( _id INT PRIMARY KEY     NOT NULL, "+
@@ -65,6 +61,31 @@ public class DbBontact extends SQLiteOpenHelper {
     private String DropConversationTable="DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
     private String DropInnerConversationTable="DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
 
+    public static ArrayList<String> getAllConversationFields()
+    {
+        ArrayList<String> strings= new ArrayList<>();
+        strings.add(Contract.Conversation.COLUMN_ID);
+        strings.add(Contract.Conversation.COLUMN_NAME);
+       strings.add(Contract.Conversation.COLUMN_AVATAR);
+       strings.add(Contract.Conversation.COLUMN_RETURNING);
+       strings.add(Contract.Conversation.COLUMN_CLOSED);
+        strings.add(Contract.Conversation.COLUMN_RESOLVED);
+        strings.add(  Contract.Conversation.COLUMN_LAST_DATE);
+       strings.add(Contract.Conversation.COLUMN_LAST_TYPE);
+        strings.add(Contract.Conversation.COLUMN_ACTION_ID);
+      strings.add( Contract.Conversation.COLUMN_REPLY);
+        strings.add(Contract.Conversation.COLUMN_PAGE);
+         strings.add( Contract.Conversation.COLUMN_IP);
+         strings.add(Contract.Conversation.COLUMN_BROWSER);
+        strings.add(Contract.Conversation.COLUMN_TITLE);
+        strings.add(Contract.Conversation.COLUMN_UNREAD);
+        strings.add(Contract.Conversation.COLUMN_PHONE);
+        strings.add( Contract.Conversation.COLUMN_EMAIL);
+        strings.add( Contract.Conversation.COLUMN_AGENT);
+        strings.add(Contract.Conversation.FLAG_COUNTRY);
+        strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
+        return strings;
+    }
 
     public DbBontact(Context context) {
         super(context,DBName,null,DBVersion);
@@ -89,7 +110,6 @@ public class DbBontact extends SQLiteOpenHelper {
     {
         database=getWritableDatabase();
         long result=database.insert(table,null,values);
-
         return result;
     }
     public boolean update(String table,ContentValues values)

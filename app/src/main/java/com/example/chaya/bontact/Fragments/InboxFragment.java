@@ -51,8 +51,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private RecyclerView recyclerView;
     private InboxAdapter adapter;
-    private String token;
-    private int current_page;
     private  View rootView;
    // private ProgressBar progressBar;
     public InboxFragment() {
@@ -72,97 +70,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
       /*  recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
         if(recyclerView != null)
          recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));*/
-
-        current_page=0;
-        SharedPreferences Preferences = getContext().getSharedPreferences("UserDeatails", Context.MODE_PRIVATE);
-        token= Preferences.getString(getResources().getString(R.string.token),"");
-              getConversationDataFromServer();
-    }
-
-
-    public void getConversationDataFromServer()
-    {
-        if(token==null)
-        {
-            return;
-        }
-        //String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.conversation_api)+token;
-       String url = "https://prd-api01-eus.azurewebsites.net/api" + getResources().getString(R.string.conversation_api)+token;
-        url += "?page="+current_page;
-
-
-        Callback callback= new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("fail", "onFailure: ");
-
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                Headers responseHeaders = response.headers();
-            try {
-                final JSONObject jsonObject =new JSONObject(response.body().string());
-                Log.d("object",jsonObject.toString());
-               pushToDB(jsonObject.getJSONObject("conversations"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            }
-        };
-
-        OkHttpRequests requests = new OkHttpRequests(url,callback);
-
-        try {
-            requests.run();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    public void pushToDB(JSONObject jsonObject) throws JSONException {
-
-        ContentValues cv = new ContentValues();
-        JSONArray values = jsonObject.getJSONArray("data");
-        if(current_page==0)
-            getContext().getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);
-        Log.d("@@@@", values.toString());
-        for (int i = 0; i < values.length(); i++) {
-            cv.clear();
-            JSONObject row = values.getJSONObject(i);
-            Iterator<String> keys = row.keys();
-
-            while (keys.hasNext())
-            {
-                String key = keys.next();
-                int ValueI=-1;
-                String ValueS="no";
-                ValueI = row.optInt(key, -1);
-                if (ValueI != -1)
-                    {
-                        Log.d(key," int "+ValueI);
-                        cv.put(key,ValueI);
-                    }
-                else
-                    {
-                        ValueS = row.optString(key, "no");
-                             if (ValueS != "no")
-                             {
-                                 Log.d(key,"str "+ValueS);
-                                 cv.put(key,ValueS);
-                             }
-                            else
-                                 //Date ValueD=row.optD
-                                 Log.d("else "+key, row.get(key).toString());
-                    }
-             }
-            //cv.put( "_id",+(i+5));
-            Log.d("cv",cv.toString());
-
-            Uri uri=getContext().getContentResolver().insert(Contract.Conversation.INBOX_URI,cv);
-            Log.d("uri",uri.toString());
-        }
     }
 
     @Override

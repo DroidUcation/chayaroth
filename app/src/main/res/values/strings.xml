@@ -19,6 +19,7 @@
     
 <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
     <string name="conversation_api">getConversations/</string>
+    <string name="main_conversation">getmainconversations/</string>
 <string name="login_api">login</string>
 <string name="welcome_msg">Hi</string>
     <string name="empty_deatails">Plese enter User name and password</string>
@@ -32,7 +33,10 @@
     <string name="idCustomer">idCustomer</string>
     <!--
     //לשים לב שיש לבדוק אם זה אחד אז צריךלשנות את הכ-->
-<string name="txt_online_v"><b>Online site visitors</b>\n
+<string name="txt_online_v"><b>online site visitors</b>\n
     see who\'s in your site, and invite them for a chat</string>
+    <string name="txt_request_v"><b>new visitors requests</b>\n
+   manage all conversation with your visitors</string>
+    <string name="name" >displayname</string>
 
 </resources>

@@ -35,7 +35,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public void onBindViewHolder(InboxHolder holder, int position) {
         cursor.moveToPosition(position);
 
-       holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_NAME)));
+       holder.tvContactName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
         holder.tvContactNumber.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_EMAIL)));
   /* img:
    String imageUri = cursor.getString(cursor.getColumnIndex(PHOTO_URI));
