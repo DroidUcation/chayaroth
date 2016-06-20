@@ -1,42 +1,54 @@
 <resources>
-    <string name="app_name">Bontact</string>
-    <string name="password">Password</string>
-    <string name="user_name">User name</string>
-    <string name="login">Log in</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_menu">MenuActivity</string>
 
+    <!--Titles-->
+    <string name="app_name">Bontact</string>
+    <string name="title_activity_menu">MenuActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
-        <string name="dashboard_title">Dahboard</string>
-        <string name="onlinevisitors_title">Online visitors</string>
-        <string name="inbox_title">Inbox</string>
-        <string name="settings_title">Settings</string>
+    <string name="dashboard_title">Dahboard</string>
+    <string name="onlinevisitors_title">Online visitors</string>
+    <string name="inbox_title">Inbox</string>
+    <string name="settings_title">Settings</string>
     <string name="sp_user_details">user_details</string>
-    
-<string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
-    <string name="conversation_api">getConversations/</string>
-    <string name="main_conversation">getmainconversations/</string>
-<string name="login_api">login</string>
-<string name="welcome_msg">Hi</string>
-    <string name="empty_deatails">Plese enter User name and password</string>
-    <string name="invalid_deatails">Invalid User name or password</string>
-<string name="agent">agent</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Variables -->
+    <string name="agent">agent</string>
     <string name="settings">settings</string>
     <string name="token">token</string>
+    <string name="idCustomer">idCustomer</string>
+    <string name="name" >name</string>
+    <string name="password">Password</string>
+    <string name="user_name">User name</string>
+
+    <!--text view messegaes -->
+    <string name="welcome_msg">Hi</string>
+    <string name="login">Log in</string>
+    <!--check if itis one or more v/r and change the string according to-->
+    <string name="txt_online_v"><b>online site visitors</b>\n
+    see who\'s in your site, and invite them for a chat</string>
+    <string name="txt_request_v"><b>new visitors requests</b>\n
+     manage all conversation with your visitors</string>
+
+
+    <!--Error messages -->
+    <string name="empty_deatails">Plese enter User name and password</string>
+    <string name="invalid_deatails">Invalid User name or password</string>
     <string name="user_not_exists">the user is not found please try again</string>
     <string name="some_problem">Please reenter the details. there was some problem </string>
     <string name="connection_problem">Please check your network connection. something is wrong! </string>
-    <string name="idCustomer">idCustomer</string>
-    <!--
-    //לשים לב שיש לבדוק אם זה אחד אז צריךלשנות את הכ-->
-<string name="txt_online_v"><b>online site visitors</b>\n
-    see who\'s in your site, and invite them for a chat</string>
-    <string name="txt_request_v"><b>new visitors requests</b>\n
-   manage all conversation with your visitors</string>
-    <string name="name" >displayname</string>
+
+    <!--URLS to api -->
+    <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
+    <string name="conversation_api">getConversations/</string>
+    <string name="main_conversation_api">getmainconversations/</string>
+    <string name="inner_conversation_api">openconversation/</string>
+    <string name="login_api">login</string>
+
+    <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
 
 </resources>
+
+

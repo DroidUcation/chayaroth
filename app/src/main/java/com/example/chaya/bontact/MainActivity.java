@@ -1,5 +1,6 @@
 package com.example.chaya.bontact;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private EditText usernameEditText;
     private  EditText passEditText;
+    private  ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -39,6 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Button btn_login = (Button)findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
+         pd = new ProgressDialog(this);
+        pd.setTitle("Loading...");
+        pd.setMessage("Please wait.");
+        pd.setCancelable(false);
+     //Todo:style the progress dialog
         }
 
     @Override
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getUserFromServer(String userName,String password)
     {
+        pd.show();
         String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.login_api);
         url += "?username=" + userName + "&pass=" + password;
         Callback callback= new Callback() {
@@ -115,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     reEnterDetails(R.string.some_problem);
                 }
+                pd.dismiss();
             }
         };
 

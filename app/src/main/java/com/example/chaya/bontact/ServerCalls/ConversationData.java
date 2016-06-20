@@ -3,6 +3,7 @@ package com.example.chaya.bontact.ServerCalls;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.renderscript.Sampler;
 import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -14,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -102,7 +104,7 @@ public class ConversationData {
                         cv.put(key, ValueI);
                     } else {
                         ValueS = row.optString(key, "no");
-                        if (ValueS != "no") {
+                        if (!ValueS.equals("no")) {
                             Log.d(key, "str " + ValueS);
                             cv.put(key, ValueS);
                         } else
@@ -110,19 +112,22 @@ public class ConversationData {
                             Log.d("else " + key, row.get(key).toString());
                     }
 
-                    if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme case
+                  /*  if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme case
                     {
-                        ValueS = row.optString(Contract.Conversation.COLUMN_COUNTRY);
-                        if (ValueS != "no") {
+                        JSONObject flag = row.getJSONObject(key);
+                      ValueS= flag.optString(Contract.Conversation.COLUMN_COUNTRY,"no");
+                        if(!ValueS.equals("no"))
+                        {
                             Log.d(key, "str " + ValueS);
-                            cv.put(key, ValueS);
+                        cv.put(key, ValueS);
                         }
+                        }*/
                     }
                 }
-
-            }
             Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, cv);
+            }
+
 
         }
     }
-}
+

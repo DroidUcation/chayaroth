@@ -82,7 +82,7 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add(Contract.Conversation.COLUMN_PHONE);
         strings.add( Contract.Conversation.COLUMN_EMAIL);
         strings.add( Contract.Conversation.COLUMN_AGENT);
-        strings.add(Contract.Conversation.FLAG_COUNTRY);
+      //  strings.add(Contract.Conversation.FLAG_COUNTRY);
         strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
         return strings;
     }

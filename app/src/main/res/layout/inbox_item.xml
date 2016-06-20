@@ -5,35 +5,36 @@
 
 
     <ImageView
-        android:id="@+id/ivContactPhoto"
+        android:id="@+id/avatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
         android:src="@drawable/avatar_jen" />
 
     <TextView
-        android:id="@+id/tvContactName"
+        android:id="@+id/displayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivContactPhoto"
+        android:layout_alignTop="@+id/avatar"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/ivContactPhoto"
-        android:layout_toRightOf="@+id/ivContactPhoto"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_toRightOf="@+id/avatar"
         android:text="Jenny Li"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/tvContactNumber"
+        android:id="@+id/lastDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvContactName"
+        android:layout_below="@+id/displayName"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/ivContactPhoto"
-        android:layout_toRightOf="@+id/ivContactPhoto"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_toRightOf="@+id/avatar"
         android:text="(123) 456-7890"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
 </RelativeLayout>

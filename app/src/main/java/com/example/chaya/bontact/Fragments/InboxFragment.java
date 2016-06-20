@@ -44,7 +44,7 @@ import okhttp3.Headers;
 import okhttp3.Response;
 
 
-public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
     private static final int INBOX_LOADER = 0;
@@ -52,7 +52,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private RecyclerView recyclerView;
     private InboxAdapter adapter;
     private  View rootView;
-   // private ProgressBar progressBar;
+   private ProgressBar progressBar;
     public InboxFragment() {
     }
 
@@ -67,27 +67,40 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onCreate(savedInstanceState);
         //have to wait until data is coming back and then put the data.
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
-      /*  recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
-        if(recyclerView != null)
-         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));*/
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+
+
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
+        if(recyclerView != null)
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
+        return rootView;
+
+    }
+    @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(),Contract.Conversation.INBOX_URI, null, null, null, null);
+
+         String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
+        CursorLoader cursorLoader= new CursorLoader(getContext(),Contract.Conversation.INBOX_URI,null,null,null,sortOrder);
+        return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         //TODO: why after clicking the second time the app is crassing
-        recyclerView = (RecyclerView) getActivity().findViewById(R.id.inbox_recyclerview);
-        if(recyclerView != null)
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         recyclerView.setVisibility(View.VISIBLE);
-        //progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
             adapter = new InboxAdapter(getContext(), cursor);
             recyclerView.setAdapter(adapter);
+
             recyclerView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.GONE);
@@ -100,14 +113,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
-       // progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
-        return rootView;
-
-    }
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -118,8 +123,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
-    @Override
-    public void onClick(View v) {
 
-    }
+
 }
