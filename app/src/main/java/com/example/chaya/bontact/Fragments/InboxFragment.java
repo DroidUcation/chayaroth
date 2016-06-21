@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,8 +25,10 @@ import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.InboxAdapter;
+import com.example.chaya.bontact.DividerItemDecoration;
 import com.example.chaya.bontact.MenuActivity;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.ServerCalls.ConversationData;
 import com.example.chaya.bontact.ServerCalls.OkHttpRequests;
 
 import org.json.JSONArray;
@@ -70,6 +73,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
 
+
     }
 
     @Override
@@ -77,8 +81,30 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
-        if(recyclerView != null)
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getActivity());
+        if(recyclerView != null) {
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        }
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+              int position= linearLayoutManager.findLastVisibleItemPosition();
+                if(position ==adapter.getItemCount())//end of data
+                {
+                   // ConversationData conversationData=new ConversationData(getContext(),)
+                    //okhttp
+                }
+            }
+        });
         progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
         return rootView;
 

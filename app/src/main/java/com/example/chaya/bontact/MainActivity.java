@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pd.setTitle("Loading...");
         pd.setMessage("Please wait.");
         pd.setCancelable(false);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
      //Todo:style the progress dialog
         }
 
@@ -153,8 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length()>0)
                     errorString.setVisibility(View.GONE);
-
-            }
+                           }
 
             @Override
             public void afterTextChanged(Editable s) {

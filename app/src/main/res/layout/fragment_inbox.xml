@@ -15,7 +15,8 @@ tools:context=".Fragments.InboxFragment">
     android:layout_height="match_parent"/>
     <ProgressBar
         android:id="@+id/progress_bar"
-        style="?android:progressBarStyle"
+        style="?android:attr/android:progressBarStyleSmall"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

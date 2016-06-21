@@ -1,45 +1,68 @@
 
 package com.example.chaya.bontact.Data;
  import android.content.Context;
- import android.content.Intent;
  import android.content.SharedPreferences;
  import android.database.Cursor;
+ import android.support.annotation.NonNull;
  import android.support.v7.widget.RecyclerView;
- import android.util.Log;
  import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
- import android.view.animation.Animation;
+ import android.view.View;
+  import android.view.ViewGroup;
  import android.widget.ImageView;
-        import android.widget.TextView;
+  import android.widget.TextView;
  import android.widget.Toast;
- import com.example.chaya.bontact.Data.Contract;
 
 
- import com.example.chaya.bontact.MenuActivity;
  import com.example.chaya.bontact.R;
  import com.example.chaya.bontact.ServerCalls.InnerConversationData;
 
- import org.json.JSONObject;
-
  import java.text.ParseException;
  import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+ import java.util.Collection;
  import java.util.Date;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.ListIterator;
+
+ import com.example.chaya.bontact.Helpers.Helper;
+
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 
     Cursor cursor;
     Context context;
+     List<Integer> avatars;
 
     public InboxAdapter(Context context, Cursor cursor) {
         this.context = context;
         this.cursor = cursor;
+        FillAvatarsList();
     }
+public void FillAvatarsList()
+{
+    if(avatars==null) {
+        avatars = new ArrayList<Integer>();
+    }
+
+    avatars.add(R.drawable.avatar1);
+    avatars.add(R.drawable.avatar2);
+    avatars.add(R.drawable.avatar3);
+    avatars.add(R.drawable.avatar4);
+    avatars.add(R.drawable.avatar5);
+    avatars.add(R.drawable.avatar6);
+    avatars.add(R.drawable.avatar7);
+    avatars.add(R.drawable.avatar8);
+    avatars.add(R.drawable.avatar9);
+    avatars.add(R.drawable.avatar10);
+}
+
 
     @Override
     public InboxHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.inbox_item, null);
         return new InboxHolder(view);
+
         }
 
     @Override
@@ -56,8 +79,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             e.printStackTrace();
         }
        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-         dateString = dateFormat.format(convertedDate);
-        holder.lastDate.setText( dateString);
+       dateString = dateFormat.format(convertedDate);
+       holder.lastDate.setText( dateString);
+      int avatarPosition = Helper.getAvatar();
+        holder.avatar.setImageResource(avatars.get(avatarPosition));
 
     /*String imageUri = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
         if(imageUri!=null)
@@ -78,17 +103,24 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public int getItemCount() {
         return cursor.getCount();
     }
+
+
+
+
+
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView avatar;
         TextView displayName, lastDate;
 
         public InboxHolder(View itemView) {
+
             super(itemView);
             avatar = (ImageView) itemView.findViewById(R.id.avatar);
             displayName = (TextView) itemView.findViewById(R.id.displayName);
             lastDate = (TextView) itemView.findViewById(R.id.lastDate);
             itemView.setOnClickListener(this);
+
         }
 
         @Override
@@ -113,4 +145,5 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             }
           }
     }
+
 }
