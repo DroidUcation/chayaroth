@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chaya.bontact">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/bontact_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".MainActivity">
+        <activity android:name=".Ui.Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MenuActivity"
+            android:name=".Ui.Activities.MenuActivity"
             android:label="@string/title_activity_menu"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Ui.Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.chaya.bontact.MainActivity" />
+                android:value=".Ui.Activities.MainActivity" />
         </activity>
+
         <provider
-            android:authorities="com.example.chaya.bontact.Data.InboxProvider"
-            android:name=".Data.InboxProvider" />
+            android:name=".Data.InboxProvider"
+            android:authorities="com.example.chaya.bontact.Data.InboxProvider" />
+
+        <activity android:name=".Ui.Activities.SplashActivity">
+           <!-- <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

@@ -1,22 +1,8 @@
-package com.example.chaya.bontact.ServerCalls;
+package com.example.chaya.bontact.NetworkCalls;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import com.example.chaya.bontact.MainActivity;
-import com.example.chaya.bontact.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by chaya on 6/13/2016.

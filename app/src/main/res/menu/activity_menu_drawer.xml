@@ -11,11 +11,11 @@
             />
         <item
             android:id="@+id/nav_online_v"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_online_visitors_24dp"
             android:title="@string/onlinevisitors_title" />
         <item
             android:id="@+id/nav_inbox"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_inbox_24dp"
             android:title="@string/inbox_title" />
             </menu>
         </item>
@@ -25,11 +25,11 @@
         <menu>
             <item
                 android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_settings_24dp"
                 android:title="Settings" />
             <item
                 android:id="@+id/nav_exit"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_exit_24dp"
                 android:title="Exit" />
         </menu>
     </item>

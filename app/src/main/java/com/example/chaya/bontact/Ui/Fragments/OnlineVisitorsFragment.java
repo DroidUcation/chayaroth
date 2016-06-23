@@ -1,6 +1,5 @@
-package com.example.chaya.bontact.Fragments;
+package com.example.chaya.bontact.Ui.Fragments;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

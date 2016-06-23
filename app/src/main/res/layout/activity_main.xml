@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.example.chaya.bontact.MainActivity">
+    tools:context=".Ui.Activities.MainActivity">
      <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,6 +41,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_login"
         android:text="@string/login" />
+    <ProgressBar
+        android:id="@+id/progress_bar_login_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="false"
+        android:visibility="gone"
+
+        />
 
 
 </LinearLayout>

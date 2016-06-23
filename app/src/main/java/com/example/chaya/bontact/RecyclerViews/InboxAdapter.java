@@ -1,9 +1,8 @@
 
-package com.example.chaya.bontact.Data;
+package com.example.chaya.bontact.RecyclerViews;
  import android.content.Context;
  import android.content.SharedPreferences;
  import android.database.Cursor;
- import android.support.annotation.NonNull;
  import android.support.v7.widget.RecyclerView;
  import android.view.LayoutInflater;
  import android.view.View;
@@ -13,19 +12,17 @@ package com.example.chaya.bontact.Data;
  import android.widget.Toast;
 
 
+ import com.example.chaya.bontact.Data.Contract;
  import com.example.chaya.bontact.R;
- import com.example.chaya.bontact.ServerCalls.InnerConversationData;
+ import com.example.chaya.bontact.NetworkCalls.InnerConversationData;
 
  import java.text.ParseException;
  import java.text.SimpleDateFormat;
  import java.util.ArrayList;
- import java.util.Collection;
  import java.util.Date;
- import java.util.Iterator;
  import java.util.List;
- import java.util.ListIterator;
 
- import com.example.chaya.bontact.Helpers.Helper;
+ import com.example.chaya.bontact.Helpers.AvatarHelper;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
@@ -81,7 +78,7 @@ public void FillAvatarsList()
        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
        dateString = dateFormat.format(convertedDate);
        holder.lastDate.setText( dateString);
-      int avatarPosition = Helper.getAvatar();
+      int avatarPosition = AvatarHelper.getAvatar();
         holder.avatar.setImageResource(avatars.get(avatarPosition));
 
     /*String imageUri = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));

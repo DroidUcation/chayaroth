@@ -1,94 +1,78 @@
-package com.example.chaya.bontact.ServerCalls;
+package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
-import android.renderscript.Sampler;
 import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Activities.MenuActivity;
+import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.Response;
 
 /**
- * Created by chaya on 6/19/2016.
+ * Created by chaya on 6/23/2016.
  */
-public class ConversationData {
+public class ConverastionDataManager implements Callback {
 
-    private String token;
-    private int current_page;
     private Context context;
 
-    public ConversationData(Context context, String token, int current_page) {
-        this.token=token;
-        this.current_page=current_page;
-        this.context=context;
+  public ConverastionDataManager()
+  {
+      context=null;
 
+  }
+    public void getFirstDataFromServer(Context context, String token)
+    {
+        int current_page=0;
+        this.context=context;
+        getDataFromServer(context,token,current_page);
+    }
+    public void getNextDataFromServer(Context context, String token)
+    {
+       this.context=context;
     }
 
-    public boolean getDataFromServer() {
-        if (token == null) {
-            return false;
-        }
+    private void getDataFromServer(Context context,String token,int current_page)
+    {
+        if(token==null)
+            sendRes(false,null, ErrorType.other);
+        this.context=context;
         String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.conversation_api) + token;
         url += "?page=" + current_page;
 
-
-        Callback callback = new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("fail", "onFailure: ");
-                //Todo:  Handle the case of fail call
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                Headers responseHeaders = response.headers();
-                try {
-                    final JSONObject res = new JSONObject(response.body().string());
-                    Log.d("object", res.toString());
-                  pushToDB(res.getJSONObject("conversations"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-
-                }
-            }
-        };
-
-        OkHttpRequests requests = new OkHttpRequests(url, callback);
-
+        OkHttpRequests requests = new OkHttpRequests(url,this);
         try {
             requests.run();
-
         } catch (Exception e) {
-            //todo:handle a case that run failed
-            e.printStackTrace();
-            return false;
+            sendRes(false,null, ErrorType.network_problems);
         }
-        return true;
     }
 
-    public void pushToDB(JSONObject conversation) throws JSONException {
-
-        JSONArray conversationList = conversation.getJSONArray("data");//get the data for conversation
+    public boolean saveData(JSONObject conversation)
+    {
+       /* JSONArray conversationList = null;//get the data for conversation
+        try {
+            conversationList = conversation.getJSONArray("data");
         ArrayList<String> fields = DbBontact.getAllConversationFields();//get all table fields
         ContentValues cv = new ContentValues();
-        if(current_page==0)
-            context.getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);
+        *//*f(current_page==0)
+            context.getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);*//*
         for (int i = 0; i < conversationList.length(); i++) {
             JSONObject row = conversationList.getJSONObject(i);
             //put in cv all fields that can be added to the table
@@ -112,7 +96,8 @@ public class ConversationData {
                             Log.d("else " + key, row.get(key).toString());
                     }
 
-                  /*  if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme case
+
+if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme case
                     {
                         JSONObject flag = row.getJSONObject(key);
                       ValueS= flag.optString(Contract.Conversation.COLUMN_COUNTRY,"no");
@@ -121,13 +106,39 @@ public class ConversationData {
                             Log.d(key, "str " + ValueS);
                         cv.put(key, ValueS);
                         }
-                        }*/
+                        }
+
                     }
                 }
             Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, cv);
             }
-
-
-        }
+        }*/
+return true;
+    }
+    @Override
+    public void onFailure(Call call, IOException e) {
+        sendRes(false,null,ErrorType.network_problems);
     }
 
+    @Override
+    public void onResponse(Call call, Response response) throws IOException {
+        if (!response.isSuccessful()) {
+            sendRes(false,null,ErrorType.network_problems);
+            return;
+        }
+            try {
+                 JSONObject res = new JSONObject(response.body().string()).getJSONObject("conversations");
+                sendRes(true,res.toString(),null);
+            } catch (JSONException e) {
+               sendRes(false,null,ErrorType.other);
+            }
+       sendRes(true,response.body().string(),null);
+        return;
+    }
+    public void sendRes(boolean isSuccsed, String response, ErrorType errorType)
+    {
+        if(context!=null)
+            ((ServerCallResponse)context).OnServerCallResponse(isSuccsed,response,errorType,getClass());
+    }
+
+}

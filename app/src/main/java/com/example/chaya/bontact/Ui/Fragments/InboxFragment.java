@@ -1,14 +1,8 @@
-package com.example.chaya.bontact.Fragments;
+package com.example.chaya.bontact.Ui.Fragments;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.renderscript.Sampler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -21,30 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
-import com.example.chaya.bontact.Data.InboxAdapter;
-import com.example.chaya.bontact.DividerItemDecoration;
-import com.example.chaya.bontact.MenuActivity;
+import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
+import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.ServerCalls.ConversationData;
-import com.example.chaya.bontact.ServerCalls.OkHttpRequests;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Objects;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.Response;
 
 
 public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -56,6 +33,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private InboxAdapter adapter;
     private  View rootView;
    private ProgressBar progressBar;
+    private LinearLayoutManager linearLayoutManager;
     public InboxFragment() {
     }
 
@@ -66,46 +44,26 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        //have to wait until data is coming back and then put the data.
-        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-
-
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
-        final LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getActivity());
+        linearLayoutManager= new LinearLayoutManager(getActivity());
         if(recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         }
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
+        recyclerView.addOnScrollListener(scrollListener);
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-              int position= linearLayoutManager.findLastVisibleItemPosition();
-                if(position ==adapter.getItemCount())//end of data
-                {
-                   // ConversationData conversationData=new ConversationData(getContext(),)
-                    //okhttp
-                }
-            }
-        });
-        progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar_inbox_loading);
+        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
         return rootView;
 
     }
@@ -119,8 +77,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        //TODO: why after clicking the second time the app is crassing
-
+//todo:if need the visibility
         recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
@@ -148,7 +105,31 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onDetach();
 
     }
+  RecyclerView.OnScrollListener scrollListener =  new RecyclerView.OnScrollListener()
+  {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
 
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int position= linearLayoutManager.findLastVisibleItemPosition();
+            int cursorItemscount=adapter.getItemCount();
+            if(position ==adapter.getItemCount())//end of data
+            {
+                Log.d("position",""+position);
+                Log.d("cursor",""+adapter.getItemCount());
+               /* ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+                converastionDataManager.getNextDataFromServer(getContext());*/
+            }
+            else
+            {
+
+            }
+        }
+    };
 
 
 }

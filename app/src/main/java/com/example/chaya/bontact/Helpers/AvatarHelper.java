@@ -7,13 +7,13 @@ import java.util.List;
 /**
  * Created by chaya on 6/21/2016.
  */
-public class Helper {
+public class AvatarHelper {
     public static int avatarPosition=0;
     public static List<Integer> avatars;
     public static int getAvatar()
     {
 
-    if(avatarPosition>=10) {
+    if(avatarPosition>=9) {
         avatarPosition = 0;
     }
     else

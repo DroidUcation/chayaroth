@@ -1,6 +1,4 @@
-package com.example.chaya.bontact;
-import android.support.v4.app.Fragment;
-import android.net.Uri;
+package com.example.chaya.bontact.Ui.Activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,9 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.example.chaya.bontact.Fragments.DashboardFragment;
-import com.example.chaya.bontact.Fragments.InboxFragment;
-import com.example.chaya.bontact.Fragments.OnlineVisitorsFragment;
+import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
+import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
+import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
@@ -23,7 +22,7 @@ public class MenuActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ReplaceFragments(DashboardFragment.newInstance());
+        ReplaceFragments(R.id.nav_dashboard);
         setContentView(R.layout.activity_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,27 +59,11 @@ public class MenuActivity extends AppCompatActivity
 
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+//    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Fragment fragment=null;
-        if (id == R.id.nav_dashboard)
-        {
-            fragment=DashboardFragment.newInstance();
-        } else if (id == R.id.nav_online_v)
-        {
-            fragment=new OnlineVisitorsFragment();
-        } else if (id == R.id.nav_inbox)
-        {
-            fragment=new InboxFragment();
-        } else if (id == R.id.nav_settings)
-        {
 
-        } else if (id == R.id.nav_exit) {
-
-        }
-       if(ReplaceFragments(fragment)==false)
+       if(ReplaceFragments(item.getItemId())==false)
         return false;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -88,27 +71,33 @@ public class MenuActivity extends AppCompatActivity
     }
 
 
-    public boolean ReplaceFragments(Fragment fragment)
+    public boolean ReplaceFragments(int id)
     {
-        if(fragment!=null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, fragment).commit();
+        if (id == R.id.nav_dashboard )
+        {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
             return true;
+        } else if (id == R.id.nav_online_v || id==R.id.onlineVisitors_btn_dashboard)
+        {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).commit();
+            return true;
+        } else if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_btn_dashboard)
+        {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
+            return true;
+        } else if (id == R.id.nav_settings)
+        {
+
+        } else if (id == R.id.nav_exit) {
+
         }
+
         return  false;
     }
 
     @Override
     public void onClick(View v) {
-        Fragment fragment=null;
-        switch(v.getId())
-        {
-            case R.id.onlineVisitors_btn_dashboard:
-                fragment=new OnlineVisitorsFragment();
-                break;
-            case R.id.visitorsRequest_btn_dashboard:
-                fragment=new InboxFragment();
-        }
-       ReplaceFragments(fragment);
+        ReplaceFragments(v.getId());
     }
 }
 

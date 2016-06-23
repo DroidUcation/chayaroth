@@ -1,25 +1,14 @@
-package com.example.chaya.bontact.ServerCalls;
+package com.example.chaya.bontact.NetworkCalls;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.renderscript.Sampler;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.chaya.bontact.Data.Contract;
-import com.example.chaya.bontact.Data.DbBontact;
-import com.example.chaya.bontact.MenuActivity;
 import com.example.chaya.bontact.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.security.Key;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;

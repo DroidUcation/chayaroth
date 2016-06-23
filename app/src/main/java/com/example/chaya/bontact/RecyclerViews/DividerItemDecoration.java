@@ -1,7 +1,6 @@
-package com.example.chaya.bontact;
+package com.example.chaya.bontact.RecyclerViews;
 
 
-        import android.content.Context;
         import android.content.res.TypedArray;
         import android.graphics.Canvas;
         import android.graphics.Rect;
@@ -10,7 +9,7 @@ package com.example.chaya.bontact;
         import android.support.v7.widget.RecyclerView;
         import android.view.View;
 
-        import com.example.chaya.bontact.Fragments.InboxFragment;
+        import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration{
