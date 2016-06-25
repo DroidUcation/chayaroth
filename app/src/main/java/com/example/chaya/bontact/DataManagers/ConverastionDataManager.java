@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
@@ -19,7 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,6 +34,7 @@ import okhttp3.Response;
 public class ConverastionDataManager implements Callback {
 
     private Context context;
+    public  static int current_page=0;
 
   public ConverastionDataManager()
   {
@@ -39,13 +43,15 @@ public class ConverastionDataManager implements Callback {
   }
     public void getFirstDataFromServer(Context context, String token)
     {
-        int current_page=0;
+         current_page=0;
         this.context=context;
         getDataFromServer(context,token,current_page);
     }
     public void getNextDataFromServer(Context context, String token)
     {
+        current_page++;
        this.context=context;
+        getDataFromServer(context,token,current_page);
     }
 
     private void getDataFromServer(Context context,String token,int current_page)
@@ -64,15 +70,25 @@ public class ConverastionDataManager implements Callback {
         }
     }
 
-    public boolean saveData(JSONObject conversation)
-    {
-       /* JSONArray conversationList = null;//get the data for conversation
+    public boolean saveData(String conversations) throws IllegalAccessException {
+/*
+      for(int i=o;i<ConversationList.length;i++)
+
+      Conversation obj = conversationList[i];
+        ContentValues contentValues = new ContentValues();
+        for (Field field : obj.getClass().getDeclaredFields()) {
+          //  field.setAccessible(true); // if you want to modify private fields
+            String key=field.getName();
+            contentValues.put(key,field.get(obj)
+            */
+        JSONArray conversationList = null;//get the data for conversation
         try {
-            conversationList = conversation.getJSONArray("data");
+            JSONObject jsonConversation=new JSONObject(conversations);
+            conversationList = jsonConversation.getJSONArray("data");
         ArrayList<String> fields = DbBontact.getAllConversationFields();//get all table fields
         ContentValues cv = new ContentValues();
-        *//*f(current_page==0)
-            context.getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);*//*
+        if(current_page==0)//fill DB from new
+            context.getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);
         for (int i = 0; i < conversationList.length(); i++) {
             JSONObject row = conversationList.getJSONObject(i);
             //put in cv all fields that can be added to the table
@@ -95,10 +111,8 @@ public class ConverastionDataManager implements Callback {
                             //Date ValueD=row.optD
                             Log.d("else " + key, row.get(key).toString());
                     }
-
-
-if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme case
-                    {
+                        if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme case
+                         {
                         JSONObject flag = row.getJSONObject(key);
                       ValueS= flag.optString(Contract.Conversation.COLUMN_COUNTRY,"no");
                         if(!ValueS.equals("no"))
@@ -112,7 +126,9 @@ if (key.equals(Contract.Conversation.FLAG_COUNTRY))//get the country - Extreme c
                 }
             Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, cv);
             }
-        }*/
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 return true;
     }
     @Override
@@ -126,19 +142,31 @@ return true;
             sendRes(false,null,ErrorType.network_problems);
             return;
         }
-            try {
-                 JSONObject res = new JSONObject(response.body().string()).getJSONObject("conversations");
-                sendRes(true,res.toString(),null);
-            } catch (JSONException e) {
-               sendRes(false,null,ErrorType.other);
-            }
-       sendRes(true,response.body().string(),null);
-        return;
+                // JSONObject res = new JSONObject(response.body().string()).getJSONObject("conversations");
+             //   res.getJSONObject("conversations")
+                sendRes(true,response.body().string(),null);
     }
     public void sendRes(boolean isSuccsed, String response, ErrorType errorType)
     {
-        if(context!=null)
-            ((ServerCallResponse)context).OnServerCallResponse(isSuccsed,response,errorType,getClass());
+      /*  if(context!=null)
+            ((ServerCallResponse)context).OnServerCallResponse(isSuccsed,response,errorType,getClass());*/
+        if(isSuccsed==true&&response!=null)
+        {
+            JSONObject resObj=null;
+            try {
+                resObj=new JSONObject(response);
+                resObj=resObj.getJSONObject("conversations");
+                saveData(resObj.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            //don't do anything
+        }
     }
 
 }

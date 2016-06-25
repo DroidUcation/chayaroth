@@ -28,11 +28,9 @@ public class AgentDataManager implements Callback {
 
     private static Agent agent=null;
     private Context context;
-
     public static Agent getAgent() {
         return agent;
     }
-
     public void setContext(Context context) {
         this.context = context;
     }
@@ -53,7 +51,6 @@ public class AgentDataManager implements Callback {
     public AgentDataManager() {
         agent= getAgentInstanse();
        setContext(null);
-
     }
 
     public void getDataFromServer(String userName,String password,Context context)
@@ -71,7 +68,8 @@ public class AgentDataManager implements Callback {
     }
 
     public boolean saveData(String response, Context context)
-    {this.context=context;
+    {
+        this.context=context;
         Gson gson =new Gson();
         setAgent(gson.fromJson(response,Agent.class));
         if(agent!=null&&context!=null)
@@ -86,34 +84,46 @@ public class AgentDataManager implements Callback {
         editor.apply();
            /* gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null),Agent.Rep.class);
             gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null),Agent.Settings.class);*/
-
         return true;
         }
             return false;
     }
 
-    public  String getAgentToken()
+    public  String getAgentToken(Context context)
     {
-        if(agent!=null)
+        if(isLoggedIn(context)==true)
+              if(agent!=null)
             return getAgent().getToken();
+
         return null;
     }
-    public String getAgentName()
+    public String getAgentName(Context context)
     {
-        if(agent!=null)
-            return getAgent().getName();
+        if(isLoggedIn(context)==true)
+            if(agent!=null)
+             return getAgent().getName();
         return null;
     }
     public boolean isLoggedIn(Context context)
     {
         this.context=context;
         SharedPreferences Preferences =context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
-        if(Preferences.getString(context.getResources().getString(R.string.token),null)!=null)
+        String token=Preferences.getString(context.getResources().getString(R.string.token),null);
+        if(token!=null)//user is logged in
+        {
+            //set the agent object
+            if(agent==null)
+            { Gson gson=new Gson();
+            agent.token=token;
+            agent.rep= gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null), Agent.Rep.class);
+            agent.settings=gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null), Agent.Settings.class);
+            }
             return true;
+        }
         return false;
     }
 
-    @Override
+ /*   @Override
     public void onFailure(Call call, IOException e) {
         sendRes(false,null,ErrorType.network_problems);
     }
@@ -139,7 +149,7 @@ public class AgentDataManager implements Callback {
             sendRes(false, null, ErrorType.network_problems);
             return;
         }
-    }
+    }*/
 
     public void sendRes(boolean isSuccsed, String response, ErrorType errorType)
     {

@@ -12,11 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Ui.Activities.MainActivity">
-            <intent-filter>
+         <!--   <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".Ui.Activities.MenuActivity"
@@ -33,11 +33,11 @@
             android:authorities="com.example.chaya.bontact.Data.InboxProvider" />
 
         <activity android:name=".Ui.Activities.SplashActivity">
-           <!-- <intent-filter>
+         <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
     </application>
 

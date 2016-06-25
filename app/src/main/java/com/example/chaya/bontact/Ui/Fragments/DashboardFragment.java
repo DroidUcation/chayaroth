@@ -16,7 +16,7 @@ import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 
 
-public class DashboardFragment extends Fragment implements ServerCallResponse{
+public class DashboardFragment extends Fragment{
 
     private View RootView;
     AgentDataManager agentDataManager;
@@ -38,7 +38,7 @@ public class DashboardFragment extends Fragment implements ServerCallResponse{
         super.onCreate(savedInstanceState);
         RootView = null;
          agentDataManager=new AgentDataManager();
-       String token= agentDataManager.getAgentToken();
+       String token= agentDataManager.getAgentToken(getContext());
         if(token!=null)
         {
             ConverastionDataManager converastionDataManager=new ConverastionDataManager();
@@ -89,8 +89,8 @@ public class DashboardFragment extends Fragment implements ServerCallResponse{
         if (agentDataManager != null) {
 
             TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_msg);
-            if (agentDataManager.getAgentName()!=null)
-            welcome_msg.append(agentDataManager.getAgentName());
+            if (agentDataManager.getAgentName(getContext())!=null)
+            welcome_msg.append(agentDataManager.getAgentName(getContext()));
         } else {
             //TODO:handle the case that a user name not found
         }
@@ -103,13 +103,6 @@ public class DashboardFragment extends Fragment implements ServerCallResponse{
     }
 
 
-    @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType,Class sender) {
-        if(sender==ConverastionDataManager.class )
-        {
 
-        }
-
-    }
 }
 
