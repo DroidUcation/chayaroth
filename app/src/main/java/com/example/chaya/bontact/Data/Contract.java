@@ -33,16 +33,12 @@ public class Contract {
         public static final String COLUMN_EMAIL="email";
         public static final String COLUMN_AGENT="agent";
         public static final String COLUMN_DISPLAY_NAME="displayname";
-        public static final String FLAG_COUNTRY ="flag";
-        public static final String COLUMN_COUNTRY="country";
-
-
-
     }
     public static class InnerConversation implements BaseColumns{
+        public static final String AUTHORITY = "com.example.chaya.bontact.Data.InnerConversationProvider";
+        public static final String URL = "content://" + AUTHORITY;
+        public static final Uri INNER_CONVERSATION_URI = Uri.parse(URL);
         public static final String TABLE_NAME="InnerConversation";
-        public static final String COLUMN_ID="id";
-        public static final String COLUMN_ID_CUSTOMER="idCustomer";
         public static final String COLUMN_CONVERSATION_PAGE="conversationPage";
         public static final String COLUMN_ID_SURFUR="idSurfer";
         public static final String COLUMN_ACTION_TYPE="actionType";
@@ -52,7 +48,6 @@ public class Contract {
         public static final String COLUMN_REQ_ID="req_id";
         public static final String COLUMN_REP_REQUEST="rep_request";
         public static final String COLUMN_RECORD="record";
-        public static final String COLUMN_AGENT="agent";
         public static final String COLUMN_AGENT_NAME="agentName";
         public static final String COLUMN_DATA_TYPE="datatype";
         public static final String COLUMN_NAME="name";

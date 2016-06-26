@@ -1,7 +1,6 @@
 
 package com.example.chaya.bontact.RecyclerViews;
  import android.content.Context;
- import android.content.SharedPreferences;
  import android.database.Cursor;
  import android.support.v7.widget.RecyclerView;
  import android.view.LayoutInflater;
@@ -9,16 +8,15 @@ package com.example.chaya.bontact.RecyclerViews;
   import android.view.ViewGroup;
  import android.widget.ImageView;
   import android.widget.TextView;
- import android.widget.Toast;
 
 
  import com.example.chaya.bontact.Data.Contract;
+ import com.example.chaya.bontact.DataManagers.AgentDataManager;
+ import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
  import com.example.chaya.bontact.R;
- import com.example.chaya.bontact.NetworkCalls.InnerConversationData;
 
  import java.text.ParseException;
  import java.text.SimpleDateFormat;
- import java.util.ArrayList;
  import java.util.Date;
  import java.util.List;
 
@@ -34,25 +32,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public InboxAdapter(Context context, Cursor cursor) {
         this.context = context;
         this.cursor = cursor;
-        FillAvatarsList();
+       avatars=AvatarHelper.getAvatarsList();
     }
-public void FillAvatarsList()
-{
-    if(avatars==null) {
-        avatars = new ArrayList<Integer>();
-    }
-
-    avatars.add(R.drawable.avatar1);
-    avatars.add(R.drawable.avatar2);
-    avatars.add(R.drawable.avatar3);
-    avatars.add(R.drawable.avatar4);
-    avatars.add(R.drawable.avatar5);
-    avatars.add(R.drawable.avatar6);
-    avatars.add(R.drawable.avatar7);
-    avatars.add(R.drawable.avatar8);
-    avatars.add(R.drawable.avatar9);
-    avatars.add(R.drawable.avatar10);
-}
 
 
     @Override
@@ -78,7 +59,7 @@ public void FillAvatarsList()
        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
        dateString = dateFormat.format(convertedDate);
        holder.lastDate.setText( dateString);
-      int avatarPosition = AvatarHelper.getAvatar();
+      int avatarPosition = AvatarHelper.getAvatarPosition();
         holder.avatar.setImageResource(avatars.get(avatarPosition));
 
     /*String imageUri = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
@@ -123,24 +104,21 @@ public void FillAvatarsList()
         @Override
         public void onClick(View v) {
 
+            int id_surfer=0;
            int position= this.getAdapterPosition();
            cursor.moveToPosition(position);
-            String name = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-            int Id = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID));
-            SharedPreferences Preferences =context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
-            String token = Preferences.getString(context.getResources().getString(R.string.token), "");
-            if (token != null)//token agent is found
+
+             id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID));
+            AgentDataManager agentDataManager=new AgentDataManager();
+            String token= agentDataManager.getAgentToken(v.getContext());
+            if(token!=null&&id_surfer!=0)
             {
-                InnerConversationData innerConversationData = new InnerConversationData(v.getContext(), token, Id);
-                innerConversationData.getDataFromServer();
-                if(innerConversationData.getResFromServer()!=null)
-                {
-                    Toast.makeText(v.getContext(), innerConversationData.getResFromServer().toString(), Toast.LENGTH_SHORT).show();
-                   // Intent intent =new Intent(v.getContext(),MenuActivity.class);
-                  // v.getContext().startActivity(intent);
+                InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager();
+                innerConversationDataManager.getFirstDataFromServer(v.getContext(),token,id_surfer);
                 }
             }
+
           }
     }
 
-}
+

@@ -14,10 +14,10 @@ public class Conversation {
     public int idSurfer;
     @SerializedName("visitor_name")
     @Expose
-    public String visitorName;
+    public String visitor_name;
     @SerializedName("avatar")
     @Expose
-    public Object avatar;
+    public String avatar;
     @SerializedName("returning")
     @Expose
     public boolean returning;
@@ -50,57 +50,22 @@ public class Conversation {
     public String browser;
     @SerializedName("title")
     @Expose
-    public Object title;
+    public String title;
     @SerializedName("unread")
     @Expose
     public int unread;
     @SerializedName("phone")
     @Expose
-    public Object phone;
+    public String phone;
     @SerializedName("email")
     @Expose
     public String email;
     @SerializedName("agent")
     @Expose
-    public Object agent;
+    public String agent;
     @SerializedName("displayname")
     @Expose
     public String displayname;
-
-}
-
-/**
- * Created by chaya on 5/30/2016.
- */
-/*
-public class Conversation {
-
-    private int idSurfer;
-    private String visitor_name;
-    private int returning;
-    private int closed;
-    private int resloved;
-    private Date lastdate;
-    private int lasttype;
-    private int actionId;
-    private int reply;
-    private int flag_callback;
-    private int flag_sms;
-    private int flag_chat;
-    private int flag_email;
-    private String page;
-    private String ip;
-    private String browser;
-    private String title;
-    private int unread;
-    private String phone;
-    private String email;
-    private String agent;
-    private String flag;
-    private String classLastChannel;
-    private String displayname;
-    private String priority;
-    private String sortChannel;
 
     public int getIdSurfer() {
         return idSurfer;
@@ -118,35 +83,43 @@ public class Conversation {
         this.visitor_name = visitor_name;
     }
 
-    public int getReturning() {
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public boolean isReturning() {
         return returning;
     }
 
-    public void setReturning(int returning) {
+    public void setReturning(boolean returning) {
         this.returning = returning;
     }
 
-    public int getClosed() {
+    public boolean isClosed() {
         return closed;
     }
 
-    public void setClosed(int closed) {
+    public void setClosed(boolean closed) {
         this.closed = closed;
     }
 
-    public int getResloved() {
+    public boolean isResloved() {
         return resloved;
     }
 
-    public void setResloved(int resloved) {
+    public void setResloved(boolean resloved) {
         this.resloved = resloved;
     }
 
-    public Date getLastdate() {
+    public String getLastdate() {
         return lastdate;
     }
 
-    public void setLastdate(Date lastdate) {
+    public void setLastdate(String lastdate) {
         this.lastdate = lastdate;
     }
 
@@ -166,44 +139,12 @@ public class Conversation {
         this.actionId = actionId;
     }
 
-    public int getReply() {
+    public boolean isReply() {
         return reply;
     }
 
-    public void setReply(int reply) {
+    public void setReply(boolean reply) {
         this.reply = reply;
-    }
-
-    public int getFlag_callback() {
-        return flag_callback;
-    }
-
-    public void setFlag_callback(int flag_callback) {
-        this.flag_callback = flag_callback;
-    }
-
-    public int getFlag_sms() {
-        return flag_sms;
-    }
-
-    public void setFlag_sms(int flag_sms) {
-        this.flag_sms = flag_sms;
-    }
-
-    public int getFlag_chat() {
-        return flag_chat;
-    }
-
-    public void setFlag_chat(int flag_chat) {
-        this.flag_chat = flag_chat;
-    }
-
-    public int getFlag_email() {
-        return flag_email;
-    }
-
-    public void setFlag_email(int flag_email) {
-        this.flag_email = flag_email;
     }
 
     public String getPage() {
@@ -270,22 +211,6 @@ public class Conversation {
         this.agent = agent;
     }
 
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
-
-    public String getClassLastChannel() {
-        return classLastChannel;
-    }
-
-    public void setClassLastChannel(String classLastChannel) {
-        this.classLastChannel = classLastChannel;
-    }
-
     public String getDisplayname() {
         return displayname;
     }
@@ -293,20 +218,4 @@ public class Conversation {
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
     }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-
-    public String getSortChannel() {
-        return sortChannel;
-    }
-
-    public void setSortChannel(String sortChannel) {
-        this.sortChannel = sortChannel;
-    }
-}*/
+}

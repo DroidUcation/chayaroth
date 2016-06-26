@@ -12,11 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Ui.Activities.MainActivity">
-         <!--   <intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".Ui.Activities.MenuActivity"
@@ -31,14 +34,18 @@
         <provider
             android:name=".Data.InboxProvider"
             android:authorities="com.example.chaya.bontact.Data.InboxProvider" />
+        <provider
+            android:name=".Data.InnerConversationProvider"
+            android:authorities="com.example.chaya.bontact.Data.InnerConversationProvider" />
 
         <activity android:name=".Ui.Activities.SplashActivity">
-         <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Ui.Activities.InnerConversationActivity"></activity>
     </application>
 
 </manifest>

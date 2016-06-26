@@ -34,13 +34,10 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_PHONE+" TEXT, "+
             Contract.Conversation.COLUMN_EMAIL+" TEXT, "+
             Contract.Conversation.COLUMN_AGENT+" TEXT, "+
-            Contract.Conversation.COLUMN_COUNTRY +" TEXT, "+
             Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT "+
             " )";
     private String CreateInnerConversationTable="CREATE TABLE "+Contract.InnerConversation.TABLE_NAME+
-            "( _id INT PRIMARY KEY     NOT NULL, "+
-    Contract.InnerConversation.COLUMN_ID+" INT,  "+
-    Contract.InnerConversation.COLUMN_ID_CUSTOMER+" INT,  "+
+            "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
     Contract.InnerConversation.COLUMN_ID_SURFUR+" INT, "+
     Contract.InnerConversation.COLUMN_CONVERSATION_PAGE+" TEXT,  "+
     Contract.InnerConversation.COLUMN_ACTION_TYPE+" INT,  "+
@@ -50,7 +47,6 @@ public class DbBontact extends SQLiteOpenHelper {
     Contract.InnerConversation.COLUMN_REQ_ID+" INT,  "+
     Contract.InnerConversation.COLUMN_REP_REQUEST+" INT,  "+
     Contract.InnerConversation.COLUMN_RECORD+" INT,  "+
-    Contract.InnerConversation.COLUMN_AGENT+" INT,  "+
     Contract.InnerConversation.COLUMN_AGENT_NAME+" TEXT,  "+
     Contract.InnerConversation.COLUMN_DATA_TYPE+" INT,  "+
     Contract.InnerConversation.COLUMN_NAME+" TEXT,  "+
@@ -61,6 +57,25 @@ public class DbBontact extends SQLiteOpenHelper {
     private String DropConversationTable="DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
     private String DropInnerConversationTable="DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
 
+    public static ArrayList<String> getAllInnerConversationFields()
+    {
+        ArrayList<String> strings= new ArrayList<>();
+        strings.add(Contract.InnerConversation.COLUMN_ID_SURFUR);
+        strings.add(Contract.InnerConversation.COLUMN_CONVERSATION_PAGE);
+        strings.add(Contract.InnerConversation.COLUMN_ACTION_TYPE);
+        strings.add(Contract.InnerConversation.COLUMN_TIME_REQUEST);
+        strings.add(Contract.InnerConversation.COLUMN_FROM);
+        strings.add(Contract.InnerConversation.COLUMN_MESS);
+        strings.add(Contract.InnerConversation.COLUMN_REQ_ID);
+        strings.add( Contract.InnerConversation.COLUMN_REP_REQUEST);
+        strings.add( Contract.InnerConversation.COLUMN_RECORD);
+        strings.add( Contract.InnerConversation.COLUMN_AGENT_NAME);
+       strings.add( Contract.InnerConversation.COLUMN_DATA_TYPE);
+        strings.add( Contract.InnerConversation.COLUMN_NAME);
+       strings.add( Contract.InnerConversation.COLUMN_SYSTEM_MSG);
+        strings.add( Contract.InnerConversation.COLUMN_RECORD_URL);
+        return strings;
+    }
     public static ArrayList<String> getAllConversationFields()
     {
         ArrayList<String> strings= new ArrayList<>();

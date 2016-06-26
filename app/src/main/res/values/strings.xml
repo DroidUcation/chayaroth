@@ -47,7 +47,7 @@
     <string name="rout_api">api</string>
     <string name="conversation_api">getConversations</string>
     <string name="main_conversation_api">getmainconversations/</string>
-    <string name="inner_conversation_api">openconversation/</string>
+    <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
 
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
