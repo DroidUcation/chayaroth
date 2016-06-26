@@ -1,10 +1,78 @@
+
 package com.example.chaya.bontact.Models;
 
 import java.sql.Date;
+import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("org.jsonschema2pojo")
+public class Conversation {
+
+    @SerializedName("idSurfer")
+    @Expose
+    public int idSurfer;
+    @SerializedName("visitor_name")
+    @Expose
+    public String visitorName;
+    @SerializedName("avatar")
+    @Expose
+    public Object avatar;
+    @SerializedName("returning")
+    @Expose
+    public boolean returning;
+    @SerializedName("closed")
+    @Expose
+    public boolean closed;
+    @SerializedName("resloved")
+    @Expose
+    public boolean resloved;
+    @SerializedName("lastdate")
+    @Expose
+    public String lastdate;
+    @SerializedName("lasttype")
+    @Expose
+    public int lasttype;
+    @SerializedName("actionId")
+    @Expose
+    public int actionId;
+    @SerializedName("reply")
+    @Expose
+    public boolean reply;
+    @SerializedName("page")
+    @Expose
+    public String page;
+    @SerializedName("ip")
+    @Expose
+    public String ip;
+    @SerializedName("browser")
+    @Expose
+    public String browser;
+    @SerializedName("title")
+    @Expose
+    public Object title;
+    @SerializedName("unread")
+    @Expose
+    public int unread;
+    @SerializedName("phone")
+    @Expose
+    public Object phone;
+    @SerializedName("email")
+    @Expose
+    public String email;
+    @SerializedName("agent")
+    @Expose
+    public Object agent;
+    @SerializedName("displayname")
+    @Expose
+    public String displayname;
+
+}
 
 /**
  * Created by chaya on 5/30/2016.
  */
+/*
 public class Conversation {
 
     private int idSurfer;
@@ -241,4 +309,4 @@ public class Conversation {
     public void setSortChannel(String sortChannel) {
         this.sortChannel = sortChannel;
     }
-}
+}*/

@@ -16,9 +16,9 @@ import android.widget.TextView;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener ,ServerCallResponse{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,ServerCallResponseToUi {
 
     private EditText usernameEditText;
     private  EditText passEditText;
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType,Class sender) {
+    public void OnServerCallResponseToUi(boolean isSuccsed, String response, ErrorType errorType, Class sender) {
       if (sender == AgentDataManager.class) {
             if (isSuccsed == true && response != null) {
 

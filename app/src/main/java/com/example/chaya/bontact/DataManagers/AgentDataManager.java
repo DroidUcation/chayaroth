@@ -2,12 +2,11 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
+import android.net.Uri;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.Ui.Activities.MainActivity;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.google.gson.Gson;
@@ -17,6 +16,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import javax.net.ssl.SSLEngineResult;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -24,7 +25,7 @@ import okhttp3.Response;
 /**
  * Created by chaya on 6/22/2016.
  */
-public class AgentDataManager implements Callback {
+public class AgentDataManager implements ServerCallResponse {
 
     private static Agent agent=null;
     private Context context;
@@ -56,9 +57,18 @@ public class AgentDataManager implements Callback {
     public void getDataFromServer(String userName,String password,Context context)
     {
         this.context=context;
-        String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.login_api);
-        url += "?username=" + userName + "&pass=" + password;
 
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(context.getResources().getString(R.string.base_api))
+                .appendPath(context.getResources().getString(R.string.rout_api))
+                .appendPath(context.getResources().getString(R.string.login_api))
+                .appendQueryParameter("username",userName)
+                 .appendQueryParameter("pass",password);
+        String url = builder.build().toString();
+      /*  String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.login_api);
+        url += "?username=" + userName + "&pass=" + password;
+*/
         OkHttpRequests requests = new OkHttpRequests(url,this);
         try {
             requests.run();
@@ -71,7 +81,10 @@ public class AgentDataManager implements Callback {
     {
         this.context=context;
         Gson gson =new Gson();
-        setAgent(gson.fromJson(response,Agent.class));
+       Agent agentFromJson=gson.fromJson(response,Agent.class);
+        agent.rep=agentFromJson.rep;
+        agent.token=agentFromJson.token;
+        agent.settings= agentFromJson.settings;
         if(agent!=null&&context!=null)
         {
           String agent_str= gson.toJson(getAgent());
@@ -80,7 +93,7 @@ public class AgentDataManager implements Callback {
         editor.clear();
         editor.putString(context.getResources().getString(R.string.agent),gson.toJson(getAgent().getRep()));
         editor.putString(context.getResources().getString(R.string.settings),gson.toJson(getAgent().getSettings()));
-        editor.putString(context.getResources().getString(R.string.token),gson.toJson(getAgent().getToken()));
+        editor.putString(context.getResources().getString(R.string.token),getAgent().getToken());
         editor.apply();
            /* gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null),Agent.Rep.class);
             gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null),Agent.Settings.class);*/
@@ -112,8 +125,9 @@ public class AgentDataManager implements Callback {
         if(token!=null)//user is logged in
         {
             //set the agent object
-            if(agent==null)
-            { Gson gson=new Gson();
+            if(agent.getToken()==null)
+            {
+                Gson gson=new Gson();
             agent.token=token;
             agent.rep= gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null), Agent.Rep.class);
             agent.settings=gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null), Agent.Settings.class);
@@ -123,7 +137,7 @@ public class AgentDataManager implements Callback {
         return false;
     }
 
- /*   @Override
+/*    @Override
     public void onFailure(Call call, IOException e) {
         sendRes(false,null,ErrorType.network_problems);
     }
@@ -154,11 +168,15 @@ public class AgentDataManager implements Callback {
     public void sendRes(boolean isSuccsed, String response, ErrorType errorType)
     {
         if(context!=null)
-            ((ServerCallResponse)context).OnServerCallResponse(isSuccsed,response,errorType,getClass());
+            ((ServerCallResponseToUi)context).OnServerCallResponseToUi(isSuccsed,response,errorType,getClass());
 
     }
 
 
+    @Override
+    public void onServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Class sender) {
+
+    }
 }
 
 

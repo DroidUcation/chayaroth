@@ -1,5 +1,4 @@
 package com.example.chaya.bontact.Ui.Fragments;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,9 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
-import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 
 
@@ -20,11 +16,6 @@ public class DashboardFragment extends Fragment{
 
     private View RootView;
     AgentDataManager agentDataManager;
-   /* private JSONObject agent;
-    private String token;
-    private int current_page;
-    private String user_name;*/
-
     public DashboardFragment() {
     }
 
@@ -37,40 +28,7 @@ public class DashboardFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RootView = null;
-         agentDataManager=new AgentDataManager();
-       String token= agentDataManager.getAgentToken(getContext());
-        if(token!=null)
-        {
-            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
-            converastionDataManager.getFirstDataFromServer(getContext(),token);
 
-
-        }
-        /*agent = null;
-        token = null;
-        current_page = 0;
-        user_name = null;*/
-       /* SharedPreferences Preferences = getContext().getSharedPreferences(getResources().getString(R.string.sp_user_details), getContext().MODE_PRIVATE);
-        try {
-            agent = new JSONObject(Preferences.getString(getResources().getString(R.string.agent), ""));//get the agent object
-            if (agent != null)//convert to json - succeeded
-            {
-                user_name = agent.getString(getResources().getString(R.string.name));//get user name to display
-                token = Preferences.getString(getResources().getString(R.string.token), "");
-                if (token != null)//token agent is found
-                {
-                    //Todo:get count number to dashboard
-                    //Todo:check if always when come in dashboard have to bring new conversation data. and also handle with the curent page
-
-                    //fill db with data for the inbox
-                    ConversationData conversationData=new ConversationData(getContext(),token,current_page);
-                    conversationData.getDataFromServer();
-                }
-            }
-            // else: agent not found!!!
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
@@ -85,13 +43,11 @@ public class DashboardFragment extends Fragment{
         LinearLayout online_v = (LinearLayout) RootView.findViewById(R.id.onlineVisitors_btn_dashboard);
         online_v.setOnClickListener((View.OnClickListener) getActivity());
         Log.d("this", this.toString());
-
-        if (agentDataManager != null) {
-
+        agentDataManager=new AgentDataManager();
             TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_msg);
             if (agentDataManager.getAgentName(getContext())!=null)
             welcome_msg.append(agentDataManager.getAgentName(getContext()));
-        } else {
+       else {
             //TODO:handle the case that a user name not found
         }
         return RootView;

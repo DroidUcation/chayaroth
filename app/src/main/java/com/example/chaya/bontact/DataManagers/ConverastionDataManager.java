@@ -8,21 +8,15 @@ import android.util.Log;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.Ui.Activities.MenuActivity;
-import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -59,10 +53,20 @@ public class ConverastionDataManager implements Callback {
         if(token==null)
             sendRes(false,null, ErrorType.other);
         this.context=context;
-        String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.conversation_api) + token;
-        url += "?page=" + current_page;
 
-        OkHttpRequests requests = new OkHttpRequests(url,this);
+    Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(context.getResources().getString(R.string.base_api))
+                .appendPath(context.getResources().getString(R.string.rout_api))
+                .appendPath(context.getResources().getString(R.string.conversation_api))
+                .appendPath(token)
+                .appendQueryParameter("page",current_page+"");
+
+        String url = builder.build().toString();
+       /* String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.conversation_api) + token;
+        url += "?page=" + current_page;*/
+
+        OkHttpRequests requests = new OkHttpRequests( url.toString(),this);
         try {
             requests.run();
         } catch (Exception e) {
@@ -71,17 +75,24 @@ public class ConverastionDataManager implements Callback {
     }
 
     public boolean saveData(String conversations) throws IllegalAccessException {
-/*
-      for(int i=o;i<ConversationList.length;i++)
 
-      Conversation obj = conversationList[i];
+      /*  List<Conversation> conversationList=new ArrayList<Conversation>();
+      for(int i=0;i< conversationList.size();i++)
+      {
+          Conversation obj = conversationList.get(i);
         ContentValues contentValues = new ContentValues();
         for (Field field : obj.getClass().getDeclaredFields()) {
           //  field.setAccessible(true); // if you want to modify private fields
             String key=field.getName();
-            contentValues.put(key,field.get(obj)
-            */
-        JSONArray conversationList = null;//get the data for conversation
+            Object o=field.get(obj);
+            if(o instanceof String)
+            contentValues.put(key,(String)o);
+            else
+                if(o instanceof Integer)
+                    contentValues.put(key,(Integer)o);
+        }
+      }*/
+       JSONArray conversationList = null;//get the data for conversation
         try {
             JSONObject jsonConversation=new JSONObject(conversations);
             conversationList = jsonConversation.getJSONArray("data");
@@ -148,8 +159,6 @@ return true;
     }
     public void sendRes(boolean isSuccsed, String response, ErrorType errorType)
     {
-      /*  if(context!=null)
-            ((ServerCallResponse)context).OnServerCallResponse(isSuccsed,response,errorType,getClass());*/
         if(isSuccsed==true&&response!=null)
         {
             JSONObject resObj=null;

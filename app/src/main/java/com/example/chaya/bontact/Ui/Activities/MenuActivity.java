@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
@@ -18,7 +20,7 @@ import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
-
+AgentDataManager agentDataManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,14 @@ public class MenuActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        agentDataManager=new AgentDataManager();
+        String token= agentDataManager.getAgentToken(this);
+        if(token!=null)
+        {
+            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+            converastionDataManager.getFirstDataFromServer(this,token);
+        }
     }
 
     @Override

@@ -43,8 +43,9 @@
 
     <!--URLS to api -->
     <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
-    <string name="base_api">prd-api01-eus.azurewebsites.net/api</string>
-    <string name="conversation_api">getConversations/</string>
+    <string name="base_api">prd-api01-eus.azurewebsites.net</string>
+    <string name="rout_api">api</string>
+    <string name="conversation_api">getConversations</string>
     <string name="main_conversation_api">getmainconversations/</string>
     <string name="inner_conversation_api">openconversation/</string>
     <string name="login_api">login</string>
