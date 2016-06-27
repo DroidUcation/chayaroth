@@ -10,6 +10,7 @@ import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
 import org.json.JSONArray;
@@ -68,17 +69,18 @@ public class ConverastionDataManager implements ServerCallResponse {
 
     }
 
-    public boolean saveData(String conversations) throws IllegalAccessException {
+    public boolean saveData(String conversations) {
         Gson gson  =new Gson();
         try {
             JSONObject jsonObject= null;
             jsonObject = new JSONObject(conversations);
             JSONArray jsonConversationArray = jsonObject.getJSONArray("data");
-            if(current_page==0)//fill DB from new and delete all old data
+            if(context!=null)//check if it is the first data or not
             {
                 context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
                 conversationList.clear();
             }
+
             for(int i=0;i<jsonConversationArray.length();i++)
             {
                 String strObj=jsonConversationArray.getJSONObject(i).toString();
@@ -89,33 +91,54 @@ public class ConverastionDataManager implements ServerCallResponse {
                 Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
                 }
             }
+            return true;
         }
         catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
-        return true;
+
     }
 
     @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
 
-        if(isSuccsed==true&&response!=null)
+        if( isSuccsed==true&&response!=null)
         {
             JSONObject resObj=null;
             try {
                 resObj=new JSONObject(response);
                 resObj=resObj.getJSONObject("conversations");
-                saveData(resObj.toString());
+                boolean result=saveData(resObj.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
 
-            } catch (IllegalAccessException e) {
+            } /*catch (IllegalAccessException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
         else{
             //don't do anything
         }
+    }
+    public void sendResToUi(boolean isSuccsed, String response, ErrorType errorType)
+    {
+        if(context!=null&&context instanceof ServerCallResponseToUi)
+        {
+            ((ServerCallResponseToUi)context).OnServerCallResponseToUi(isSuccsed,response,errorType,getClass());
+        }
+    }
+
+    public Conversation getConversationByIdSurfer(int idSurfer)
+    {
+        if(conversationList!=null&&conversationList.size()>0)
+        {
+           for (Conversation conversation:conversationList)
+           {
+            if(conversation.idSurfer==idSurfer)
+                return conversation;
+           }
+        }
+       return null;
     }
 }

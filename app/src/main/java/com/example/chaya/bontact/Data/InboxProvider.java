@@ -59,7 +59,7 @@ public class InboxProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-       int result= dbBontact.delete(selection,selectionArgs);
+       int result= dbBontact.delete(Contract.Conversation.TABLE_NAME, selection,selectionArgs);
         return  result;
     }
 

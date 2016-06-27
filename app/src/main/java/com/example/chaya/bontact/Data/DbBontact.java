@@ -121,10 +121,10 @@ public class DbBontact extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insert(String table, ContentValues values)
+    public long insert(String tableName, ContentValues values)
     {
         database=getWritableDatabase();
-        long result=database.insert(table,null,values);
+        long result=database.insert(tableName,null,values);
         return result;
     }
     public boolean update(String table,ContentValues values)
@@ -133,10 +133,10 @@ public class DbBontact extends SQLiteOpenHelper {
       //  database.update(table,values,);
         return true;
     }
-    public int delete(String selection, String[] selectionArgs){
+    public int delete(String tableName,String selection, String[] selectionArgs){
 
         database=getWritableDatabase();
-         return database.delete(Contract.Conversation.TABLE_NAME,selection,selectionArgs);
+         return database.delete(tableName,selection,selectionArgs);
 
 
     }

@@ -3,15 +3,16 @@ package com.example.chaya.bontact.DataManagers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
 
@@ -19,8 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +27,22 @@ import java.util.List;
  * Created by chaya on 6/26/2016.
  */
 public class InnerConversationDataManager implements ServerCallResponse {
+
     private Context context;
+    private Conversation current_conversation;
+    private List<InnerConversation> innerConversationsList;
 
     public InnerConversationDataManager()
     {
+        current_conversation =null;
         context=null;
-
+        innerConversationsList=new ArrayList<>();
     }
-    public void getFirstDataFromServer(Context context, String token,int id_surfer)
+    public void getFirstDataFromServer(Context context, String token, Conversation current_conversation)
     {
         this.context=context;
-        getDataFromServer(context,token,id_surfer);
+        this.current_conversation =current_conversation;
+        getDataFromServer(context,token,current_conversation.idSurfer);
     }
     public void getNextDataFromServer(Context context, String token)
     {
@@ -69,7 +73,10 @@ public class InnerConversationDataManager implements ServerCallResponse {
         Gson gson  =new Gson();
         try {
             JSONArray DataArray=new JSONArray(data);
-             for(int i=0;i<DataArray.length();i++)
+            //check if it is the first data or not
+            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI,null,null);
+
+            for(int i=0;i<DataArray.length();i++)
                 {
                  String strObj=DataArray.getJSONObject(i).toString();
                  InnerConversation innerConversation=  gson.fromJson(strObj,InnerConversation.class);
@@ -105,9 +112,9 @@ public class InnerConversationDataManager implements ServerCallResponse {
     }
     public void sendResToUi()
     {
-        if(context!=null)
+        if(context!=null&&context instanceof ServerCallResponseToUi)
         {
-
+            ((ServerCallResponseToUi)context).OnServerCallResponseToUi(true,id_surfer+"",null,getClass());
         }
 
     }

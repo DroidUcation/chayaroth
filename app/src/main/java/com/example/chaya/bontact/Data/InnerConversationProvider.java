@@ -56,7 +56,7 @@ public class InnerConversationProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        int result= dbBontact.delete(selection,selectionArgs);
+        int result= dbBontact.delete(Contract.InnerConversation.TABLE_NAME, selection,selectionArgs);
         return  result;
     }
 

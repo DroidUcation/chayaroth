@@ -1,4 +1,5 @@
 package com.example.chaya.bontact.Ui.Activities;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,16 +12,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
-AgentDataManager agentDataManager;
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,ServerCallResponseToUi {
+    AgentDataManager agentDataManager;
+    ConverastionDataManager converastionDataManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +58,7 @@ AgentDataManager agentDataManager;
         String token= agentDataManager.getAgentToken(this);
         if(token!=null)
         {
-            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+             converastionDataManager=new ConverastionDataManager();
             converastionDataManager.getFirstDataFromServer(this,token);
         }
     }
@@ -67,9 +73,6 @@ AgentDataManager agentDataManager;
         }
     }
 
-
-
-//    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -79,7 +82,6 @@ AgentDataManager agentDataManager;
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     public boolean ReplaceFragments(int id)
     {
@@ -91,17 +93,15 @@ AgentDataManager agentDataManager;
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).commit();
             return true;
-        } else if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_btn_dashboard)
-        {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
+        } else
+        if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_btn_dashboard){
+                 getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
             return true;
         } else if (id == R.id.nav_settings)
         {
 
         } else if (id == R.id.nav_exit) {
-
         }
-
         return  false;
     }
 
@@ -109,5 +109,27 @@ AgentDataManager agentDataManager;
     public void onClick(View v) {
         ReplaceFragments(v.getId());
     }
-}
+
+    @Override
+    public void OnServerCallResponseToUi(boolean isSuccsed, final String response, ErrorType errorType, Class sender) {
+        if(sender== InnerConversationDataManager.class)
+        {
+            if(isSuccsed==true)
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(MenuActivity.this, InnerConversationActivity.class);
+                        Bundle b = new Bundle();
+                        b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, Integer.parseInt(response)); //Your id
+                        intent.putExtras(b); //Put your id to your next Intent
+                        startActivity(intent);
+                    }
+                });
+            }
+        }
+
+        }
+    }
+
 

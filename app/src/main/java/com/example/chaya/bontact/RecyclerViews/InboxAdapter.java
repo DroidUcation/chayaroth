@@ -12,7 +12,9 @@ package com.example.chaya.bontact.RecyclerViews;
 
  import com.example.chaya.bontact.Data.Contract;
  import com.example.chaya.bontact.DataManagers.AgentDataManager;
+ import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
  import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+ import com.example.chaya.bontact.Models.Conversation;
  import com.example.chaya.bontact.R;
 
  import java.text.ParseException;
@@ -104,18 +106,21 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         @Override
         public void onClick(View v) {
 
-            int id_surfer=0;
-           int position= this.getAdapterPosition();
+            Conversation conversation=null;
+            int position= this.getAdapterPosition();
            cursor.moveToPosition(position);
+            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
 
-             id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID));
+           int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID));
+            conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
+
             AgentDataManager agentDataManager=new AgentDataManager();
             String token= agentDataManager.getAgentToken(v.getContext());
-            if(token!=null&&id_surfer!=0)
+            if(token!=null&&conversation!=null)
             {
                 InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager();
-                innerConversationDataManager.getFirstDataFromServer(v.getContext(),token,id_surfer);
-                }
+                innerConversationDataManager.getFirstDataFromServer(v.getContext(),token,conversation);
+            }
             }
 
           }
