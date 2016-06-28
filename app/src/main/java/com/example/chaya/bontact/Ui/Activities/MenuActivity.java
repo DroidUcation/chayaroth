@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -27,6 +28,7 @@ public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,ServerCallResponseToUi {
     AgentDataManager agentDataManager;
     ConverastionDataManager converastionDataManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,11 +109,13 @@ public class MenuActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
+
         ReplaceFragments(v.getId());
     }
 
     @Override
     public void OnServerCallResponseToUi(boolean isSuccsed, final String response, ErrorType errorType, Class sender) {
+
         if(sender== InnerConversationDataManager.class)
         {
             if(isSuccsed==true)
@@ -124,8 +128,11 @@ public class MenuActivity extends AppCompatActivity
                         b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, Integer.parseInt(response)); //Your id
                         intent.putExtras(b); //Put your id to your next Intent
                         startActivity(intent);
+
+
                     }
                 });
+
             }
         }
 

@@ -13,20 +13,19 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
         android:textIsSelectable="true"
-        android:background="@drawable/bg_msg_from"
+        android:background="@drawable/background_visitor_message"
         android:textSize="14dp" />
 
-   <!-- <TextView
-        android:id="@+id/timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/message"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="6dp"
-        android:textSize="10dp"
-        android:text="20:45"/>-->
+    <!-- <TextView
+         android:id="@+id/timestamp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@id/message"
+         android:layout_marginBottom="25dp"
+         android:layout_marginLeft="10dp"
+         android:paddingLeft="10dp"
+         android:paddingTop="6dp"
+         android:textSize="10dp"
+         android:text="20:45"/>-->
 </RelativeLayout>
-

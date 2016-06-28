@@ -7,7 +7,7 @@ package com.example.chaya.bontact.RecyclerViews;
  import android.view.View;
   import android.view.ViewGroup;
  import android.widget.ImageView;
-  import android.widget.TextView;
+ import android.widget.TextView;
 
 
  import com.example.chaya.bontact.Data.Contract;
@@ -118,8 +118,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             String token= agentDataManager.getAgentToken(v.getContext());
             if(token!=null&&conversation!=null)
             {
-                InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager();
-                innerConversationDataManager.getFirstDataFromServer(v.getContext(),token,conversation);
+                InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(conversation);
+                innerConversationDataManager.getDataFromServer(v.getContext(),token);
+
             }
             }
 

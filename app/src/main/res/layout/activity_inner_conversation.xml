@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".Ui.Activities.InnerConversationActivity">
-
+<!--header-->
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,13 +15,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--content-->
+   <RelativeLayout
+       xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/inner_conversation_recyclerView"
@@ -29,7 +30,17 @@
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
         android:scrollbars="vertical" />
-
+       <ProgressBar
+           android:id="@+id/loading_inner_conversation"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerInParent="true"
+           android:visibility="invisible"
+           android:padding="5dp"
+           android:foreground="@color/colorPrimary"
+           android:foregroundGravity="fill"
+           />
+       <!--send messege box and button-->
     <LinearLayout
         android:background="@android:color/white"
         android:layout_width="match_parent"
@@ -38,7 +49,8 @@
         android:orientation="horizontal"
         android:weightSum="7">
 
-        <EditText android:id="@+id/message"
+        <EditText
+            android:id="@+id/response_message"
             android:layout_width="0dp"
             android:hint="Enter message"
             android:paddingLeft="10dp"
@@ -49,12 +61,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="6" />
 
-        <Button android:id="@+id/btn_send"
+       <Button android:id="@+id/btn_send_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/ic_menu_send"
-             />
+            android:background="@drawable/ic_menu_send" />
 
     </LinearLayout>
 

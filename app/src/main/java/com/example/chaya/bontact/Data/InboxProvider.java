@@ -33,7 +33,7 @@ public class InboxProvider extends ContentProvider {
             sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
         }
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
 
     }
@@ -52,6 +52,7 @@ public class InboxProvider extends ContentProvider {
         long rowID =  dbBontact.insert(Contract.Conversation.TABLE_NAME,values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
+            getContext().getContentResolver().notifyChange(_uri, null);
             return uri;
           }
         return null;

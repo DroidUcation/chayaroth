@@ -46,7 +46,7 @@ public class DashboardFragment extends Fragment{
         agentDataManager=new AgentDataManager();
             TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_msg);
             if (agentDataManager.getAgentName(getContext())!=null)
-            welcome_msg.append(agentDataManager.getAgentName(getContext()));
+            welcome_msg.append(" "+agentDataManager.getAgentName(getContext()));
        else {
             //TODO:handle the case that a user name not found
         }

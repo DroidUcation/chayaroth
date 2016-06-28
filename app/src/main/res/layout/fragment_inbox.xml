@@ -13,11 +13,23 @@ tools:context=".Ui.Fragments.InboxFragment">
     android:id="@+id/inbox_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
-    <ProgressBar
-        android:id="@+id/progress_bar_inbox_loading"
+  <!-- <ProgressBar
+        android:id="@+id/loading_first_inbox_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-
+        android:foregroundGravity="fill"
+        />-->
+    <ProgressBar
+        android:id="@+id/loading_next_inbox_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:contentDescription="loading"
+        android:visibility="invisible"
+        android:padding="5dp"
+        android:foreground="@color/colorPrimary"
+        android:foregroundGravity="fill"
         />
 </RelativeLayout>

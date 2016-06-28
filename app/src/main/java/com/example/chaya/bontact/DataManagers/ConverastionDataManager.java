@@ -75,7 +75,7 @@ public class ConverastionDataManager implements ServerCallResponse {
             JSONObject jsonObject= null;
             jsonObject = new JSONObject(conversations);
             JSONArray jsonConversationArray = jsonObject.getJSONArray("data");
-            if(context!=null)//check if it is the first data or not
+            if(context!=null&&current_page==0)//check if it is the first data or not
             {
                 context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
                 conversationList.clear();
