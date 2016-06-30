@@ -31,10 +31,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private RecyclerView recyclerView;
     private InboxAdapter adapter;
     private  View rootView;
-    //  private ProgressBar progressBarFirstData;
     private ProgressBar progressBarCenter;
     ProgressBar progressBarBottom;
     private LinearLayoutManager linearLayoutManager;
+
+    int lastVisibleItem;
     public InboxFragment() {
     }
 
@@ -66,13 +67,14 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         progressBarCenter = (ProgressBar) getActivity().findViewById(R.id.loading_center);
         progressBarCenter.setVisibility(View.VISIBLE);
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
+
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
         return rootView;
 
     }
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-
+        lastVisibleItem=0;
         String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
         CursorLoader cursorLoader= new CursorLoader(getContext(),Contract.Conversation.INBOX_URI,null,null,null,sortOrder);
         return cursorLoader;
@@ -80,14 +82,15 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
         //todo:if need the visibility
         recyclerView.setVisibility(View.VISIBLE);
-        // progressBarFirstData.setVisibility(View.GONE);
         progressBarCenter.setVisibility(View.GONE);
         progressBarBottom.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
             adapter = new InboxAdapter(getContext(), cursor);
             recyclerView.setAdapter(adapter);
+            recyclerView.scrollToPosition(lastVisibleItem);
             recyclerView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.GONE);
@@ -122,6 +125,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             super.onScrolled(recyclerView, dx, dy);
             if(linearLayoutManager.findLastCompletelyVisibleItemPosition()+1 ==adapter.getItemCount())//end of data
             {
+                lastVisibleItem=linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 AgentDataManager agentDataManager=new AgentDataManager();
                 ConverastionDataManager converastionDataManager=new ConverastionDataManager();
                 converastionDataManager.getNextDataFromServer(getContext(),agentDataManager.getAgentToken(getContext()));

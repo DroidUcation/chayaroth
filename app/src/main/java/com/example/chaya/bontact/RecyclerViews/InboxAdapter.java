@@ -23,6 +23,7 @@ package com.example.chaya.bontact.RecyclerViews;
  import java.util.List;
 
  import com.example.chaya.bontact.Helpers.AvatarHelper;
+ import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
@@ -120,6 +121,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             {
                 InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(conversation);
                 innerConversationDataManager.getDataFromServer(v.getContext(),token);
+                ((MenuActivity)v.getContext()).setProgressBarCenterState(View.VISIBLE);
             }
             }
 

@@ -25,14 +25,14 @@
 
 
     <!--text view messegaes -->
-    <string name="welcome_msg">Hi</string>
+    <string name="welcome_name_msg">Hi</string>
     <string name="login">Log in</string>
     <!--check if itis one or more v/r and change the string according to-->
     <string name="txt_online_v"><b>online site visitors</b>\n
     see who\'s in your site, and invite them for a chat</string>
     <string name="txt_request_v"><b>new visitors requests</b>\n
      manage all conversation with your visitors</string>
-
+<string name="welcome_msg">Manage and convert your visitors</string>
 
     <!--Error messages -->
     <string name="empty_deatails">Plese enter User name and password</string>

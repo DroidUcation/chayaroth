@@ -38,13 +38,13 @@ public class DashboardFragment extends Fragment{
         //Inflate the layout for this fragment
         RootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        LinearLayout request_v = (LinearLayout) RootView.findViewById(R.id.visitorsRequest_btn_dashboard);
+        LinearLayout request_v = (LinearLayout) RootView.findViewById(R.id.visitorsRequest_dashboard_layout);
         request_v.setOnClickListener((View.OnClickListener) getActivity());
-        LinearLayout online_v = (LinearLayout) RootView.findViewById(R.id.onlineVisitors_btn_dashboard);
+        LinearLayout online_v = (LinearLayout) RootView.findViewById(R.id.onlineVisitors_dashboard_layout);
         online_v.setOnClickListener((View.OnClickListener) getActivity());
         Log.d("this", this.toString());
         agentDataManager=new AgentDataManager();
-        TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_msg);
+        TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_name);
         if (agentDataManager.getAgentName(getContext())!=null)
             welcome_msg.append(" "+agentDataManager.getAgentName(getContext()));
         else {

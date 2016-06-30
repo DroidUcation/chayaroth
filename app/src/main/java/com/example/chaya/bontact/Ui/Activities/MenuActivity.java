@@ -28,6 +28,8 @@ public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,ServerCallResponseToUi {
     AgentDataManager agentDataManager;
     ConverastionDataManager converastionDataManager;
+        ProgressBar progressBarCenter=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class MenuActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
         agentDataManager=new AgentDataManager();
         String token= agentDataManager.getAgentToken(this);
         if(token!=null)
@@ -63,6 +65,17 @@ public class MenuActivity extends AppCompatActivity
             converastionDataManager=new ConverastionDataManager();
             converastionDataManager.getFirstDataFromServer(this,token);
         }
+    }
+
+    public void setProgressBarCenterState(int state) {
+        if(progressBarCenter==null)
+            progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
+        if(state==View.VISIBLE)
+        {
+
+        }
+        progressBarCenter.setVisibility(state);
+
     }
 
     @Override
@@ -91,12 +104,12 @@ public class MenuActivity extends AppCompatActivity
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
             return true;
-        } else if (id == R.id.nav_online_v || id==R.id.onlineVisitors_btn_dashboard)
+        } else if (id == R.id.nav_online_v || id==R.id.onlineVisitors_dashboard_layout)
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).commit();
             return true;
         } else
-        if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_btn_dashboard){
+        if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_dashboard_layout){
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
             return true;
         } else if (id == R.id.nav_settings)
@@ -128,7 +141,7 @@ public class MenuActivity extends AppCompatActivity
                         b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, Integer.parseInt(response)); //Your id
                         intent.putExtras(b); //Put your id to your next Intent
                         startActivity(intent);
-
+                        setProgressBarCenterState(View.GONE);
 
                     }
                 });

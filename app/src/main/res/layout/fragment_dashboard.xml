@@ -5,49 +5,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Ui.Fragments.DashboardFragment">
-<TextView
-    android:id="@+id/txt_welcom_msg"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/welcome_msg"/>
-<LinearLayout
-    android:id="@+id/onlineVisitors_btn_dashboard"
+
+        <LinearLayout
+        android:id="@+id/welcome_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/padding_dashboard_layouts"
+     >
+            <TextView
+            android:id="@+id/txt_welcom_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_name_msg"
+            android:textColor="@color/white"/>
+            <TextView
+            android:id="@+id/txt_welcom_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_msg"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+    android:id="@+id/onlineVisitors_dashboard_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_below="@id/txt_welcom_msg"
-    android:clickable="true">
+    android:layout_below="@id/welcome_layout"
+    android:clickable="true"
+    android:padding="10dp">
             <TextView
             android:id="@+id/count_visitors"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0"/>
+            android:text="0"
+                android:textColor="@color/colorAccent" />
             <TextView
             android:id="@+id/txt_online_v_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:text="@string/txt_online_v"/>
-</LinearLayout>
- <LinearLayout
-  android:id="@+id/visitorsRequest_btn_dashboard"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:orientation="horizontal"
-  android:layout_below="@id/onlineVisitors_btn_dashboard">
+            android:text="@string/txt_online_v"
+                android:textColor="@color/colorAccent" />
+    </LinearLayout>
+    <LinearLayout
+     android:id="@+id/visitorsRequest_dashboard_layout"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     android:layout_below="@id/onlineVisitors_dashboard_layout"
+     android:padding="10dp">
     `       <TextView
             android:id="@+id/count_request"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0"/>
+            android:text="0"
+            android:textColor="@color/colorAccent" />
             <TextView
             android:id="@+id/txt_request_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:text="@string/txt_request_v"/>
- </LinearLayout>
+            android:text="@string/txt_request_v"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
 
 </RelativeLayout>
