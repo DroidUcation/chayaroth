@@ -49,6 +49,8 @@ public class InnerConversationProvider extends ContentProvider {
         long rowID =  dbBontact.insert(Contract.InnerConversation.TABLE_NAME,values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(Contract.InnerConversation.INNER_CONVERSATION_URI, rowID);
+            getContext().getContentResolver().notifyChange(_uri, null);
+
             return uri;
         }
         return null;

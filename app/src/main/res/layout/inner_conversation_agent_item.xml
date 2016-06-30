@@ -4,14 +4,16 @@
     android:layout_height="match_parent"
     android:gravity="right"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingTop="5dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <TextView
         android:id="@+id/mess"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
+        android:layout_margin="10dp"
         android:textIsSelectable="true"
         android:background="@drawable/background_agent_message"
         android:textSize="14dp" />

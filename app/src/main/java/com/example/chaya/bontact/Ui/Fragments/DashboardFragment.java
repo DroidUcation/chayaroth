@@ -44,10 +44,10 @@ public class DashboardFragment extends Fragment{
         online_v.setOnClickListener((View.OnClickListener) getActivity());
         Log.d("this", this.toString());
         agentDataManager=new AgentDataManager();
-            TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_msg);
-            if (agentDataManager.getAgentName(getContext())!=null)
+        TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_msg);
+        if (agentDataManager.getAgentName(getContext())!=null)
             welcome_msg.append(" "+agentDataManager.getAgentName(getContext()));
-       else {
+        else {
             //TODO:handle the case that a user name not found
         }
         return RootView;

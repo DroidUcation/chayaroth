@@ -15,10 +15,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         AgentDataManager agentDataManager=new AgentDataManager();
         Intent intent;
-     if(  agentDataManager.isLoggedIn(this)==true)
+        if(  agentDataManager.isLoggedIn(this)==true)
             intent=new Intent(this,MenuActivity.class  );
         else
-        intent=new Intent(this,MainActivity.class);
+            intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 

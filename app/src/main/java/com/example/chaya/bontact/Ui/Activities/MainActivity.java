@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Ui.Activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,13 +35,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btn_login = (Button)findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
         progressBar = (ProgressBar)findViewById(R.id.progress_bar_login_loading);
-        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+        Dialog dialog=new Dialog(this);
+        dialog.show();
+    }
 
     @Override
     public void onClick(View v) {
-    switch (v.getId())
-    {
-        case R.id.btn_login:
+        switch (v.getId())
+        {
+            case R.id.btn_login:
                 //get inputs
                 usernameEditText = (EditText) findViewById(R.id.etxt_user_name);
                 passEditText = (EditText) findViewById(R.id.etxt_password);
@@ -50,9 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     progressBar.setVisibility(View.VISIBLE);
                     agentDataManager=new AgentDataManager();
-                   agentDataManager.getDataFromServer(userName,password,this);
+                    agentDataManager.getDataFromServer(userName,password,this);
                 }
-     }
+        }
     }
 
 
@@ -69,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
         //if all details are correct and full
-     return true;
+        return true;
 
     }
 
@@ -104,36 +112,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBar.setVisibility(View.GONE);
                 usernameEditText.setText("");
                 passEditText.setText("");
-               // errorString.setText();
+                // errorString.setText();
                 errorString.setVisibility(View.VISIBLE);
 
             }
         });
-      //  passEditText.addTextChangedListener(textWatcher);
+        //  passEditText.addTextChangedListener(textWatcher);
     }
 
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+        }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //if(s.length()>0)
-                //errorString.setVisibility(View.GONE);
-            }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //if(s.length()>0)
+            //errorString.setVisibility(View.GONE);
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        @Override
+        public void afterTextChanged(Editable s) {
 
-            }
-        };
+        }
+    };
 
 
     @Override
     public void OnServerCallResponseToUi(boolean isSuccsed, String response, ErrorType errorType, Class sender) {
-      if (sender == AgentDataManager.class) {
+        if (sender == AgentDataManager.class) {
             if (isSuccsed == true && response != null) {
 
                 if (agentDataManager.saveData(response, this) == true) {

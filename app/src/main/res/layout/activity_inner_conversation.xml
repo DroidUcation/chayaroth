@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".Ui.Activities.InnerConversationActivity">
-<!--header-->
+    <!--header-->
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,61 +15,61 @@
 
     </android.support.design.widget.AppBarLayout>
 
-<!--content-->
-   <RelativeLayout
-       xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/inner_conversation_recyclerView"
+    <!--content-->
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:scrollbars="vertical" />
-       <ProgressBar
-           android:id="@+id/loading_inner_conversation"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_centerInParent="true"
-           android:visibility="invisible"
-           android:padding="5dp"
-           android:foreground="@color/colorPrimary"
-           android:foregroundGravity="fill"
-           />
-       <!--send messege box and button-->
-    <LinearLayout
-        android:background="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:weightSum="7">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <EditText
-            android:id="@+id/response_message"
-            android:layout_width="0dp"
-            android:hint="Enter message"
-            android:paddingLeft="10dp"
-            android:background="@null"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="16dp"
-            android:lines="1"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/inner_conversation_recyclerView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="6" />
-
-       <Button android:id="@+id/btn_send_message"
-            android:layout_width="0dp"
+            android:paddingBottom="30dp"
+            android:scrollbars="vertical" />
+        <ProgressBar
+            android:id="@+id/loading_inner_conversation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/ic_menu_send" />
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:padding="5dp"
+            android:foreground="@color/colorPrimary"
+            android:foregroundGravity="fill"
+            />
+        <!--send messege box and button-->
+        <LinearLayout
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="7">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/response_message"
+                android:layout_width="0dp"
+                android:hint="Enter message"
+                android:paddingLeft="10dp"
+                android:background="@null"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="16dp"
+                android:lines="1"
+                android:layout_height="wrap_content"
+                android:layout_weight="6" />
 
-</RelativeLayout>
+            <Button android:id="@+id/btn_send_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/ic_menu_send" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
 

@@ -32,8 +32,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
     private Conversation current_conversation;
     private List<InnerConversation> innerConversationsList;
 
-
-    public InnerConversationDataManager(Conversation current_conversation)
+    public InnerConversationDataManager( Conversation current_conversation)
     {
         this.current_conversation =current_conversation;
         context=null;
@@ -42,11 +41,10 @@ public class InnerConversationDataManager implements ServerCallResponse {
     public void getDataFromServer(Context context, String token)
     {
         this.context=context;
-        if(current_conversation!=null) {
-        String id_surfer_string=current_conversation.idSurfer+"";
-
-          if(token!=null&&id_surfer_string!=null)
+        if(current_conversation!=null)
         {
+            String id_surfer_string=current_conversation.idSurfer+"";
+        if(token!=null&&id_surfer_string!=null) {
             this.context = context;
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
@@ -59,11 +57,9 @@ public class InnerConversationDataManager implements ServerCallResponse {
             String url = builder.build().toString();
 
             OkHttpRequests requests = new OkHttpRequests(url, this);
-        } } }
-
-
-
-
+        }
+    }
+    }
     public boolean saveData(String data)
     {
         Gson gson  =new Gson();
@@ -76,10 +72,10 @@ public class InnerConversationDataManager implements ServerCallResponse {
                 {
                  String strObj=DataArray.getJSONObject(i).toString();
                  InnerConversation innerConversation=  gson.fromJson(strObj,InnerConversation.class);
-                   if(innerConversationsList==null)
-                         innerConversationsList=new ArrayList<>();
-                    innerConversationsList.add(innerConversation);
                  ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
+if(innerConversationsList==null)
+    innerConversationsList=new ArrayList<>();
+                    innerConversationsList.add(innerConversation);
                     if(context!=null&&contentValues!=null)
                   context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
                 }
@@ -88,10 +84,6 @@ public class InnerConversationDataManager implements ServerCallResponse {
         } catch (JSONException e) {
           return false;
         }
-    }
-
-    public Conversation getCurrent_conversation() {
-        return current_conversation;
     }
 
     @Override
@@ -112,6 +104,10 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
         }
     }
+    public Conversation getCurrent_conversation() {
+        return current_conversation;
+    }
+
     public void sendResToUi()
     {
         if(context!=null&&context instanceof ServerCallResponseToUi)
@@ -120,13 +116,8 @@ public class InnerConversationDataManager implements ServerCallResponse {
         }
 
     }
-
     public void sendResponseToServer()
     {
 
     }
-
-
-
-
 }

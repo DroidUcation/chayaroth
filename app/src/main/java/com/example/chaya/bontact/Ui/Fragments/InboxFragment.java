@@ -22,7 +22,6 @@ import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.R;
 
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 
 public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -32,8 +31,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private RecyclerView recyclerView;
     private InboxAdapter adapter;
     private  View rootView;
- //  private ProgressBar progressBarFirstData;
-     private ProgressBar progressBarCenter;
+    //  private ProgressBar progressBarFirstData;
+    private ProgressBar progressBarCenter;
     ProgressBar progressBarBottom;
     private LinearLayoutManager linearLayoutManager;
     public InboxFragment() {
@@ -60,11 +59,10 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-            recyclerView.setItemAnimator(new SlideInUpAnimator());
         }
         recyclerView.addOnScrollListener(scrollListener);
 
-      //  progressBarFirstData = (ProgressBar)rootView.findViewById(R.id.loading_first_inbox_data);
+        //  progressBarFirstData = (ProgressBar)rootView.findViewById(R.id.loading_first_inbox_data);
         progressBarCenter = (ProgressBar) getActivity().findViewById(R.id.loading_center);
         progressBarCenter.setVisibility(View.VISIBLE);
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
@@ -75,7 +73,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
 
-         String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
+        String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
         CursorLoader cursorLoader= new CursorLoader(getContext(),Contract.Conversation.INBOX_URI,null,null,null,sortOrder);
         return cursorLoader;
     }
@@ -84,7 +82,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         //todo:if need the visibility
         recyclerView.setVisibility(View.VISIBLE);
-       // progressBarFirstData.setVisibility(View.GONE);
+        // progressBarFirstData.setVisibility(View.GONE);
         progressBarCenter.setVisibility(View.GONE);
         progressBarBottom.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
@@ -112,8 +110,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onDetach();
 
     }
-  RecyclerView.OnScrollListener scrollListener =  new RecyclerView.OnScrollListener()
-  {
+    RecyclerView.OnScrollListener scrollListener =  new RecyclerView.OnScrollListener()
+    {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);

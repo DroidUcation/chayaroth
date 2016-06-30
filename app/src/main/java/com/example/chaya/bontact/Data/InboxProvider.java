@@ -33,7 +33,7 @@ public class InboxProvider extends ContentProvider {
             sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
         }
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;
 
     }

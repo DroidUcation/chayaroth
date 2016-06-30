@@ -20,24 +20,35 @@ import com.example.chaya.bontact.R;
  */
 public class OnlineVisitorsFragment extends Fragment {
 
+
+
     public OnlineVisitorsFragment() {
         // Required empty public constructor
     }
 
+
     public static OnlineVisitorsFragment newInstance() {
         OnlineVisitorsFragment fragment = new OnlineVisitorsFragment();
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_online_visitors, container, false);
     }
+
+
+
+
 
     @Override
     public void onDetach() {

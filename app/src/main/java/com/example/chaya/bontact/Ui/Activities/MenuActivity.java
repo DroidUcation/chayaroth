@@ -60,7 +60,7 @@ public class MenuActivity extends AppCompatActivity
         String token= agentDataManager.getAgentToken(this);
         if(token!=null)
         {
-             converastionDataManager=new ConverastionDataManager();
+            converastionDataManager=new ConverastionDataManager();
             converastionDataManager.getFirstDataFromServer(this,token);
         }
     }
@@ -78,8 +78,8 @@ public class MenuActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-       if(ReplaceFragments(item.getItemId())==false)
-        return false;
+        if(ReplaceFragments(item.getItemId())==false)
+            return false;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -97,7 +97,7 @@ public class MenuActivity extends AppCompatActivity
             return true;
         } else
         if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_btn_dashboard){
-                 getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
             return true;
         } else if (id == R.id.nav_settings)
         {
@@ -136,7 +136,7 @@ public class MenuActivity extends AppCompatActivity
             }
         }
 
-        }
     }
+}
 
 
