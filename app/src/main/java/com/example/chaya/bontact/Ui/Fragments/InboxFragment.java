@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -21,7 +23,7 @@ import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
 import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.R;
-
+import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 
 
 public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -31,7 +33,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private RecyclerView recyclerView;
     private InboxAdapter adapter;
     private  View rootView;
-    private ProgressBar progressBarCenter;
     ProgressBar progressBarBottom;
     private LinearLayoutManager linearLayoutManager;
 
@@ -64,8 +65,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         recyclerView.addOnScrollListener(scrollListener);
 
         //  progressBarFirstData = (ProgressBar)rootView.findViewById(R.id.loading_first_inbox_data);
-        progressBarCenter = (ProgressBar) getActivity().findViewById(R.id.loading_center);
-        progressBarCenter.setVisibility(View.VISIBLE);
+        ((MenuActivity)getActivity()).setProgressBarCenterState(View.VISIBLE);
+
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
 
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
@@ -85,7 +86,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
         //todo:if need the visibility
         recyclerView.setVisibility(View.VISIBLE);
-        progressBarCenter.setVisibility(View.GONE);
+        ((MenuActivity)getActivity()).setProgressBarCenterState(View.GONE);
         progressBarBottom.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
             adapter = new InboxAdapter(getContext(), cursor);

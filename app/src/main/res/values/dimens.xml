@@ -8,6 +8,7 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!-- my dimens -->
-    <dimen name="padding_dashboard_layouts">10dp</dimen>
+    <dimen name="padding_dashboard_layouts">15dp</dimen>
+    <dimen name="padding_inbox_items">10dp</dimen>
 
 </resources>

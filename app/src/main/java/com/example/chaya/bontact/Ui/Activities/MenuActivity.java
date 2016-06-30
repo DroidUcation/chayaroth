@@ -1,8 +1,12 @@
 package com.example.chaya.bontact.Ui.Activities;
+import android.animation.ObjectAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -29,7 +34,7 @@ public class MenuActivity extends AppCompatActivity
     AgentDataManager agentDataManager;
     ConverastionDataManager converastionDataManager;
         ProgressBar progressBarCenter=null;
-
+    ObjectAnimator animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class MenuActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
+
         agentDataManager=new AgentDataManager();
         String token= agentDataManager.getAgentToken(this);
         if(token!=null)
@@ -69,12 +75,21 @@ public class MenuActivity extends AppCompatActivity
 
     public void setProgressBarCenterState(int state) {
         if(progressBarCenter==null)
-            progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
-        if(state==View.VISIBLE)
+          progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
+       /*   if(state==View.VISIBLE)
         {
-
+            animation = ObjectAnimator.ofInt (progressBarCenter, "progress", 0, 50); // see this max value coming back here, we animale towards that value
+            animation.setDuration (5000); //in milliseconds
+            animation.setInterpolator (new DecelerateInterpolator());
+            animation.start ();
         }
+        else
+        {
+           progressBarCenter.clearAnimation();
+        }*/
         progressBarCenter.setVisibility(state);
+
+
 
     }
 
@@ -84,7 +99,21 @@ public class MenuActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+          //  super.onBackPressed();
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+            builder .setIcon(R.mipmap.bontact_launcher)
+                    .setTitle("Exit")
+                    .setMessage("Are you sure you want to Exit the app?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
         }
     }
 

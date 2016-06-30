@@ -29,7 +29,6 @@
         android:contentDescription="loading"
         android:visibility="invisible"
         android:padding="5dp"
-        android:foreground="@color/colorPrimary"
         android:foregroundGravity="fill"
         />
 </RelativeLayout>

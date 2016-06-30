@@ -22,14 +22,16 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/white">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/inner_conversation_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="30dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+           />
         <ProgressBar
             android:id="@+id/loading_inner_conversation"
             android:layout_width="wrap_content"
@@ -65,7 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/ic_menu_send" />
+                android:background="@drawable/ic_send_24dp" />
 
         </LinearLayout>
 

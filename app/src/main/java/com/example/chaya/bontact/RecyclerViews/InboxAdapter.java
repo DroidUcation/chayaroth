@@ -17,8 +17,6 @@ package com.example.chaya.bontact.RecyclerViews;
  import com.example.chaya.bontact.Models.Conversation;
  import com.example.chaya.bontact.R;
 
- import java.text.ParseException;
- import java.text.SimpleDateFormat;
  import java.util.Date;
  import java.util.List;
 
@@ -51,20 +49,21 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         cursor.moveToPosition(position);
 
         String dateString =cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+       /* SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
         Date convertedDate = new Date();
         try {
             convertedDate = dateFormat.parse(dateString);
         } catch (ParseException e) {
 
             e.printStackTrace();
-        }
+        }*/
        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-       dateString = dateFormat.format(convertedDate);
-       holder.lastDate.setText( dateString);
+        holder.lastDate.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE)));
       int avatarPosition = AvatarHelper.getAvatarPosition();
         holder.avatar.setImageResource(avatars.get(avatarPosition));
-
+        holder.lastDate.setText(dateString);
+        //Date d=new Date(Date.parse(dateString));
+      // holder.lastDate.setText( d.getHours() );
     /*String imageUri = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
         if(imageUri!=null)
         {
@@ -119,9 +118,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             String token= agentDataManager.getAgentToken(v.getContext());
             if(token!=null&&conversation!=null)
             {
+
                 InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(conversation);
-                innerConversationDataManager.getDataFromServer(v.getContext(),token);
+                innerConversationDataManager.getData(v.getContext(),token);
                 ((MenuActivity)v.getContext()).setProgressBarCenterState(View.VISIBLE);
+
             }
             }
 

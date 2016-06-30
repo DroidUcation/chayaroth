@@ -5,7 +5,7 @@
 
     <!-- view background color -->
     <solid
-        android:color="@color/bg_msg_you" >
+        android:color="@color/orange_light" >
     </solid>
 
 

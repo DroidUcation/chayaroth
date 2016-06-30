@@ -34,13 +34,24 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
     public InnerConversationDataManager( Conversation current_conversation)
     {
+
         this.current_conversation =current_conversation;
         context=null;
         innerConversationsList=new ArrayList<>();
     }
-    public void getDataFromServer(Context context, String token)
+    public void getData(Context context, String token)
     {
         this.context=context;
+       /* String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
+        String[]  selectionArgs={current_conversation.idSurfer+""};
+        if(context.getContentResolver().query(Contract.InnerConversation.INNER_CONVERSATION_URI,null,selectionStr,selectionArgs,null)!=null)//there ara culomns for this user
+       */
+       // sendResToUi();
+        getDataFromServer(context,token);
+    }
+
+    public void getDataFromServer(Context context, String token)
+    {
         if(current_conversation!=null)
         {
             String id_surfer_string=current_conversation.idSurfer+"";
@@ -65,16 +76,19 @@ public class InnerConversationDataManager implements ServerCallResponse {
         Gson gson  =new Gson();
         try {
             JSONArray DataArray=new JSONArray(data);
-            //check if it is the first data or not
-            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI,null,null);
+
+            //delete this users data
+      String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
+       String[]  selectionArgs={current_conversation.idSurfer+""};
+            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
 
             for(int i=0;i<DataArray.length();i++)
                 {
                  String strObj=DataArray.getJSONObject(i).toString();
                  InnerConversation innerConversation=  gson.fromJson(strObj,InnerConversation.class);
                  ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
-if(innerConversationsList==null)
-    innerConversationsList=new ArrayList<>();
+                 if(innerConversationsList==null)
+                         innerConversationsList=new ArrayList<>();
                     innerConversationsList.add(innerConversation);
                     if(context!=null&&contentValues!=null)
                   context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
