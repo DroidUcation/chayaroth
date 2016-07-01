@@ -28,6 +28,7 @@ public class DashboardFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RootView = null;
+        getActivity().setTitle(R.string.dashboard_title);
 
     }
 

@@ -42,6 +42,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
     public void getData(Context context, String token)
     {
         this.context=context;
+        sendResToUi();
        /* String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
         String[]  selectionArgs={current_conversation.idSurfer+""};
         if(context.getContentResolver().query(Contract.InnerConversation.INNER_CONVERSATION_URI,null,selectionStr,selectionArgs,null)!=null)//there ara culomns for this user
@@ -110,7 +111,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
                {
                  String inner_data=res.getJSONArray("data").toString();
                 boolean result= saveData(inner_data);
-                   sendResToUi();
+                  // sendResToUi();
                }
             } catch (JSONException e) {
                 e.printStackTrace();

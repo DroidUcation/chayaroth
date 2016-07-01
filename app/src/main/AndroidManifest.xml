@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Ui.Activities.MainActivity">
+        <activity android:name=".Ui.Activities.MainActivity"
+            android:label="@string/login_title">
 
             <!--
             <intent-filter>
@@ -45,7 +46,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Ui.Activities.InnerConversationActivity"></activity>
+        <activity android:name=".Ui.Activities.InnerConversationActivity"
+            android:label="@string/title_inner_conversation">
+
+        </activity>
     </application>
 
 </manifest>

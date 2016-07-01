@@ -2,7 +2,10 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
+
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
@@ -70,6 +73,7 @@ public class ConverastionDataManager implements ServerCallResponse {
     }
 
     public boolean saveData(String conversations) {
+        Log.d("res",conversations);
         Gson gson  =new Gson();
         try {
             JSONObject jsonObject= null;
@@ -140,5 +144,16 @@ public class ConverastionDataManager implements ServerCallResponse {
            }
         }
        return null;
+    }
+    public Conversation convertCursorToConversation(Cursor cursor)
+    {
+       /* Gson gson  =new Gson();
+        if(cursor!=null&&cursor.moveToFirst()) {
+            cursor.get
+            Conversation conversation = new Conversation();
+            gson.fromJson(strObj,Conversation.class);
+
+        }*/
+        return null;
     }
 }

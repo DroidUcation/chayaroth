@@ -3,6 +3,7 @@ package com.example.chaya.bontact.Ui.Activities;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -13,14 +14,19 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
@@ -34,15 +40,20 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     private LinearLayoutManager linearLayoutManager;
     EditText response_mess;
     ProgressBar loading;
-    private int id_surfer;
+    Conversation current_conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inner_conversation);
         Bundle args = getIntent().getExtras();
         if (args != null) {
-             this.id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+             int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+             ConverastionDataManager  converastionDataManager=new ConverastionDataManager();
+           this.current_conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
+            setTitle(current_conversation.displayname);
+
         }
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -54,6 +65,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         response_mess= (EditText) findViewById(R.id.response_message);
         response_mess.setOnKeyListener(this);
         Button btn_send_mess= (Button) findViewById(R.id.btn_send_message);
+        btn_send_mess.setOnClickListener(this);
         loading= (ProgressBar) findViewById(R.id.loading_inner_conversation);
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
     }
@@ -76,14 +88,18 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     }
     public void SendResponseMessage(String textMsg)
     {
-
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
 
         String sortOrder = null;
         String selectionCoulmns=Contract.InnerConversation.COLUMN_ID_SURFUR;
-        String[] selectionArgs = { this.id_surfer+""};
+        String[] selectionArgs = { current_conversation.idSurfer+""};
         CursorLoader cursorLoader=new CursorLoader(this,Contract.InnerConversation.INNER_CONVERSATION_URI,null,selectionCoulmns+ "=?",selectionArgs,null);
         return cursorLoader;
     }
@@ -118,30 +134,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
-   /* RecyclerView.OnScrollListener scrollListener =  new RecyclerView.OnScrollListener()
-    {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            int position= linearLayoutManager.findLastVisibleItemPosition();
-            int cursorItemscount=adapter.getItemCount();
-            if(position ==adapter.getItemCount())//end of data
-            {
-                Log.d("position",""+position);
-                Log.d("cursor",""+adapter.getItemCount());
-               *//* ConverastionDataManager converastionDataManager=new ConverastionDataManager();
-                converastionDataManager.getNextDataFromServer(getContext());*//*
-            }
-            else
-            {
-
-            }
-        }
-    };*/
-
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+       switch (item.getItemId()) {
+           case android.R.id.home:
+               onBackPressed();
+               return true;
+           default:
+               return super.onOptionsItemSelected(item);
+       }
+   }
 }

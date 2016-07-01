@@ -47,6 +47,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        getActivity().setTitle(R.string.inbox_title);
         super.onCreate(savedInstanceState);
     }
 
@@ -65,7 +67,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         recyclerView.addOnScrollListener(scrollListener);
 
         //  progressBarFirstData = (ProgressBar)rootView.findViewById(R.id.loading_first_inbox_data);
-        ((MenuActivity)getActivity()).setProgressBarCenterState(View.VISIBLE);
 
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
 
@@ -75,6 +76,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     }
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
+        ((MenuActivity)getActivity()).setProgressBarCenterState(View.VISIBLE);
         lastVisibleItem=0;
         String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
         CursorLoader cursorLoader= new CursorLoader(getContext(),Contract.Conversation.INBOX_URI,null,null,null,sortOrder);

@@ -1,8 +1,10 @@
 package com.example.chaya.bontact.Helpers;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.Models.Conversation;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,6 +39,14 @@ public class DbToolsHelper {
             }
         }
       return contentValues;
+    }
+    public static Conversation convertCursorToConversation(Cursor cursor)
+    {
+        if(cursor==null&&!cursor.moveToFirst())
+            return null;
+        Conversation conversation=new Conversation();
+
+        return conversation;
     }
 
 }

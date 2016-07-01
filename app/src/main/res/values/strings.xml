@@ -8,8 +8,10 @@
     <string name="action_settings">Settings</string>
     <string name="dashboard_title">Dahboard</string>
     <string name="onlinevisitors_title">Online visitors</string>
+    <string name="login_title">Login</string>
     <string name="inbox_title">Inbox</string>
     <string name="settings_title">Settings</string>
+<string name="title_inner_conversation">Visitor</string>
     <string name="sp_user_details">user_details</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -51,6 +53,13 @@
     <string name="login_api">login</string>
 
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
+
+    <!-- time strings-->
+    <string name="minute">a minute ago</string>
+    <string name="minutes">minutes ago</string>
+    <string name="yesterday">yesterday</string>
+    <string name="days">days</string>
+    <string name="just_now">just now</string>
 
 </resources>
 

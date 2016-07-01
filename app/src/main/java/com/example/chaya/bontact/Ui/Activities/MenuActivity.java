@@ -76,21 +76,7 @@ public class MenuActivity extends AppCompatActivity
     public void setProgressBarCenterState(int state) {
         if(progressBarCenter==null)
           progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
-       /*   if(state==View.VISIBLE)
-        {
-            animation = ObjectAnimator.ofInt (progressBarCenter, "progress", 0, 50); // see this max value coming back here, we animale towards that value
-            animation.setDuration (5000); //in milliseconds
-            animation.setInterpolator (new DecelerateInterpolator());
-            animation.start ();
-        }
-        else
-        {
-           progressBarCenter.clearAnimation();
-        }*/
         progressBarCenter.setVisibility(state);
-
-
-
     }
 
     @Override
@@ -169,8 +155,8 @@ public class MenuActivity extends AppCompatActivity
                         Bundle b = new Bundle();
                         b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, Integer.parseInt(response)); //Your id
                         intent.putExtras(b); //Put your id to your next Intent
-                        startActivity(intent);
                         setProgressBarCenterState(View.GONE);
+                        startActivity(intent);
 
                     }
                 });

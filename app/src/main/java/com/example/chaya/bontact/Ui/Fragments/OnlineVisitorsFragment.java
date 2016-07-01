@@ -35,6 +35,7 @@ public class OnlineVisitorsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.onlinevisitors_title);
         super.onCreate(savedInstanceState);
 
     }

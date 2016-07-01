@@ -1,14 +1,19 @@
 package com.example.chaya.bontact.Ui.Activities;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -19,7 +24,7 @@ import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener ,ServerCallResponseToUi {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,ServerCallResponseToUi,View.OnKeyListener {
 
     private EditText usernameEditText;
     private  EditText passEditText;
@@ -34,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Button btn_login = (Button)findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
+        usernameEditText = (EditText) findViewById(R.id.etxt_user_name);
+        passEditText = (EditText) findViewById(R.id.etxt_password);
+        usernameEditText.setOnKeyListener(this);
+        passEditText.setOnKeyListener(this);
         progressBar = (ProgressBar)findViewById(R.id.progress_bar_login_loading);
     }
 
@@ -49,20 +58,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.btn_login:
-                //get inputs
-                usernameEditText = (EditText) findViewById(R.id.etxt_user_name);
-                passEditText = (EditText) findViewById(R.id.etxt_password);
-                String userName = usernameEditText.getText().toString();
-                String password = passEditText.getText().toString();
-                if(CheckValidInputs(userName,password)==true)
-                {
-                    progressBar.setVisibility(View.VISIBLE);
-                    agentDataManager=new AgentDataManager();
-                    agentDataManager.getDataFromServer(userName,password,this);
-                }
+                doLogin();
         }
     }
 
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent event) {
+        if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+        {
+            switch (view.getId())
+            {
+                case R.id.etxt_password:
+                    doLogin();
+                    break;
+            }
+            return true;
+        }
+        return false; // pass on to other listeners.
+    }
+    public void doLogin()
+    {
+
+        String userName = usernameEditText.getText().toString();
+        String password = passEditText.getText().toString();
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        if(CheckValidInputs(userName,password)==true)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            agentDataManager=new AgentDataManager();
+            agentDataManager.getDataFromServer(userName,password,this);
+        }
+    }
+
+    public void SendResponseMessage(String textMsg)
+    {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     public boolean CheckValidInputs(String userName,String password)
     {

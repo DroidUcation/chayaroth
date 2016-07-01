@@ -2,7 +2,9 @@
 package com.example.chaya.bontact.RecyclerViews;
  import android.content.Context;
  import android.database.Cursor;
+ import android.graphics.Typeface;
  import android.support.v7.widget.RecyclerView;
+ import android.util.Log;
  import android.view.LayoutInflater;
  import android.view.View;
   import android.view.ViewGroup;
@@ -14,14 +16,20 @@ package com.example.chaya.bontact.RecyclerViews;
  import com.example.chaya.bontact.DataManagers.AgentDataManager;
  import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
  import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+ import com.example.chaya.bontact.Helpers.DateTimeHelper;
  import com.example.chaya.bontact.Models.Conversation;
  import com.example.chaya.bontact.R;
 
+ import java.security.Timestamp;
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
  import java.util.Date;
  import java.util.List;
+ import java.util.concurrent.TimeUnit;
 
  import com.example.chaya.bontact.Helpers.AvatarHelper;
  import com.example.chaya.bontact.Ui.Activities.MenuActivity;
+ import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
@@ -48,20 +56,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public void onBindViewHolder(InboxHolder holder, int position) {
         cursor.moveToPosition(position);
 
-        String dateString =cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-       /* SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
-        Date convertedDate = new Date();
-        try {
-            convertedDate = dateFormat.parse(dateString);
-        } catch (ParseException e) {
-
-            e.printStackTrace();
-        }*/
-       holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-        holder.lastDate.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE)));
-      int avatarPosition = AvatarHelper.getAvatarPosition();
+        String dateString = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
+        if(dateString!=null && context!=null) {
+         holder.lastDate.setText( DateTimeHelper.getDiffToNow(dateString, context));
+        }
+        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
+        int avatarPosition = AvatarHelper.getAvatarPosition();
         holder.avatar.setImageResource(avatars.get(avatarPosition));
-        holder.lastDate.setText(dateString);
+
+        if(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))==1)
+        {
+           holder.lastDate.setTypeface(null, Typeface.BOLD);
+        }
         //Date d=new Date(Date.parse(dateString));
       // holder.lastDate.setText( d.getHours() );
     /*String imageUri = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
@@ -120,8 +126,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             {
 
                 InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(conversation);
-                innerConversationDataManager.getData(v.getContext(),token);
                 ((MenuActivity)v.getContext()).setProgressBarCenterState(View.VISIBLE);
+                innerConversationDataManager.getData(v.getContext(),token);
 
             }
             }

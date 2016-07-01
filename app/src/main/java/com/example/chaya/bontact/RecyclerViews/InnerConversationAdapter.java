@@ -3,6 +3,7 @@ package com.example.chaya.bontact.RecyclerViews;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,14 +51,28 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type=getItemViewType(position);
         cursor.moveToPosition(position);
+        String msg=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
+
         switch(type)
         {
             case AGENT_VH_ITEM:
-                ((InnerConversationAgentHolder)holder).msg.setText(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)));
+                if(msg!=null)
+                ((InnerConversationAgentHolder)holder).msg.setText(msg);
+               /* if(msg.contains("@"))
+                {
+                    ((InnerConversationAgentHolder)holder).msg.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+
+                }*/
                 break;
 
             case VISITOR_VH_ITEM:
+                if(msg!=null)
                 ((InnerConversationVisitorHolder)holder).msg.setText(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)));
+             /*   if(msg.contains("@"))
+                {
+                    ((InnerConversationVisitorHolder)holder).msg.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+
+                }*/
                 break;
         }
     }

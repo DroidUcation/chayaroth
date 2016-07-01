@@ -14,7 +14,9 @@
         android:layout_marginLeft="10dp"
         android:textIsSelectable="true"
         android:background="@drawable/background_visitor_message"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        android:autoLink="email"
+        />
 
     <!-- <TextView
          android:id="@+id/timestamp"
