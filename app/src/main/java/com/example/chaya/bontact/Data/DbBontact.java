@@ -16,7 +16,7 @@ public class DbBontact extends SQLiteOpenHelper {
     private static final int DBVersion= 1;
      private String CreateConversationTable="CREATE TABLE "+Contract.Conversation.TABLE_NAME+
             "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
-            Contract.Conversation.COLUMN_ID+" INT,  "+
+            Contract.Conversation.COLUMN_ID_SURFER +" INT,  "+
             Contract.Conversation.COLUMN_NAME+" TEXT, "+
              Contract.Conversation.COLUMN_AVATAR+" TEXT, "+
             Contract.Conversation.COLUMN_RETURNING+" INT, "+
@@ -34,6 +34,7 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_PHONE+" TEXT, "+
             Contract.Conversation.COLUMN_EMAIL+" TEXT, "+
             Contract.Conversation.COLUMN_AGENT+" TEXT, "+
+             Contract.Conversation.COLUMN_LAST_SENTENCE+" TEXT, "+
             Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT "+
             " )";
     private String CreateInnerConversationTable="CREATE TABLE "+Contract.InnerConversation.TABLE_NAME+
@@ -52,7 +53,7 @@ public class DbBontact extends SQLiteOpenHelper {
     Contract.InnerConversation.COLUMN_NAME+" TEXT,  "+
     Contract.InnerConversation.COLUMN_SYSTEM_MSG+" INT,  "+
     Contract.InnerConversation.COLUMN_RECORD_URL+" TEXT ,"+
-    "FOREIGN KEY("+Contract.InnerConversation.COLUMN_ID_SURFUR+") REFERENCES "+Contract.Conversation.TABLE_NAME+"("+Contract.Conversation.COLUMN_ID+")"+
+    "FOREIGN KEY("+Contract.InnerConversation.COLUMN_ID_SURFUR+") REFERENCES "+Contract.Conversation.TABLE_NAME+"("+Contract.Conversation.COLUMN_ID_SURFER +")"+
             " )";
     private String DropConversationTable="DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
     private String DropInnerConversationTable="DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
@@ -79,7 +80,7 @@ public class DbBontact extends SQLiteOpenHelper {
     public static ArrayList<String> getAllConversationFields()
     {
         ArrayList<String> strings= new ArrayList<>();
-        strings.add(Contract.Conversation.COLUMN_ID);
+        strings.add(Contract.Conversation.COLUMN_ID_SURFER);
         strings.add(Contract.Conversation.COLUMN_NAME);
        strings.add(Contract.Conversation.COLUMN_AVATAR);
        strings.add(Contract.Conversation.COLUMN_RETURNING);
@@ -97,8 +98,8 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add(Contract.Conversation.COLUMN_PHONE);
         strings.add( Contract.Conversation.COLUMN_EMAIL);
         strings.add( Contract.Conversation.COLUMN_AGENT);
-      //  strings.add(Contract.Conversation.FLAG_COUNTRY);
         strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
+        strings.add(Contract.Conversation.COLUMN_LAST_SENTENCE);
         return strings;
     }
 
@@ -127,11 +128,10 @@ public class DbBontact extends SQLiteOpenHelper {
         long result=database.insert(tableName,null,values);
         return result;
     }
-    public boolean update(String table,ContentValues values)
+    public int update(String table,ContentValues values,String selection, String[] selectionArgs)
     {
         database=getWritableDatabase();
-      //  database.update(table,values,);
-        return true;
+       return database.update(table,values,selection,selectionArgs);
     }
     public int delete(String tableName,String selection, String[] selectionArgs){
 

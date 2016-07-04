@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -28,33 +29,31 @@ import java.util.List;
  */
 public class ConverastionDataManager implements ServerCallResponse {
 
-    public static List<Conversation> conversationList=null;
+    public static List<Conversation> conversationList = null;
     private Context context;
-    public  static int current_page=0;
+    public static int current_page = 0;
 
-    public ConverastionDataManager()
-    {
-        if(conversationList==null)
-            conversationList=new ArrayList<>();
-        context=null;
+    public ConverastionDataManager() {
+        if (conversationList == null)
+            conversationList = new ArrayList<>();
+        context = null;
 
     }
-    public void getFirstDataFromServer(Context context, String token)
-    {
-        current_page=0;
-        this.context=context;
-        getDataFromServer(context,token,current_page);
+
+    public void getFirstDataFromServer(Context context, String token) {
+        current_page = 0;
+        this.context = context;
+        getDataFromServer(context, token, current_page);
     }
-    public void getNextDataFromServer(Context context, String token)
-    {
+
+    public void getNextDataFromServer(Context context, String token) {
         current_page++;
-        this.context=context;
-        getDataFromServer(context,token,current_page);
+        this.context = context;
+        getDataFromServer(context, token, current_page);
     }
 
-    private void getDataFromServer(Context context,String token,int current_page)
-    {
-        if(token!=null) {
+    private void getDataFromServer(Context context, String token, int current_page) {
+        if (token != null) {
             this.context = context;
 
             Uri.Builder builder = new Uri.Builder();
@@ -73,31 +72,35 @@ public class ConverastionDataManager implements ServerCallResponse {
     }
 
     public boolean saveData(String conversations) {
-        Log.d("res",conversations);
-        Gson gson  =new Gson();
+        Log.d("res", conversations);
+        Gson gson = new Gson();
         try {
-            JSONObject jsonObject= null;
+            JSONObject jsonObject = null;
             jsonObject = new JSONObject(conversations);
             JSONArray jsonConversationArray = jsonObject.getJSONArray("data");
-            if(context!=null&&current_page==0)//check if it is the first data or not
+            if (context != null && current_page == 0)//check if it is the first data or not
             {
                 context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
                 conversationList.clear();
             }
 
-            for(int i=0;i<jsonConversationArray.length();i++)
-            {
-                String strObj=jsonConversationArray.getJSONObject(i).toString();
-                Conversation conversation=  gson.fromJson(strObj,Conversation.class);
+            for (int i = 0; i < jsonConversationArray.length(); i++) {
+                String strObj = jsonConversationArray.getJSONObject(i).toString();
+                Conversation conversation = gson.fromJson(strObj, Conversation.class);
+                //add last defult sentences
                 conversationList.add(conversation);
-                ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(conversation,DbBontact.getAllConversationFields());
-            if(contentValues!=null&&context!=null) {
-                Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
+                ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(conversation, DbBontact.getAllConversationFields());
+                if (contentValues != null && context != null) {
+                    Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
+                }
+                if(conversation.getLastSentence()==null)
+                {
+                    String lastSentence=ChanelsTypes.getDefultStringByChanelType(conversation.getLasttype());
+                    setLastSentence(context,conversation,lastSentence);
                 }
             }
             return true;
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
@@ -107,46 +110,40 @@ public class ConverastionDataManager implements ServerCallResponse {
     @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
 
-        if( isSuccsed==true&&response!=null)
-        {
-            JSONObject resObj=null;
+        if (isSuccsed == true && response != null) {
+            JSONObject resObj = null;
             try {
-                resObj=new JSONObject(response);
-                resObj=resObj.getJSONObject("conversations");
-                boolean result=saveData(resObj.toString());
+                resObj = new JSONObject(response);
+                resObj = resObj.getJSONObject("conversations");
+                boolean result = saveData(resObj.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
 
             } /*catch (IllegalAccessException e) {
                 e.printStackTrace();
             }*/
-        }
-        else{
+        } else {
             //don't do anything
         }
     }
-    public void sendResToUi(boolean isSuccsed, String response, ErrorType errorType)
-    {
-        if(context!=null&&context instanceof ServerCallResponseToUi)
-        {
-            ((ServerCallResponseToUi)context).OnServerCallResponseToUi(isSuccsed,response,errorType,getClass());
+
+    public void sendResToUi(boolean isSuccsed, String response, ErrorType errorType) {
+        if (context != null && context instanceof ServerCallResponseToUi) {
+            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(isSuccsed, response, errorType, getClass());
         }
     }
 
-    public Conversation getConversationByIdSurfer(int idSurfer)
-    {
-        if(conversationList!=null&&conversationList.size()>0)
-        {
-           for (Conversation conversation:conversationList)
-           {
-            if(conversation.idSurfer==idSurfer)
-                return conversation;
-           }
+    public Conversation getConversationByIdSurfer(int idSurfer) {
+        if (conversationList != null && conversationList.size() > 0) {
+            for (Conversation conversation : conversationList) {
+                if (conversation.idSurfer == idSurfer)
+                    return conversation;
+            }
         }
-       return null;
+        return null;
     }
-    public Conversation convertCursorToConversation(Cursor cursor)
-    {
+
+    public Conversation convertCursorToConversation(Cursor cursor) {
        /* Gson gson  =new Gson();
         if(cursor!=null&&cursor.moveToFirst()) {
             cursor.get
@@ -155,5 +152,22 @@ public class ConverastionDataManager implements ServerCallResponse {
 
         }*/
         return null;
+    }
+    public boolean setLastSentence(Context context, Conversation conversation,String sentence)
+    {
+        if(conversation!=null && sentence!=null)
+        {
+            conversation.setLastSentence(sentence);
+            if(context!=null)
+            {
+                String selectionStr=Contract.Conversation.COLUMN_ID_SURFER+"=?";
+                String[]  selectionArgs={conversation.idSurfer+""};
+                ContentValues values=new ContentValues();
+                values.put(Contract.Conversation.COLUMN_LAST_SENTENCE,sentence);
+                context.getContentResolver().update(Contract.Conversation.INBOX_URI,values,selectionStr,selectionArgs );
+            }
+            return true;
+        }
+      return false;
     }
 }

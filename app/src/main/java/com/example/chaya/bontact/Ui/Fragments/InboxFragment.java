@@ -1,6 +1,5 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,15 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
-
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
@@ -34,6 +32,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private InboxAdapter adapter;
     private  View rootView;
     ProgressBar progressBarBottom;
+    SwipeRefreshLayout refreshLayout;
+
     private LinearLayoutManager linearLayoutManager;
 
     int lastVisibleItem;
@@ -70,10 +70,19 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
 
-        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
+        refreshLayout= (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
+        refreshLayout.setOnRefreshListener(refreshListener);
+       refreshLayout.setColorSchemeColors(R.color.orange_dark);
+        initLoader();
         return rootView;
 
     }
+    public void initLoader()
+    {
+        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
+
+    }
+
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
         ((MenuActivity)getActivity()).setProgressBarCenterState(View.VISIBLE);
@@ -86,15 +95,17 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        //todo:if need the visibility
-        recyclerView.setVisibility(View.VISIBLE);
         ((MenuActivity)getActivity()).setProgressBarCenterState(View.GONE);
+        if(refreshLayout==null)
+            refreshLayout=(SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
+        refreshLayout.setRefreshing(false);
         progressBarBottom.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
             adapter = new InboxAdapter(getContext(), cursor);
             recyclerView.setAdapter(adapter);
             recyclerView.scrollToPosition(lastVisibleItem);
             recyclerView.setVisibility(View.VISIBLE);
+
         } else {
             recyclerView.setVisibility(View.GONE);
         }
@@ -137,6 +148,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
         }
     };
+   SwipeRefreshLayout.OnRefreshListener refreshListener=  new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
 
-
-}
+            initLoader();
+        }
+ };
+   }

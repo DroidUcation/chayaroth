@@ -41,4 +41,10 @@ public class AvatarHelper {
         avatars.add(R.drawable.avatar10);
         return avatars;
     }
+    public static int getNextAvatar()
+    {
+        getAvatarsList();
+       return avatars.get(getAvatarPosition());
+    }
+
 }

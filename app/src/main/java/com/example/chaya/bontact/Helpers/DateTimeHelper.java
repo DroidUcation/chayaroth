@@ -1,14 +1,15 @@
 package com.example.chaya.bontact.Helpers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by chaya on 6/30/2016.
@@ -18,30 +19,68 @@ public class DateTimeHelper {
     {
         dateString= dateString.replace('T',' ');
         dateString= dateString.replace('Z',' ');
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        Date convertedDate=new Date();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
         try {
-            convertedDate = dateFormat.parse(dateString);
-        } catch (ParseException e) {
+            Date created=dateFormat.parse(dateString);
+            dateFormat=new SimpleDateFormat("dd/MM/yyyy");
+            Calendar createdDateCal = Calendar.getInstance();
+            createdDateCal.setTime(created);
+
+            Date now=new Date();
+            Calendar currentDateCal = Calendar.getInstance();
+            currentDateCal.setTime(now);
+
+            int currentYear=currentDateCal.get(Calendar.YEAR);
+            int createdYear=createdDateCal.get(Calendar.YEAR);
+            int currentMonth=currentDateCal.get(Calendar.MONTH);
+            int createdMonth=createdDateCal.get(Calendar.MONTH);
+
+            if(currentYear>createdYear || currentMonth>createdMonth)
+            {
+             Date returnDate=  createdDateCal.getTime();
+                return dateFormat.format(returnDate);
+               // return created.getYear()+"/"+created.getMonth()+"/"+ created.getDay();
+            }
+            int createdDay = createdDateCal.get(Calendar.DAY_OF_MONTH);
+            int currentDay = currentDateCal.get(Calendar.DAY_OF_MONTH);
+
+            if(currentDay> createdDay)
+            {
+               int dayDiff=currentDay-createdDay;
+                if(dayDiff==1)
+                    return  context.getResources().getString(R.string.yesterday);
+               // return dayDiff+" "+context.getResources().getString(R.string.days);
+                Date returnDate=  createdDateCal.getTime();
+                return dateFormat.format(returnDate);
+
+            }
+            else
+            {
+
+                int currentHours=currentDateCal.get(Calendar.HOUR);
+                int createdHours=createdDateCal.get(Calendar.HOUR);
+                if(currentHours>createdHours)
+                {
+                  int hoursDiff= currentHours-createdHours ;
+                    return hoursDiff+" "+context.getResources().getString(R.string.hours);
+                }
+                else
+                {
+                    int currentMinutes=currentDateCal.get(Calendar.MINUTE);
+                   int createdMinutes=createdDateCal.get(Calendar.MINUTE);
+                   int minutesDiff=currentMinutes-createdMinutes;
+                return minutesDiff+" "+context.getResources().getString(R.string.minutes);
+             }
+
+            }
+
+        }
+        catch (ParseException e) {
             e.printStackTrace();
         }
-        long newDate=new Date().getTime();
-        long diffrence=newDate-convertedDate.getTime();
-        long days= TimeUnit.MILLISECONDS.toDays(diffrence);
-        if(days>0)
-        {
-            if(days==1)
-                return  context.getResources().getString(R.string.yesterday);
-            return  days+" "+context.getResources().getString(R.string.days);
-        }
-
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(diffrence);
-        if(minutes==0)
-            return context.getResources().getString(R.string.just_now);
-        if(minutes>1)
-            return ( minutes)+" "+context.getResources().getString(R.string.minutes);
-        if(minutes==1)
-            return  context.getResources().getString(R.string.minute);
         return null;
+
     }
 }

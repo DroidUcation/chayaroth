@@ -20,28 +20,20 @@ package com.example.chaya.bontact.RecyclerViews;
  import com.example.chaya.bontact.Models.Conversation;
  import com.example.chaya.bontact.R;
 
- import java.security.Timestamp;
- import java.text.ParseException;
- import java.text.SimpleDateFormat;
- import java.util.Date;
  import java.util.List;
- import java.util.concurrent.TimeUnit;
 
  import com.example.chaya.bontact.Helpers.AvatarHelper;
  import com.example.chaya.bontact.Ui.Activities.MenuActivity;
- import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 
     Cursor cursor;
     Context context;
-     List<Integer> avatars;
 
     public InboxAdapter(Context context, Cursor cursor) {
         this.context = context;
         this.cursor = cursor;
-       avatars=AvatarHelper.getAvatarsList();
     }
 
 
@@ -56,32 +48,24 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public void onBindViewHolder(InboxHolder holder, int position) {
         cursor.moveToPosition(position);
 
-        String dateString = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
-        if(dateString!=null && context!=null) {
-         holder.lastDate.setText( DateTimeHelper.getDiffToNow(dateString, context));
+        int avatarPosition = AvatarHelper.getAvatarPosition();
+        String lastSentences =cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_SENTENCE));
+        String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
+        String timeAgo=null;
+        if(dateStringToConvert!=null && context!=null) {
+            timeAgo = DateTimeHelper.getDiffToNow(dateStringToConvert, context);
         }
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-        int avatarPosition = AvatarHelper.getAvatarPosition();
-        holder.avatar.setImageResource(avatars.get(avatarPosition));
-
+        holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
+         if(lastSentences!=null)
+            holder.lastSentence.setText(lastSentences );
+        if(timeAgo!=null)
+             holder.date.setText(timeAgo);
         if(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))==1)
         {
-           holder.lastDate.setTypeface(null, Typeface.BOLD);
+          holder.setUnRead(true);
         }
-        //Date d=new Date(Date.parse(dateString));
-      // holder.lastDate.setText( d.getHours() );
-    /*String imageUri = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
-        if(imageUri!=null)
-        {
-            try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUri));
-            holder.ivContactPhoto.setImageBitmap(bitmap);
-            }
-            catch (Exception e) {
-            e.printStackTrace();
-            holder.ivContactPhoto.setImageBitmap(null);
-            }
-        }*/
+
     }
 
 
@@ -97,17 +81,29 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView avatar;
-        TextView displayName, lastDate;
+        TextView displayName, lastSentence,date;
 
         public InboxHolder(View itemView) {
 
             super(itemView);
             avatar = (ImageView) itemView.findViewById(R.id.avatar);
             displayName = (TextView) itemView.findViewById(R.id.displayName);
-            lastDate = (TextView) itemView.findViewById(R.id.lastDate);
+            lastSentence = (TextView) itemView.findViewById(R.id.last_sentence);
+            date = (TextView) itemView.findViewById(R.id.date);
             itemView.setOnClickListener(this);
+            avatar.setOnClickListener(imagesClickListener);
 
         }
+        public void setUnRead(boolean status)
+        {
+            if(status==true)
+            {
+                displayName.setTypeface(null, Typeface.BOLD);
+                lastSentence.setTypeface(null, Typeface.BOLD);
+                date.setTypeface(null, Typeface.BOLD);
+            }
+        }
+
 
         @Override
         public void onClick(View v) {
@@ -117,22 +113,27 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
            cursor.moveToPosition(position);
             ConverastionDataManager converastionDataManager=new ConverastionDataManager();
 
-           int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID));
+           int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
             conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
 
             AgentDataManager agentDataManager=new AgentDataManager();
             String token= agentDataManager.getAgentToken(v.getContext());
             if(token!=null&&conversation!=null)
             {
-
                 InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(conversation);
                 ((MenuActivity)v.getContext()).setProgressBarCenterState(View.VISIBLE);
                 innerConversationDataManager.getData(v.getContext(),token);
 
             }
             }
+        View.OnClickListener imagesClickListener=new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-          }
+            }
+        };
+
+    }
     }
 
 

@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -14,6 +15,7 @@ import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -79,21 +81,28 @@ public class InnerConversationDataManager implements ServerCallResponse {
             JSONArray DataArray=new JSONArray(data);
 
             //delete this users data
-      String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
-       String[]  selectionArgs={current_conversation.idSurfer+""};
-            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
-
+         String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
+         String[]  selectionArgs={current_conversation.idSurfer+""};
+          context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
+            InnerConversation innerConversation=null;
             for(int i=0;i<DataArray.length();i++)
                 {
                  String strObj=DataArray.getJSONObject(i).toString();
-                 InnerConversation innerConversation=  gson.fromJson(strObj,InnerConversation.class);
+                  innerConversation=  gson.fromJson(strObj,InnerConversation.class);
+
                  ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
-                 if(innerConversationsList==null)
+                  if(innerConversationsList==null)
                          innerConversationsList=new ArrayList<>();
                     innerConversationsList.add(innerConversation);
                     if(context!=null&&contentValues!=null)
-                  context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
+                     context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
                 }
+
+            if(innerConversation!=null&&innerConversation.getMess()!=null)//check type
+            {
+                ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+                converastionDataManager.setLastSentence(context, current_conversation,innerConversation.getMess());
+            }
           return true;
 
         } catch (JSONException e) {

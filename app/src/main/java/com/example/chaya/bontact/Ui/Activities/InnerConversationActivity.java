@@ -60,13 +60,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
         }
-       // recyclerView.addOnScrollListener(scrollListener);
-
         response_mess= (EditText) findViewById(R.id.response_message);
         response_mess.setOnKeyListener(this);
         Button btn_send_mess= (Button) findViewById(R.id.btn_send_message);
         btn_send_mess.setOnClickListener(this);
-        loading= (ProgressBar) findViewById(R.id.loading_inner_conversation);
+       setProgressBarState(View.VISIBLE);
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
     }
 
@@ -107,13 +105,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-//todo:if need the visibility
-        recyclerView.setVisibility(View.VISIBLE);
-        loading.setVisibility(View.GONE);
+       // loading.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
+            if(cursor.getCount()>0)
+                setProgressBarState(View.GONE);
             adapter = new InnerConversationAdapter(this, cursor);
             recyclerView.setAdapter(adapter);
             recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.smoothScrollToPosition(cursor.getCount());
         } else {
             recyclerView.setVisibility(View.GONE);
         }
@@ -144,4 +143,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                return super.onOptionsItemSelected(item);
        }
    }
+    public void setProgressBarState(int state)
+    {
+        if(loading==null)
+            loading= (ProgressBar) findViewById(R.id.loading_inner_conversation);
+        loading.setVisibility(state);
+    }
 }

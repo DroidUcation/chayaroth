@@ -20,7 +20,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public static final int VISITOR_VH_ITEM=0;
     public static  final int AGENT_VH_ITEM=1;
-    public static final int SYSTEM_NSG_VH_ITEM=1;
+    public static final int SYSTEM_NSG_VH_ITEM=2;
     Cursor cursor;
     Context context;
 

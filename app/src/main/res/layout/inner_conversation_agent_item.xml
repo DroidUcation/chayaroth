@@ -16,7 +16,9 @@
         android:layout_margin="10dp"
         android:textIsSelectable="true"
         android:background="@drawable/background_agent_message"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        android:autoLink="all"
+        />
 
     <!--
         <TextView

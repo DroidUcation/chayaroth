@@ -35,6 +35,7 @@
     <string name="txt_request_v"><b>new visitors requests</b>\n
      manage all conversation with your visitors</string>
 <string name="welcome_msg">Manage and convert your visitors</string>
+    <string name="logged_in_as">logged in as </string>
 
     <!--Error messages -->
     <string name="empty_deatails">Plese enter User name and password</string>
@@ -58,8 +59,8 @@
     <string name="minute">a minute ago</string>
     <string name="minutes">minutes ago</string>
     <string name="yesterday">yesterday</string>
-    <string name="days">days</string>
-    <string name="just_now">just now</string>
+    <string name="days">days ago</string>
+    <string name="hours">hours ago</string>
 
 </resources>
 

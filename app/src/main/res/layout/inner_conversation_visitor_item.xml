@@ -15,7 +15,7 @@
         android:textIsSelectable="true"
         android:background="@drawable/background_visitor_message"
         android:textSize="14dp"
-        android:autoLink="email"
+        android:autoLink="all"
         />
 
     <!-- <TextView

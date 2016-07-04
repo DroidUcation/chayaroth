@@ -14,7 +14,7 @@ public class Contract {
         public static final String URL = "content://" + AUTHORITY;
         public static final Uri INBOX_URI = Uri.parse(URL);
         public static final String TABLE_NAME="Conversation";
-        public static final String COLUMN_ID="idSurfer";
+        public static final String COLUMN_ID_SURFER ="idSurfer";
         public static final String COLUMN_AVATAR="avatar";
         public static final String COLUMN_NAME="visitor_name";
         public static final String COLUMN_RETURNING="returning";
@@ -33,6 +33,7 @@ public class Contract {
         public static final String COLUMN_EMAIL="email";
         public static final String COLUMN_AGENT="agent";
         public static final String COLUMN_DISPLAY_NAME="displayname";
+        public static final String COLUMN_LAST_SENTENCE="lastSentence";
     }
     public static class InnerConversation implements BaseColumns{
         public static final String AUTHORITY = "com.example.chaya.bontact.Data.InnerConversationProvider";

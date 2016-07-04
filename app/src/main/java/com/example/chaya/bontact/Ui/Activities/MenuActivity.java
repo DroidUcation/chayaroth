@@ -17,17 +17,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
+
+import java.util.logging.Logger;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,ServerCallResponseToUi {
@@ -39,8 +43,18 @@ public class MenuActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ReplaceFragments(R.id.nav_dashboard);
+
         setContentView(R.layout.activity_menu);
+        ReplaceFragments(R.id.nav_dashboard);
+        agentDataManager=new AgentDataManager();
+/*
+
+        TextView loggedInAs = (TextView) findViewById(R.id.loggedInAsTxt);
+        loggedInAs.setText(R.string.logged_in_as);
+        loggedInAs.append( agentDataManager.getAgentName(this));
+*/
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -64,7 +78,7 @@ public class MenuActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
 
-        agentDataManager=new AgentDataManager();
+
         String token= agentDataManager.getAgentToken(this);
         if(token!=null)
         {
@@ -94,7 +108,7 @@ public class MenuActivity extends AppCompatActivity
                     {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            finish();
                         }
 
                     })

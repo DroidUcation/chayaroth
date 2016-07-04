@@ -30,6 +30,9 @@ public class Conversation {
     @SerializedName("lastdate")
     @Expose
     public String lastdate;
+    @SerializedName("lastSentence")
+    @Expose
+    public String lastSentence;
     @SerializedName("lasttype")
     @Expose
     public int lasttype;
@@ -217,5 +220,14 @@ public class Conversation {
 
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
+    }
+
+    public String getLastSentence() {
+        return lastSentence;
+    }
+
+    public void setLastSentence(String lastSentence) {
+
+        this.lastSentence = lastSentence;
     }
 }

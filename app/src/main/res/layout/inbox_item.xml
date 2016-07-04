@@ -8,10 +8,19 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentTop="true"
-        android:src="@drawable/avatar_jen" />
+        android:src="@drawable/avatar_jen"
+        />
+    <ImageView
+        android:id="@+id/online_point"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/online_point"
+        android:layout_alignBottom="@id/avatar"
+        android:layout_alignBaseline="@id/avatar"
+        android:layout_alignRight="@id/avatar"/>
 
 
     <TextView
@@ -24,11 +33,10 @@
         android:layout_toEndOf="@+id/avatar"
         android:layout_toRightOf="@+id/avatar"
         android:text="Jenny Li"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
     <TextView
-        android:id="@+id/lastDate"
+        android:id="@+id/last_sentence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/displayName"
@@ -37,8 +45,16 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/avatar"
         android:layout_toRightOf="@+id/avatar"
-        android:text="(123) 456-7890"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="waiting you..."
+        android:lines="1"
         />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/avatar"
+        android:layout_alignParentRight="true"
+        android:text="11:12"/>
+
 
 </RelativeLayout>

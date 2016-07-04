@@ -36,11 +36,12 @@
     android:layout_height="wrap_content"
     android:visibility="gone"
     android:textColor="@color/colorRequierd"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_login"
-        android:text="@string/login" />
+        android:text="@string/login"/>
     <ProgressBar
         android:id="@+id/progress_bar_login_loading"
         android:layout_width="wrap_content"

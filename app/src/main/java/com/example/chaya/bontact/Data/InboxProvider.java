@@ -61,11 +61,16 @@ public class InboxProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
        int result= dbBontact.delete(Contract.Conversation.TABLE_NAME, selection,selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+
         return  result;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+      int result=dbBontact.update(Contract.Conversation.TABLE_NAME,values,selection,selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return result;
     }
 }
