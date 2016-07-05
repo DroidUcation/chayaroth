@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Socket.io.SocketManager;
 
 import java.net.URISyntaxException;
 
@@ -15,33 +16,35 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+
 public class SplashActivity extends AppCompatActivity {
-    private Socket socket;
-
-
+   // private Socket socket;
     @Override
     protected void onResume(){
         super.onResume();
         setContentView(R.layout.activity_splash);
-        connectSocket();
+      //  connectSocket();
 
         //bring numbers to dashbord.
         AgentDataManager agentDataManager=new AgentDataManager();
         Intent intent;
-        if(  agentDataManager.isLoggedIn(this)==true)
-            intent=new Intent(this,MenuActivity.class  );
+        if(  agentDataManager.isLoggedIn(this)==true) {
+            SocketManager socketManager=new SocketManager(this);
+
+            intent = new Intent(this, MenuActivity.class);
+        }
         else
             intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 
 
-    public void connectSocket()
+    /*public void connectSocket()
     {
         try {
             socket = IO.socket("https://prd-socket01-eus.azurewebsites.net/");
         } catch (URISyntaxException e) {}
-        socket.on("connect",listener);
+       socket.on("connect",listener);
         socket.on("selectConversation",listener);
         socket.on("unselectConversation",listener);
         socket.on("refreshSelectConversation",listener);
@@ -59,8 +62,11 @@ public class SplashActivity extends AppCompatActivity {
                     Toast.makeText(SplashActivity.this, "in function", Toast.LENGTH_SHORT).show();
                 }
             });
+          AgentDataManager agentDataManager=new AgentDataManager();
+            agentDataManager.isLoggedIn();
+            socket.emit("repConnected",)
         }
 
-    };
+    };*/
 
 }

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.R;
 
 
@@ -52,27 +54,30 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         int type=getItemViewType(position);
         cursor.moveToPosition(position);
         String msg=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
-
+       String date=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_TIME_REQUEST));
+         date=DateTimeHelper.getTimeFromDateToDisplay(date);
         switch(type)
         {
             case AGENT_VH_ITEM:
                 if(msg!=null)
-                ((InnerConversationAgentHolder)holder).msg.setText(msg);
-               /* if(msg.contains("@"))
                 {
-                    ((InnerConversationAgentHolder)holder).msg.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+                    InnerConversationAgentHolder agentHolder= (InnerConversationAgentHolder)holder;
+                    agentHolder.msg.setText(msg);
+                    agentHolder.date.setText(date);
+                    String name=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME));
+                    if(name==null)
+                        name="agent";
+                    agentHolder.name.setText(name);
 
-                }*/
+
+                }
+
                 break;
 
             case VISITOR_VH_ITEM:
                 if(msg!=null)
                 ((InnerConversationVisitorHolder)holder).msg.setText(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)));
-             /*   if(msg.contains("@"))
-                {
-                    ((InnerConversationVisitorHolder)holder).msg.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
 
-                }*/
                 break;
         }
     }
@@ -80,16 +85,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemViewType(int position) {
-      //  return super.getItemViewType(position);
-        /*if(cursor==null)
-        {}
-            if(cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_SYSTEM_MSG))==0)//not a system msg
-            {
-                if(cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_REP_REQUEST))==1)//it is a agent msg
-                  return AGENT_VH_ITEM;
-                    return VISITOR_VH_ITEM;
-            }
-              return SYSTEM_NSG_VH_ITEM;*/
+
         cursor.moveToPosition(position);
         if (cursor != null) {
             if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_SYSTEM_MSG)) == 0)//not a system msg
@@ -112,11 +108,13 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     class InnerConversationAgentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView msg;
+        TextView msg,name,date;
 
         public InnerConversationAgentHolder(View itemView) {
             super(itemView);
             msg = (TextView) itemView.findViewById(R.id.mess);
+            name = (TextView) itemView.findViewById(R.id.name);
+            date = (TextView) itemView.findViewById(R.id.date);
             itemView.setOnClickListener(this);
         }
 

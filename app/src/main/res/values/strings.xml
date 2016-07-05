@@ -56,11 +56,11 @@
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
 
     <!-- time strings-->
-    <string name="minute">a minute ago</string>
-    <string name="minutes">minutes ago</string>
+    <string name="minutes">min ago</string>
     <string name="yesterday">yesterday</string>
     <string name="days">days ago</string>
     <string name="hours">hours ago</string>
+    <string name="hour">an hour ago</string>
 
 </resources>
 
