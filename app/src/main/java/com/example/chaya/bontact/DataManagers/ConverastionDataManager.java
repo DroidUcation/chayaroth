@@ -95,7 +95,7 @@ public class ConverastionDataManager implements ServerCallResponse {
                 }
                 if(conversation.getLastSentence()==null)
                 {
-                    String lastSentence=ChanelsTypes.getDefultStringByChanelType(conversation.getLasttype());
+                    String lastSentence=ChanelsTypes.getDefultStringByChanelType(context, conversation.getLasttype());
                     setLastSentence(context,conversation,lastSentence);
                 }
             }

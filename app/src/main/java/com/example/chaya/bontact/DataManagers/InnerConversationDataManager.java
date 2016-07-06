@@ -83,7 +83,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
             //delete this users data
          String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
          String[]  selectionArgs={current_conversation.idSurfer+""};
-          context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
+          context.getContentResolver().(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
             InnerConversation innerConversation=null;
             for(int i=0;i<DataArray.length();i++)
                 {

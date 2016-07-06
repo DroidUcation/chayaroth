@@ -63,6 +63,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
              holder.date.setText(timeAgo);
         if(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))==1)
         {
+            holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
           holder.setUnRead(true);
         }
 
@@ -80,8 +81,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar;
-        TextView displayName, lastSentence,date;
+        ImageView avatar,chanel;
+        TextView displayName, lastSentence,date,unread;
+
 
         public InboxHolder(View itemView) {
 
@@ -90,6 +92,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             displayName = (TextView) itemView.findViewById(R.id.displayName);
             lastSentence = (TextView) itemView.findViewById(R.id.last_sentence);
             date = (TextView) itemView.findViewById(R.id.date);
+            unread = (TextView) itemView.findViewById(R.id.unread);
+
             itemView.setOnClickListener(this);
             avatar.setOnClickListener(imagesClickListener);
 
@@ -101,6 +105,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 displayName.setTypeface(null, Typeface.BOLD);
                 lastSentence.setTypeface(null, Typeface.BOLD);
                 date.setTypeface(null, Typeface.BOLD);
+                unread.setVisibility(View.VISIBLE);
             }
         }
 
@@ -126,7 +131,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
             }
             }
-        View.OnClickListener imagesClickListener=new View.OnClickListener() {
+          View.OnClickListener imagesClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

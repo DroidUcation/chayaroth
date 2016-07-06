@@ -24,7 +24,7 @@
         android:id="@+id/mess"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+
         android:textIsSelectable="true"
         android:layout_below="@id/name"
         android:textSize="14dp"

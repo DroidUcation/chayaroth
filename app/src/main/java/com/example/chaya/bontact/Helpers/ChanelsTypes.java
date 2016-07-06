@@ -1,5 +1,9 @@
 package com.example.chaya.bontact.Helpers;
 
+import android.content.Context;
+
+import com.example.chaya.bontact.R;
+
 /**
  * Created by chaya on 7/3/2016.
  */
@@ -10,45 +14,23 @@ public class ChanelsTypes {
     public static final int email=4;
     public static final int whatsapp=5;
     public static final int webCall=16;
-   /* public static String convertChanelTypeTostring(int chanelType)
-    {
-        switch (chanelType)
-        {
-         case callback:
-        return "callback";
-        case sms:
-        return "sms";
 
-        //case 33:
-         case chat:
-        return "chat";
-        case email:
-        return "email";
-        case whatsapp:
-        return "whatsapp";
-        case webCall:
-        return "web call";
-        default:
-
-        }
-        return null;
-    }*/
-    public static String getDefultStringByChanelType(int chanelType)
+    public static String getDefultStringByChanelType(Context context, int chanelType)
     {
         switch (chanelType)
         {
             case callback:
-                return "a callback is waiting";
+                return context.getResources().getString(R.string.unread_callback);
             case sms:
-                return "a sms is waiting";
+                return context.getResources().getString(R.string.unread_sms);
             case chat:
-                return "a chat is waiting";
+                return context.getResources().getString(R.string.unread_chat);
             case email:
-                return "a email is waiting";
+                return context.getResources().getString(R.string.unread_email);
             case whatsapp:
                 return "a whatsapp is waiting";
             case webCall:
-                return "a web call is waiting";
+                return context.getResources().getString(R.string.unread_webcall);
             default:
 
         }

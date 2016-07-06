@@ -62,6 +62,11 @@
     <string name="hours">hours ago</string>
     <string name="hour">an hour ago</string>
 
+    <string name="unread_sms">Unread text message, read now.</string>
+    <string name="unread_chat">Unread chat message, read now. </string>
+    <string name="unread_email">Unread email message, read now.</string>
+    <string name="unread_callback">Unheard voice recording ,play now</string>
+    <string name="unread_webcall">Unheard voice recording ,play now</string>
 </resources>
 
 
