@@ -36,6 +36,7 @@ public class ConverastionDataManager implements ServerCallResponse {
     public ConverastionDataManager() {
         if (conversationList == null)
             conversationList = new ArrayList<>();
+
         context = null;
 
     }
@@ -43,6 +44,13 @@ public class ConverastionDataManager implements ServerCallResponse {
     public void getFirstDataFromServer(Context context, String token) {
         current_page = 0;
         this.context = context;
+        /*String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC";
+      Cursor cursor=  context.getContentResolver().query(Contract.Conversation.INBOX_URI,null,null,null,sortOrder);
+        if(cursor.moveToFirst()&&cursor.getCount()>0)
+        for(int i=0;i<cursor.getCount();i++)
+        {
+            conversationList.add(cursor.moveToPosition(i))
+        }*/
         getDataFromServer(context, token, current_page);
     }
 
@@ -78,25 +86,26 @@ public class ConverastionDataManager implements ServerCallResponse {
             JSONObject jsonObject = null;
             jsonObject = new JSONObject(conversations);
             JSONArray jsonConversationArray = jsonObject.getJSONArray("data");
-            if (context != null && current_page == 0)//check if it is the first data or not
+         /*   if (context != null && current_page == 0)//check if it is the first data or not
             {
-                context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
-                conversationList.clear();
-            }
+               context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
+              conversationList.
+            }*/
 
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
+              /*  if(conversation.getLastSentence()==null)
+                {
+                    String lastSentence=ChanelsTypes.getDefultStringByChanelType(context, conversation.getLasttype());
+                   // setLastSentence(context,conversation,lastSentence);
+                    conversation.setLastSentence(lastSentence);
+                }*/
                 //add last defult sentences
                 conversationList.add(conversation);
                 ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(conversation, DbBontact.getAllConversationFields());
                 if (contentValues != null && context != null) {
-                    Uri uri = context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
-                }
-                if(conversation.getLastSentence()==null)
-                {
-                    String lastSentence=ChanelsTypes.getDefultStringByChanelType(context, conversation.getLasttype());
-                    setLastSentence(context,conversation,lastSentence);
+                    context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
                 }
             }
             return true;

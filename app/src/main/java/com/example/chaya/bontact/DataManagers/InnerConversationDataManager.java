@@ -76,38 +76,48 @@ public class InnerConversationDataManager implements ServerCallResponse {
     }
     public boolean saveData(String data)
     {
-        Gson gson  =new Gson();
         try {
             JSONArray DataArray=new JSONArray(data);
-
-            //delete this users data
-         String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
-         String[]  selectionArgs={current_conversation.idSurfer+""};
-          context.getContentResolver().(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
-            InnerConversation innerConversation=null;
-            for(int i=0;i<DataArray.length();i++)
-                {
-                 String strObj=DataArray.getJSONObject(i).toString();
-                  innerConversation=  gson.fromJson(strObj,InnerConversation.class);
-
-                 ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
-                  if(innerConversationsList==null)
-                         innerConversationsList=new ArrayList<>();
-                    innerConversationsList.add(innerConversation);
-                    if(context!=null&&contentValues!=null)
-                     context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
-                }
-
-            if(innerConversation!=null&&innerConversation.getMess()!=null)//check type
-            {
-                ConverastionDataManager converastionDataManager=new ConverastionDataManager();
-                converastionDataManager.setLastSentence(context, current_conversation,innerConversation.getMess());
-            }
-          return true;
+           return saveData(DataArray);
 
         } catch (JSONException e) {
           return false;
         }
+    }
+    public boolean saveData(JSONArray DataArray)
+    {
+        Gson gson  =new Gson();
+        //delete this users data
+        String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
+        String[]  selectionArgs={current_conversation.idSurfer+""};
+        context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
+
+        InnerConversation innerConversation=null;
+        for(int i=0;i<DataArray.length();i++)
+        {
+            String strObj= null;
+            try {
+                strObj = DataArray.getJSONObject(i).toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            innerConversation=  gson.fromJson(strObj,InnerConversation.class);
+
+            ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
+            if(innerConversationsList==null)
+                innerConversationsList=new ArrayList<>();
+            innerConversationsList.add(innerConversation);
+            if(context!=null&&contentValues!=null)
+                context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
+        }
+
+        if(innerConversation!=null&&innerConversation.getMess()!=null)//check type
+        {
+            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+            converastionDataManager.setLastSentence(context, current_conversation,innerConversation.getMess());
+        }
+        return true;
+
     }
 
     @Override
@@ -140,8 +150,5 @@ public class InnerConversationDataManager implements ServerCallResponse {
         }
 
     }
-    public void sendResponseToServer()
-    {
 
-    }
 }

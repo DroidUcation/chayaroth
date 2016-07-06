@@ -8,8 +8,20 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Models.Agent;
+import com.example.chaya.bontact.Models.Conversation;
+import com.example.chaya.bontact.Models.InnerConversation;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
@@ -21,6 +33,8 @@ public class SocketManager {
 
     public static Socket socket;
     private Context context;
+    private Gson gson=null;
+
     public Socket getSocket()
     {
         return socket;
@@ -28,53 +42,73 @@ public class SocketManager {
     public SocketManager(Context context)
     {
         this.context=context;
+         gson=new Gson();
         connectSocket();
     }
 
-    public void connectSocket()
-    {
+    public void connectSocket() {
         try {
             socket = IO.socket("https://dev-socket01-eus.azurewebsites.net/");
-        } catch (URISyntaxException e) {}
-        socket.on("connect",connectListener);
-        socket.on("pushmessage",pushListener);
-
+        } catch (URISyntaxException e) {
+        }
+        socket.on(Socket.EVENT_CONNECT,connectListener )
+               .on("pushmessage",pushMessListener );
         socket.connect();
     }
 
-    private Emitter.Listener connectListener =new Emitter.Listener() {
+ Emitter.Listener pushMessListener= new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONObject data = (JSONObject) args[0];
+
+            int id_surfer=0;
+            try {
+                id_surfer = data.getInt(Contract.Conversation.COLUMN_ID_SURFER);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+              /*  String json = gson.toJson(arg);
+                InnerConversation innerConversation = gson.fromJson(, InnerConversation.class);
+                 id_surfer = innerConversation.getIdSurfer();*/
+
+                ConverastionDataManager converastionDataManager = new ConverastionDataManager();
+                Conversation conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
+
+                if (conversation != null) {
+                    InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(conversation);
+                    innerConversationDataManager.saveData(data.toString());
+                } else {
+                    if (AgentDataManager.getAgentInstanse() != null)
+                        converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
+                }
+        }
+
+    };
+    Emitter.Listener connectListener=new Emitter.Listener() {
         @Override
         public void call(Object... args) {
 
             AgentDataManager agentDataManager=new AgentDataManager();
             if(agentDataManager.isLoggedIn(context)) {
-               socket.emit("repConnected", agentDataManager.getAgentInstanse().rep, new Ack() {
-                   @Override
-                   public void call(final Object... args) {
-                       if(context instanceof Activity)
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(context,"emit" , Toast.LENGTH_SHORT).show();
-                                Log.d("emit",args.toString());
-                            }
-                        }); }
-               });}
-        }
 
-    };
-    private Emitter.Listener pushListener =new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            ((Activity) context).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(context,"push" , Toast.LENGTH_SHORT).show();
-                    Log.d("push",args.toString());
+                JSONObject jsonObject=null;
+                try {
+                    jsonObject=new JSONObject(gson.toJson(agentDataManager.getAgentInstanse().rep));
+                    socket.emit("repConnected",jsonObject,connectEmitCallBack );
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
         }
-
+    };
+   Ack connectEmitCallBack= new Ack() {
+        @Override
+        public void call(Object... args) {
+            String json=  gson.toJson(args);
+        }
     };
 
 }
+
+

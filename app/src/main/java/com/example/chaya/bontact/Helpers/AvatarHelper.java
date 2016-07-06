@@ -44,6 +44,7 @@ public class AvatarHelper {
     public static int getNextAvatar()
     {
         getAvatarsList();
+
        return avatars.get(getAvatarPosition());
     }
 

@@ -36,5 +36,27 @@ public class ChanelsTypes {
         }
         return null;
     }
+    public static int getIconByChanelType(int chanelType)
+    {
+        switch (chanelType)
+        {
+            case callback:
+                return R.string.phone_calling_icon;
+            case sms:
+                return R.string.sms_icon;
+            case chat:
+                return R.string.chat_icon;
+            case email:
+                return R.string.email_icon;
+            case whatsapp:
+                return R.string.chat_icon;
+            case webCall:
+                return R.string.phone_calling_icon;
+            default:
+
+        }
+
+        return 0;
+    }
 }
 

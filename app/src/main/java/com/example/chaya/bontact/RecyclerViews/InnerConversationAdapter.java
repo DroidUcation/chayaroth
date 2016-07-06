@@ -2,6 +2,7 @@ package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -68,6 +69,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     if(name==null)
                         name="agent";
                     agentHolder.name.setText(name);
+                    agentHolder.chanelIcon.setText(R.string.chat_icon);
 
 
                 }
@@ -108,13 +110,16 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     class InnerConversationAgentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView msg,name,date;
+        TextView msg,name,date,chanelIcon;
 
         public InnerConversationAgentHolder(View itemView) {
             super(itemView);
             msg = (TextView) itemView.findViewById(R.id.mess);
             name = (TextView) itemView.findViewById(R.id.name);
             date = (TextView) itemView.findViewById(R.id.date);
+            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
+            Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
+            chanelIcon.setTypeface(font);
             itemView.setOnClickListener(this);
         }
 

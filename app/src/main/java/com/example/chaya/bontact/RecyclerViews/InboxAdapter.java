@@ -16,6 +16,7 @@ package com.example.chaya.bontact.RecyclerViews;
  import com.example.chaya.bontact.DataManagers.AgentDataManager;
  import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
  import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+ import com.example.chaya.bontact.Helpers.ChanelsTypes;
  import com.example.chaya.bontact.Helpers.DateTimeHelper;
  import com.example.chaya.bontact.Models.Conversation;
  import com.example.chaya.bontact.R;
@@ -48,20 +49,33 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public void onBindViewHolder(InboxHolder holder, int position) {
         cursor.moveToPosition(position);
 
-        int avatarPosition = AvatarHelper.getAvatarPosition();
+        // init data to display
+        int lastType=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
+        int chanelIcon= ChanelsTypes.getIconByChanelType(lastType);
+
+        int isUnread=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
         String lastSentences =cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_SENTENCE));
+        if(lastSentences==null)
+            lastSentences= ChanelsTypes.getDefultStringByChanelType(context,lastType);
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
         String timeAgo=null;
         if(dateStringToConvert!=null && context!=null) {
             timeAgo = DateTimeHelper.getDiffToNow(dateStringToConvert, context);
         }
+
+        //set in item
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
         holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
-         if(lastSentences!=null)
-            holder.lastSentence.setText(lastSentences );
+        holder.chanelIcon.setText(chanelIcon);
+        if(lastType==ChanelsTypes.webCall||lastType==ChanelsTypes.sms||lastType==ChanelsTypes.callback)
+        holder.chanelIcon.setTextSize(14);
+            if(lastSentences!=null)
+             holder.lastSentence.setText(lastSentences);
+
         if(timeAgo!=null)
              holder.date.setText(timeAgo);
-        if(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))==1)
+
+        if(isUnread==1)
         {
             holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
           holder.setUnRead(true);
@@ -81,8 +95,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar,chanel;
+        ImageView avatar;
         TextView displayName, lastSentence,date,unread;
+        TextView chanelIcon;
 
 
         public InboxHolder(View itemView) {
@@ -93,6 +108,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             lastSentence = (TextView) itemView.findViewById(R.id.last_sentence);
             date = (TextView) itemView.findViewById(R.id.date);
             unread = (TextView) itemView.findViewById(R.id.unread);
+
+            chanelIcon=(TextView) itemView.findViewById(R.id.chanelIcon);
+            Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
+            chanelIcon.setTypeface(font);
 
             itemView.setOnClickListener(this);
             avatar.setOnClickListener(imagesClickListener);
@@ -105,6 +124,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 displayName.setTypeface(null, Typeface.BOLD);
                 lastSentence.setTypeface(null, Typeface.BOLD);
                 date.setTypeface(null, Typeface.BOLD);
+
                 unread.setVisibility(View.VISIBLE);
             }
         }

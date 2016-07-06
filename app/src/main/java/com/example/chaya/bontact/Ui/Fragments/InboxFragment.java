@@ -101,9 +101,18 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         refreshLayout.setRefreshing(false);
         progressBarBottom.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
-            adapter = new InboxAdapter(getContext(), cursor);
-            recyclerView.setAdapter(adapter);
-            recyclerView.scrollToPosition(lastVisibleItem);
+            if(adapter==null)
+            {
+                adapter = new InboxAdapter(getContext(), cursor);
+                recyclerView.setAdapter(adapter);
+            }
+            else
+            {
+                adapter = new InboxAdapter(getContext(), cursor);
+                recyclerView.swapAdapter(adapter, false);
+            }
+
+           // recyclerView.scrollToPosition(lastVisibleItem);
             recyclerView.setVisibility(View.VISIBLE);
 
         } else {

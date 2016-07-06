@@ -45,7 +45,7 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_menu);
-        ReplaceFragments(R.id.nav_dashboard);
+      //  ReplaceFragments(R.id.nav_dashboard);
         agentDataManager=new AgentDataManager();
 /*
 
@@ -131,15 +131,15 @@ public class MenuActivity extends AppCompatActivity
     {
         if (id == R.id.nav_dashboard )
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_online_v || id==R.id.onlineVisitors_dashboard_layout)
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else
         if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_dashboard_layout){
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_settings)
         {

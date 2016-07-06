@@ -62,11 +62,21 @@
     <string name="hours">hours ago</string>
     <string name="hour">an hour ago</string>
 
-    <string name="unread_sms">Unread text message, read now.</string>
-    <string name="unread_chat">Unread chat message, read now. </string>
-    <string name="unread_email">Unread email message, read now.</string>
-    <string name="unread_callback">Unheard voice recording ,play now</string>
-    <string name="unread_webcall">Unheard voice recording ,play now</string>
+    <string name="unread_sms">Unread SMS, read now.</string>
+    <string name="unread_chat">Unread Chat, read now. </string>
+    <string name="unread_email">Unread Email, read now.</string>
+    <string name="unread_callback">New voice recording ,play now</string>
+    <string name="unread_webcall">New voice recording ,play now</string>
+
+
+    <string name="email_icon">&#xf0e0;</string>
+    <string name="chat_icon">&#xf086;</string>
+    <string name="microphone_icon">&#xf130;</string>
+    <string name="phone_square_icon">&#xf098;</string>
+    <string name="device_icon">&#xf10b;</string>
+    <string name="phone_calling_icon">&#xf2a0;</string>
+    <string name="audio_icon">&#xf028;</string>
+    <string name="sms_icon">&#xf27a;</string>
 </resources>
 
 

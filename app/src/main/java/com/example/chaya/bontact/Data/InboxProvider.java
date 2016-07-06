@@ -49,28 +49,30 @@ public class InboxProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        long rowID =  dbBontact.insert(Contract.Conversation.TABLE_NAME,values);
+        long rowID =  dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME,values,Contract.Conversation.COLUMN_ID_SURFER);
         if (rowID > 0) {
-            Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
-            getContext().getContentResolver().notifyChange(_uri, null);
+           // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
+            getContext().getContentResolver().notifyChange(uri, null);
             return uri;
           }
+
         return null;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-       int result= dbBontact.delete(Contract.Conversation.TABLE_NAME, selection,selectionArgs);
+       long result= dbBontact.delete(Contract.Conversation.TABLE_NAME, selection,selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
 
-        return  result;
+        return (int) result;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-      int result=dbBontact.update(Contract.Conversation.TABLE_NAME,values,selection,selectionArgs);
+      long result=dbBontact.update(Contract.Conversation.TABLE_NAME,values,selection,selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
 
-        return result;
+        return (int)result;
     }
+
 }

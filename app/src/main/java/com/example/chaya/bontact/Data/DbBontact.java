@@ -2,6 +2,8 @@ package com.example.chaya.bontact.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,9 +16,9 @@ public class DbBontact extends SQLiteOpenHelper {
 
     private static final String DBName= "Bontact.db";
     private static final int DBVersion= 1;
-     private String CreateConversationTable="CREATE TABLE "+Contract.Conversation.TABLE_NAME+
-            "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
-            Contract.Conversation.COLUMN_ID_SURFER +" INT,  "+
+     private String CreateConversationTable="CREATE TABLE "+Contract.Conversation.TABLE_NAME+" ("+
+           // "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
+            Contract.Conversation.COLUMN_ID_SURFER +"  INTEGER PRIMARY KEY,  "+
             Contract.Conversation.COLUMN_NAME+" TEXT, "+
              Contract.Conversation.COLUMN_AVATAR+" TEXT, "+
             Contract.Conversation.COLUMN_RETURNING+" INT, "+
@@ -128,16 +130,31 @@ public class DbBontact extends SQLiteOpenHelper {
         long result=database.insert(tableName,null,values);
         return result;
     }
-    public int update(String table,ContentValues values,String selection, String[] selectionArgs)
+    public long update(String table,ContentValues values,String selection, String[] selectionArgs)
     {
         database=getWritableDatabase();
        return database.update(table,values,selection,selectionArgs);
     }
-    public int delete(String tableName,String selection, String[] selectionArgs){
+    public long delete(String tableName,String selection, String[] selectionArgs){
 
         database=getWritableDatabase();
          return database.delete(tableName,selection,selectionArgs);
 
+
+    }
+    public long insertOrUpdateById( String table, ContentValues values, String column)  {
+        database=getWritableDatabase();
+        try {
+          long row_id=  database.insertOrThrow(table, null, values);
+            return row_id;
+        } catch (SQLiteConstraintException e) {
+            long result = update(table, values, column + "=?",
+                    new String[]{values.getAsString(column)});
+           /* if (result == 0)
+                throw e;
+            else*/
+                return result;
+        }
 
     }
 
