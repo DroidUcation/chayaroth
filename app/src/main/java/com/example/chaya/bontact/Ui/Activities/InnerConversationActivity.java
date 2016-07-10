@@ -50,7 +50,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         Bundle args = getIntent().getExtras();
         if (args != null) {
              int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
-             ConverastionDataManager  converastionDataManager=new ConverastionDataManager();
+             ConverastionDataManager  converastionDataManager=new ConverastionDataManager(this);
            this.current_conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
             setTitle(current_conversation.displayname);
 

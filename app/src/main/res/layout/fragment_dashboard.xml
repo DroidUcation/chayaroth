@@ -41,13 +41,15 @@
     android:padding="10dp">
             <TextView
             android:id="@+id/count_visitors"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
             android:text="2"
                 android:textAlignment="center"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_size_dashboard"/>
+                android:textSize="@dimen/text_size_dashboard"
+                android:background="@drawable/circle_purple_shape"
+                android:gravity="center_horizontal|center_vertical"
+                    />
 
         <TextView
             android:id="@+id/txt_online_v_btn"

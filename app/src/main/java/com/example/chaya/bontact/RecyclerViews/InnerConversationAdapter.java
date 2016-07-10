@@ -68,7 +68,8 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     String name=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME));
                     if(name==null)
                         name="agent";
-                    agentHolder.name.setText(name);
+//
+//                agentHolder.name.setText(name);
                     agentHolder.chanelIcon.setText(R.string.chat_icon);
 
 
@@ -115,11 +116,11 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         public InnerConversationAgentHolder(View itemView) {
             super(itemView);
             msg = (TextView) itemView.findViewById(R.id.mess);
-            name = (TextView) itemView.findViewById(R.id.name);
+           // name = (TextView) itemView.findViewById(R.id.name);
             date = (TextView) itemView.findViewById(R.id.date);
             chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
-            chanelIcon.setTypeface(font);
+//            chanelIcon.setTypeface(font);
             itemView.setOnClickListener(this);
         }
 

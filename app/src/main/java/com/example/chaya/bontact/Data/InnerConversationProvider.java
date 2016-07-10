@@ -14,14 +14,15 @@ import android.text.TextUtils;
  * Created by chaya on 6/26/2016.
  */
 public class InnerConversationProvider extends ContentProvider {
-    private SQLiteDatabase db;
+   // private SQLiteDatabase db;
     private DbBontact dbBontact ;
     @Override
     public boolean onCreate() {
 
         dbBontact = new DbBontact(getContext());
-        db = dbBontact.getWritableDatabase();
-        return (db != null);
+        return true;
+        //db = dbBontact.getWritableDatabase();
+       // return (db != null);
     }
 
     @Nullable
@@ -29,7 +30,7 @@ public class InnerConversationProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
         sqLiteQueryBuilder.setTables(Contract.InnerConversation.TABLE_NAME);
-        Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = sqLiteQueryBuilder.query(dbBontact.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;
 

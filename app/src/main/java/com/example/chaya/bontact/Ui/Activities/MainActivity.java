@@ -23,6 +23,7 @@ import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
+import com.example.chaya.bontact.Socket.io.SocketManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener ,ServerCallResponseToUi,View.OnKeyListener {
 
@@ -188,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void run() {
                             progressBar.setVisibility(View.GONE);
+                            SocketManager socketManager= new SocketManager(MainActivity.this);
                             startActivity(new Intent(MainActivity.this, MenuActivity.class));
                         }
                     });

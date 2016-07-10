@@ -33,7 +33,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private  View rootView;
     ProgressBar progressBarBottom;
     SwipeRefreshLayout refreshLayout;
-
+    private boolean isFirstLoadData;
     private LinearLayoutManager linearLayoutManager;
 
     int lastVisibleItem;
@@ -50,6 +50,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
         getActivity().setTitle(R.string.inbox_title);
         super.onCreate(savedInstanceState);
+
     }
 
 
@@ -63,13 +64,12 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            recyclerView.addOnScrollListener(scrollListener);
+            adapter= new InboxAdapter(getContext(),null);
+            recyclerView.setAdapter(adapter);
         }
-        recyclerView.addOnScrollListener(scrollListener);
-
-        //  progressBarFirstData = (ProgressBar)rootView.findViewById(R.id.loading_first_inbox_data);
 
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
-
         refreshLayout= (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setOnRefreshListener(refreshListener);
        refreshLayout.setColorSchemeColors(R.color.orange_dark);
@@ -80,7 +80,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public void initLoader()
     {
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
-
+        isFirstLoadData=true;
     }
 
     @Override
@@ -100,25 +100,42 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             refreshLayout=(SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setRefreshing(false);
         progressBarBottom.setVisibility(View.GONE);
+       // if (cursor != null && cursor.moveToFirst()) {
+            adapter.swapCursor(cursor);
+       // }
+      //  else
+        if(cursor==null)
+            recyclerView.setVisibility(View.VISIBLE);
+
+    }
+  /*      ((MenuActivity)getActivity()).setProgressBarCenterState(View.GONE);
+        if(refreshLayout==null)
+            refreshLayout=(SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
+        refreshLayout.setRefreshing(false);
+        progressBarBottom.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
-            if(adapter==null)
-            {
+        if(isFirstLoadData) {
+            adapter = new InboxAdapter(getContext(), cursor);
+            recyclerView.setAdapter(adapter);
+
+        }
                 adapter = new InboxAdapter(getContext(), cursor);
                 recyclerView.setAdapter(adapter);
-            }
+
             else
             {
-                adapter = new InboxAdapter(getContext(), cursor);
-                recyclerView.swapAdapter(adapter, false);
+               // recyclerView.
+               adapter = new InboxAdapter(getContext(), cursor);
+                recyclerView.swapAdapter(adapter, false);*//**//*
             }
 
-           // recyclerView.scrollToPosition(lastVisibleItem);
+           // recyclerView.scrollToPosition(lastVisibleItem);*//*
             recyclerView.setVisibility(View.VISIBLE);
 
         } else {
             recyclerView.setVisibility(View.GONE);
-        }
-    }
+        }*/
+
 
     @Override
     public void onLoaderReset(Loader loader) {
@@ -150,7 +167,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             {
                 lastVisibleItem=linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 AgentDataManager agentDataManager=new AgentDataManager();
-                ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+                ConverastionDataManager converastionDataManager=new ConverastionDataManager(getContext());
                 converastionDataManager.getNextDataFromServer(getContext(),agentDataManager.getAgentToken(getContext()));
                 progressBarBottom.setVisibility(View.VISIBLE);
             }

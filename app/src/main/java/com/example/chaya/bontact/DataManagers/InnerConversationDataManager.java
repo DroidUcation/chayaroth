@@ -34,11 +34,11 @@ public class InnerConversationDataManager implements ServerCallResponse {
     private Conversation current_conversation;
     private List<InnerConversation> innerConversationsList;
 
-    public InnerConversationDataManager( Conversation current_conversation)
+    public InnerConversationDataManager(Context context, Conversation current_conversation)
     {
 
         this.current_conversation =current_conversation;
-        context=null;
+        this.context=context;
         innerConversationsList=new ArrayList<>();
     }
     public void getData(Context context, String token)
@@ -78,48 +78,49 @@ public class InnerConversationDataManager implements ServerCallResponse {
     {
         try {
             JSONArray DataArray=new JSONArray(data);
-           return saveData(DataArray);
+            Gson gson  =new Gson();
+            //delete this users data
+            String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
+            String[]  selectionArgs={current_conversation.idSurfer+""};
+            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
+
+            InnerConversation innerConversation=null;
+            for(int i=0;i<DataArray.length();i++)
+            {
+                String strObj= null;
+                try {
+                    strObj = DataArray.getJSONObject(i).toString();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                innerConversation=  gson.fromJson(strObj,InnerConversation.class);
+            saveData(innerConversation);
+            }
+
+            if(innerConversation!=null&&innerConversation.getMess()!=null)//check type
+            {
+                ConverastionDataManager converastionDataManager=new ConverastionDataManager(context);
+                converastionDataManager.setLastSentence(context, current_conversation,innerConversation.getMess());
+            }
+            return true;
 
         } catch (JSONException e) {
           return false;
         }
     }
-    public boolean saveData(JSONArray DataArray)
+    public boolean saveData(InnerConversation innerConversation)
     {
-        Gson gson  =new Gson();
-        //delete this users data
-        String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
-        String[]  selectionArgs={current_conversation.idSurfer+""};
-        context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
-
-        InnerConversation innerConversation=null;
-        for(int i=0;i<DataArray.length();i++)
+        ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
+        if(innerConversationsList==null)
+            innerConversationsList=new ArrayList<>();
+        innerConversationsList.add(innerConversation);
+        if(context!=null&&contentValues!=null)
         {
-            String strObj= null;
-            try {
-                strObj = DataArray.getJSONObject(i).toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            innerConversation=  gson.fromJson(strObj,InnerConversation.class);
-
-            ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
-            if(innerConversationsList==null)
-                innerConversationsList=new ArrayList<>();
-            innerConversationsList.add(innerConversation);
-            if(context!=null&&contentValues!=null)
-                context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI,contentValues);
+            context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI, contentValues);
+            return true;
         }
-
-        if(innerConversation!=null&&innerConversation.getMess()!=null)//check type
-        {
-            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
-            converastionDataManager.setLastSentence(context, current_conversation,innerConversation.getMess());
-        }
-        return true;
-
+        return false;
     }
-
     @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
         if(isSuccsed==true)

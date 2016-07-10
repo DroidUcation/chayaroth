@@ -21,7 +21,8 @@
         android:background="@drawable/online_point"
         android:layout_alignBottom="@id/avatar"
         android:layout_alignBaseline="@id/avatar"
-        android:layout_alignRight="@id/avatar"/>
+        android:layout_alignRight="@id/avatar"
+        android:visibility="invisible"/>
 
 
     <TextView

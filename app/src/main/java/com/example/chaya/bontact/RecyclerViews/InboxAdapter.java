@@ -25,6 +25,7 @@ package com.example.chaya.bontact.RecyclerViews;
 
  import com.example.chaya.bontact.Helpers.AvatarHelper;
  import com.example.chaya.bontact.Ui.Activities.MenuActivity;
+ import com.squareup.picasso.Picasso;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
@@ -36,6 +37,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         this.context = context;
         this.cursor = cursor;
     }
+
 
 
     @Override
@@ -52,7 +54,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         // init data to display
         int lastType=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         int chanelIcon= ChanelsTypes.getIconByChanelType(lastType);
-
+        String avatarUrl=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
         int isUnread=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
         String lastSentences =cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_SENTENCE));
         if(lastSentences==null)
@@ -62,10 +64,19 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if(dateStringToConvert!=null && context!=null) {
             timeAgo = DateTimeHelper.getDiffToNow(dateStringToConvert, context);
         }
+        int isOnline=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE));
 
         //set in item
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-        holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
+       /* if(avatarUrl!=null)
+        Picasso.with(context)
+                .load(avatarUrl)
+                .into(holder.avatar);*/
+      /*  else {
+            holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
+       }*/
+        String avatarStr=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
+        holder.avatar.setImageResource(Integer.parseInt(avatarStr));
         holder.chanelIcon.setText(chanelIcon);
         if(lastType==ChanelsTypes.webCall||lastType==ChanelsTypes.sms||lastType==ChanelsTypes.callback)
         holder.chanelIcon.setTextSize(14);
@@ -74,7 +85,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         if(timeAgo!=null)
              holder.date.setText(timeAgo);
-
+        if(isOnline==1)
+        {
+            holder.onlinePoint.setVisibility(View.VISIBLE);
+        }
         if(isUnread==1)
         {
             holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
@@ -86,16 +100,28 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         @Override
     public int getItemCount() {
+            if(cursor!=null)
         return cursor.getCount();
+            return 0;
     }
 
 
-
+    public Cursor swapCursor(Cursor cursor) {
+        if (this.cursor == cursor) {
+            return null;
+        }
+        Cursor oldCursor = this.cursor;
+        this.cursor = cursor;
+        if (cursor != null) {
+            this.notifyDataSetChanged();
+        }
+        return oldCursor;
+    }
 
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar;
+        ImageView avatar,onlinePoint;
         TextView displayName, lastSentence,date,unread;
         TextView chanelIcon;
 
@@ -112,7 +138,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             chanelIcon=(TextView) itemView.findViewById(R.id.chanelIcon);
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
             chanelIcon.setTypeface(font);
-
+            onlinePoint=(ImageView) itemView.findViewById(R.id.online_point);;
             itemView.setOnClickListener(this);
             avatar.setOnClickListener(imagesClickListener);
 
@@ -135,23 +161,24 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
             Conversation conversation=null;
             int position= this.getAdapterPosition();
-           cursor.moveToPosition(position);
-            ConverastionDataManager converastionDataManager=new ConverastionDataManager();
+            cursor.moveToPosition(position);
+            ConverastionDataManager converastionDataManager=new ConverastionDataManager(v.getContext());
 
-           int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
+            int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
             conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
 
             AgentDataManager agentDataManager=new AgentDataManager();
             String token= agentDataManager.getAgentToken(v.getContext());
             if(token!=null&&conversation!=null)
             {
-                InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(conversation);
+                InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(v.getContext(),conversation);
                 ((MenuActivity)v.getContext()).setProgressBarCenterState(View.VISIBLE);
                 innerConversationDataManager.getData(v.getContext(),token);
 
             }
-            }
-          View.OnClickListener imagesClickListener=new View.OnClickListener() {
+        }
+
+        View.OnClickListener imagesClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

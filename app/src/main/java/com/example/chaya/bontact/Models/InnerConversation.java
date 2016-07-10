@@ -50,14 +50,14 @@ public class InnerConversation {
     @Expose
     public String recordUrl;
 
-    public String getConversationPage() {
+  /*  public String getConversationPage() {
         return conversationPage;
     }
 
     public void setConversationPage(String conversationPage) {
         this.conversationPage = conversationPage;
     }
-
+*/
     public String getRecordUrl() {
         return recordUrl;
     }

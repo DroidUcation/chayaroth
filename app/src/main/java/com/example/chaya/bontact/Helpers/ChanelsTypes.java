@@ -58,5 +58,24 @@ public class ChanelsTypes {
 
         return 0;
     }
+    public static int convertStringChannelToInt(String chanelString) {
+        if (chanelString.toLowerCase().equals("whatsapp"))
+            return whatsapp;
+        if (chanelString.toLowerCase().equals("chat"))
+            return chat;
+        if (chanelString.toLowerCase().equals("sms"))
+            return sms;
+        if (chanelString.toLowerCase().equals("email"))
+            return email;
+        if (chanelString.toLowerCase().equals("callme"))
+            return callback;
+       /* if (chanelString.toLowerCase() == "webcall")
+            return webCall;*/
+        else
+        {
+         return 0;
+        }
+    }
+
 }
 

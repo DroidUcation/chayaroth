@@ -5,25 +5,23 @@ package com.example.chaya.bontact.Socket.io;
  */
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
-import com.example.chaya.bontact.Models.Agent;
+import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.Date;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -52,39 +50,13 @@ public class SocketManager {
         } catch (URISyntaxException e) {
         }
         socket.on(Socket.EVENT_CONNECT,connectListener )
-               .on("pushmessage",pushMessListener );
+               .on("pushmessage",pushMessListener )
+                .on("surferUpdate", surferUpdatedListener)
+                .on("surferLeaved", surferLeavedListener);
         socket.connect();
     }
 
- Emitter.Listener pushMessListener= new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            JSONObject data = (JSONObject) args[0];
 
-            int id_surfer=0;
-            try {
-                id_surfer = data.getInt(Contract.Conversation.COLUMN_ID_SURFER);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-              /*  String json = gson.toJson(arg);
-                InnerConversation innerConversation = gson.fromJson(, InnerConversation.class);
-                 id_surfer = innerConversation.getIdSurfer();*/
-
-                ConverastionDataManager converastionDataManager = new ConverastionDataManager();
-                Conversation conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
-
-                if (conversation != null) {
-                    InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(conversation);
-                    innerConversationDataManager.saveData(data.toString());
-                } else {
-                    if (AgentDataManager.getAgentInstanse() != null)
-                        converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
-                }
-        }
-
-    };
     Emitter.Listener connectListener=new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -108,6 +80,103 @@ public class SocketManager {
             String json=  gson.toJson(args);
         }
     };
+    Emitter.Listener surferUpdatedListener =new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+        JSONObject data=(JSONObject) args[0];
+            try {
+                int idSurfer= data.getJSONObject("surfer").getInt("idSurfer");
+                ConverastionDataManager converastionDataManager =new ConverastionDataManager(context);
+                converastionDataManager.updateOnlineState(context,idSurfer,1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+    Emitter.Listener surferLeavedListener=new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONObject data=(JSONObject) args[0];
+            data.toString();
+        }
+    };
+    Emitter.Listener pushMessListener= new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+            JSONObject data = (JSONObject) args[0];
+
+            int id_surfer = 0;
+            try {
+                id_surfer = data.getInt(Contract.Conversation.COLUMN_ID_SURFER);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
+            Conversation conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
+
+            if (conversation != null) {
+                InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, conversation);
+                final InnerConversation innerConversation = buildObjectFromJsonData(data, converastionDataManager);
+                if (innerConversationDataManager.saveData(innerConversation) == true) {
+
+                    updateConversationDeatails(converastionDataManager,id_surfer,innerConversation);
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, " you have a new message from " + innerConversation.getName(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    if (AgentDataManager.getAgentInstanse() != null)
+                        converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
+                }
+            }
+        }
+
+    };
+    private InnerConversation buildObjectFromJsonData(JSONObject data,ConverastionDataManager converastionDataManager    )
+    {
+        InnerConversation innerConversation=new InnerConversation();
+        try {
+
+            innerConversation.idSurfer=data.getInt("idSurfer");
+            innerConversation.mess=data.getString("message");
+            int type=ChanelsTypes.convertStringChannelToInt(data.getString("actionType"));
+            innerConversation.actionType=type;
+            innerConversation.rep_request=false;
+            if(AgentDataManager.getAgentInstanse()!=null)
+               innerConversation.agentName= AgentDataManager.getAgentInstanse().getName();
+            innerConversation.timeRequest= DateTimeHelper.dateFullFormat.format(new Date());
+            innerConversation.datatype=data.getInt("datatype");
+            innerConversation.from_s=data.getString("from_s");
+           Conversation conversation= converastionDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
+            innerConversation.name=conversation.getVisitor_name();
+          //TODO:update in conversation new data and last type etc.
+
+            return innerConversation;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private void updateConversationDeatails(ConverastionDataManager converastionDataManager, int id_surfer,InnerConversation innerConversation)
+    {
+    if(converastionDataManager==null)
+        return;
+
+    converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_LAST_TYPE,innerConversation.actionType);//set last type
+    if(innerConversation.datatype==ChanelsTypes.sms)
+        converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_PHONE,innerConversation.from_s);//set phone
+    if(innerConversation.datatype==ChanelsTypes.email)
+        converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_EMAIL,innerConversation.from_s);//set phone
+    //if(innerConversation.datatype==ChanelsTypes.callback)
+       // converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_EMAIL,innerConversation.from_s);//set phone
+    //todo:check the type field in data also
+    }
+
 
 }
 

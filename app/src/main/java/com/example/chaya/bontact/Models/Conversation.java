@@ -70,6 +70,11 @@ public class Conversation {
     @Expose
     public String displayname;
 
+    @SerializedName("isOnline")
+    @Expose
+    public boolean isOnline;
+
+
     public int getIdSurfer() {
         return idSurfer;
     }

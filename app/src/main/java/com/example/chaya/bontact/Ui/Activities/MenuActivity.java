@@ -35,17 +35,18 @@ import java.util.logging.Logger;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,ServerCallResponseToUi {
+
     AgentDataManager agentDataManager;
     ConverastionDataManager converastionDataManager;
         ProgressBar progressBarCenter=null;
-    ObjectAnimator animation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_menu);
-      //  ReplaceFragments(R.id.nav_dashboard);
+        getSupportFragmentManager().beginTransaction().add(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
         agentDataManager=new AgentDataManager();
 /*
 
@@ -57,18 +58,7 @@ public class MenuActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //replace to refreah
-     /*   FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-*/
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -82,7 +72,7 @@ public class MenuActivity extends AppCompatActivity
         String token= agentDataManager.getAgentToken(this);
         if(token!=null)
         {
-            converastionDataManager=new ConverastionDataManager();
+            converastionDataManager=new ConverastionDataManager(this);
             converastionDataManager.getFirstDataFromServer(this,token);
         }
     }

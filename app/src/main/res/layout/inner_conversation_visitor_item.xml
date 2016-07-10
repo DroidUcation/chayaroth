@@ -4,18 +4,35 @@
     android:orientation="horizontal"
     android:paddingTop="5dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingRight="50dp">
 
-    <TextView
-        android:id="@+id/mess"
+    <RelativeLayout
+        android:id="@+id/visitor_chat_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:textIsSelectable="true"
         android:background="@drawable/background_visitor_message"
-        android:textSize="14dp"
-        android:autoLink="all"
-        />
+        >
+
+        <TextView
+            android:id="@+id/mess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textIsSelectable="true"
+            android:textSize="14dp"
+            android:autoLink="all"
+            android:text="hi, what else?"
+            />
+        <TextView
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/mess"
+             android:id="@+id/date"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+            android:text="22/03, 11:20"
+            android:textSize="10sp"
+           />
+    </RelativeLayout>
+
 
 </RelativeLayout>

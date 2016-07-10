@@ -17,7 +17,6 @@ public class DbBontact extends SQLiteOpenHelper {
     private static final String DBName= "Bontact.db";
     private static final int DBVersion= 1;
      private String CreateConversationTable="CREATE TABLE "+Contract.Conversation.TABLE_NAME+" ("+
-           // "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
             Contract.Conversation.COLUMN_ID_SURFER +"  INTEGER PRIMARY KEY,  "+
             Contract.Conversation.COLUMN_NAME+" TEXT, "+
              Contract.Conversation.COLUMN_AVATAR+" TEXT, "+
@@ -37,7 +36,8 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_EMAIL+" TEXT, "+
             Contract.Conversation.COLUMN_AGENT+" TEXT, "+
              Contract.Conversation.COLUMN_LAST_SENTENCE+" TEXT, "+
-            Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT "+
+            Contract.Conversation.COLUMN_DISPLAY_NAME+" TEXT ,"+
+             Contract.Conversation.COLUMN_IS_ONLINE+" INT DEFAULT 0"+
             " )";
     private String CreateInnerConversationTable="CREATE TABLE "+Contract.InnerConversation.TABLE_NAME+
             "( _id INTEGER PRIMARY KEY   AUTOINCREMENT, "+
@@ -102,6 +102,7 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add( Contract.Conversation.COLUMN_AGENT);
         strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
         strings.add(Contract.Conversation.COLUMN_LAST_SENTENCE);
+        strings.add(Contract.Conversation.COLUMN_IS_ONLINE);
         return strings;
     }
 
