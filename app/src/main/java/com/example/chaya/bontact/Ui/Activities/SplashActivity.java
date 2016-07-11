@@ -1,6 +1,7 @@
 package com.example.chaya.bontact.Ui.Activities;
 
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,9 +20,15 @@ import io.socket.emitter.Emitter;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        setContentView(R.layout.activity_splash);
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        setContentView(R.layout.activity_splash);
 
         //todo:bring numbers to dashbord.
         AgentDataManager agentDataManager = new AgentDataManager();

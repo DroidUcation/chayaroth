@@ -74,29 +74,15 @@ public class ConverastionDataManager implements ServerCallResponse {
 
     public boolean saveData(String conversations) {
 
-        Log.d("res", conversations);
         Gson gson = new Gson();
         try {
             JSONObject jsonObject = null;
             jsonObject = new JSONObject(conversations);
             JSONArray jsonConversationArray = jsonObject.getJSONArray("data");
-            if (context != null && current_page == 0)//check if it is the first data or not
-            {
-               context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
-              conversationList.clear();
-            }
-
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
                 conversation.avatar= AvatarHelper.getNextAvatar()+"";
-              /*  if(conversation.getLastSentence()==null)
-                {
-                    String lastSentence=ChanelsTypes.getDefultStringByChanelType(context, conversation.getLasttype());
-                   // setLastSentence(context,conversation,lastSentence);
-                    conversation.setLastSentence(lastSentence);
-                }*/
-
                 conversationList.add(conversation);
                 ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(conversation, DbBontact.getAllConversationFields());
                 if (contentValues != null && context != null) {
@@ -108,7 +94,6 @@ public class ConverastionDataManager implements ServerCallResponse {
             e.printStackTrace();
             return false;
         }
-
     }
 
     @Override
@@ -123,9 +108,7 @@ public class ConverastionDataManager implements ServerCallResponse {
             } catch (JSONException e) {
                 e.printStackTrace();
 
-            } /*catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }*/
+            }
         } else {
             //don't do anything
         }
@@ -144,22 +127,18 @@ public class ConverastionDataManager implements ServerCallResponse {
                 if (conversation.idSurfer == idSurfer)
                     return conversation;
             }
-          // Cursor cursor= context.getContentResolver().query(Contract.Conversation.INBOX_URI,null,Contract.Conversation.COLUMN_ID_SURFER+"=?",new String[]{idSurfer+""},null);
-        //    if(cursor!=null)
-        }
+             }
         return null;
     }
 
     public Conversation convertCursorToConversation(Cursor cursor) {
-        //List<Conversation> list=new ArrayList<>();
          if(cursor==null&&!cursor.moveToFirst())
                  return null;
-              Gson gson =new Gson();
+                Gson gson =new Gson();
+                JSONObject jsonObject=new JSONObject();
+                String resStr=null;
+                int resInt;
 
-
-                 JSONObject jsonObject=new JSONObject();
-               String resStr=null;
-               int resInt;
                for (String column : cursor.getColumnNames()) {
                    try {
                        resStr = cursor.getString(cursor.getColumnIndex(column));
@@ -177,10 +156,7 @@ public class ConverastionDataManager implements ServerCallResponse {
                {
                    Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
                    return conversation;
-                 //  list.add(conversation);
                }
-                // return list;
-
         return null;
     }
     public boolean insertOrUpdateConversationInList(Conversation conversation)
@@ -246,8 +222,8 @@ public class ConverastionDataManager implements ServerCallResponse {
         contentValues.put(fieldName,value);
         return updateConversation(context,contentValues,idSurfer);
     }
-private boolean updateConversation(Context context,ContentValues contentValues,int idSurfer)
-{
+    private boolean updateConversation(Context context,ContentValues contentValues,int idSurfer)
+     {
     String selectionStr=Contract.Conversation.COLUMN_ID_SURFER+"=?";
     String[]  selectionArgs={idSurfer+""};
    int result= context.getContentResolver().update(Contract.Conversation.INBOX_URI,contentValues,selectionStr,selectionArgs);
@@ -258,7 +234,7 @@ private boolean updateConversation(Context context,ContentValues contentValues,i
         return true;
     }
     return false;
-}
+    }
     public void updateOnlineState(Context context, int idSurfer,int state)
     {
         ContentValues contentValues=new ContentValues();
@@ -267,8 +243,8 @@ private boolean updateConversation(Context context,ContentValues contentValues,i
         String[]  selectionArgs={idSurfer+""};
         context.getContentResolver().update(Contract.Conversation.INBOX_URI,contentValues,selectionStr,selectionArgs);
         Cursor cursor= context.getContentResolver().query(Contract.Conversation.INBOX_URI,null,selectionStr,selectionArgs,null);
-        cursor.moveToFirst();
-        insertOrUpdateConversationInList(convertCursorToConversation(cursor));
+       if( cursor.moveToFirst())
+         insertOrUpdateConversationInList(convertCursorToConversation(cursor));
 
     }
 

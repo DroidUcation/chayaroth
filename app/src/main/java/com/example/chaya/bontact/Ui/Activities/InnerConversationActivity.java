@@ -3,33 +3,32 @@ package com.example.chaya.bontact.Ui.Activities;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
-import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
-import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,View.OnClickListener,EditText.OnKeyListener {
@@ -43,6 +42,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     Conversation current_conversation;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
@@ -53,6 +60,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
              ConverastionDataManager  converastionDataManager=new ConverastionDataManager(this);
            this.current_conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
             setTitle(current_conversation.displayname);
+           // avatar= (ImageView) findViewById(R.id.avatar);
+              //  avatar.setImageResource(Integer.parseInt(current_conversation.avatar));
 
         }
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
@@ -64,7 +73,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         response_mess.setOnKeyListener(this);
         Button btn_send_mess= (Button) findViewById(R.id.btn_send_message);
         btn_send_mess.setOnClickListener(this);
-       setProgressBarState(View.VISIBLE);
+         setProgressBarState(View.VISIBLE);
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
     }
 
@@ -139,14 +148,24 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
            case android.R.id.home:
                onBackPressed();
                return true;
+
+
            default:
-               return super.onOptionsItemSelected(item);
+                AlertComingSoon.show(this);
        }
+       return true;
    }
     public void setProgressBarState(int state)
     {
         if(loading==null)
             loading= (ProgressBar) findViewById(R.id.loading_inner_conversation);
         loading.setVisibility(state);
+    }
+
+    @Override
+    public void onBackPressed() {
+        ConverastionDataManager converastionDataManager=new ConverastionDataManager(this);
+        converastionDataManager.updateConversation(this,current_conversation.idSurfer,Contract.Conversation.COLUMN_UNREAD,0);
+        super.onBackPressed();
     }
 }

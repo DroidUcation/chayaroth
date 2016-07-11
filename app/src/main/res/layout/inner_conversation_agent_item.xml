@@ -3,16 +3,38 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:paddingTop="5dp"
-    android:paddingLeft="200dp"
-    android:paddingRight="16dp">
+    android:paddingRight="16dp"
+    android:paddingLeft="50dp">
 
     <RelativeLayout
         android:id="@+id/agent_chat_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_agent_message">
-
+        android:background="@drawable/background_agent_message"
+        android:layout_marginLeft="60dp">
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chanelIcon"
+            android:text="@string/email_icon"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:textSize="10sp" />
+        <TextView
+            android:id="@+id/displayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="agent"
+            android:layout_marginRight="9dp"
+            android:layout_marginEnd="9dp"
+            android:layout_alignParentTop="true"
+
+            android:layout_toLeftOf="@+id/chanelIcon"
+            android:layout_toStartOf="@+id/chanelIcon"
+            android:textSize="10sp"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/displayName"
             android:id="@+id/mess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +42,7 @@
             android:textIsSelectable="true"
             android:textSize="14dp"
             android:autoLink="all"
-            android:text="hi,help please?"
+            android:text="hi, what else?"
             />
         <TextView
             android:layout_alignParentRight="true"
@@ -30,59 +52,9 @@
             android:layout_height="wrap_content"
             android:text="22/03, 11:20"
             android:textSize="10sp"
+
             />
     </RelativeLayout>
-
-    <!--
-    <RelativeLayout
-        android:id="@+id/item_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_agent_message"
-        android:layout_alignParentRight="true">
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="agent"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            />
-        <TextView
-            android:id="@+id/chanelIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"/>
-        <TextView
-            android:id="@+id/mess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            android:layout_below="@id/name"
-            android:textSize="14dp"
-            android:autoLink="all" />
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mess"
-            android:text="11:12"
-            android:textSize="8sp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignEnd="@id/mess"
-            android:layout_alignRight="@id/mess" />
-
-    </RelativeLayout>
-
-
-    -->
 
 
 </RelativeLayout>
-
-

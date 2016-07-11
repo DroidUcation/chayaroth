@@ -16,7 +16,10 @@ import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,7 +49,7 @@ public class SocketManager {
 
     public void connectSocket() {
         try {
-            socket = IO.socket("https://dev-socket01-eus.azurewebsites.net/");
+            socket = IO.socket("https://prd-socket01-eus.azurewebsites.net/");
         } catch (URISyntaxException e) {
         }
         socket.on(Socket.EVENT_CONNECT,connectListener )
@@ -78,8 +81,24 @@ public class SocketManager {
         @Override
         public void call(Object... args) {
             String json=  gson.toJson(args);
+            try {
+                JSONObject jsonObject=new JSONObject(args[0].toString());
+               JSONArray jsonArray= jsonObject.getJSONArray("Surfers");
+                for( int i=0;i<jsonArray.length();i++)
+                {
+                  int idSurfer=  jsonArray.getJSONObject(i).getInt("id_Surfer");
+                    ConverastionDataManager converastionDataManager =new ConverastionDataManager(context);
+                    converastionDataManager.updateOnlineState(context,idSurfer,1);
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     };
+
     Emitter.Listener surferUpdatedListener =new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -97,10 +116,17 @@ public class SocketManager {
     Emitter.Listener surferLeavedListener=new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            JSONObject data=(JSONObject) args[0];
-            data.toString();
+            /*JSONObject data=(JSONObject) args[0];
+            try {
+                int idSurfer= data.getJSONObject("surfer").getInt("idSurfer");
+                ConverastionDataManager converastionDataManager =new ConverastionDataManager(context);
+                converastionDataManager.updateOnlineState(context,idSurfer,0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }*/
         }
     };
+
     Emitter.Listener pushMessListener= new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -114,10 +140,10 @@ public class SocketManager {
                 e.printStackTrace();
             }
             ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
-            Conversation conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
+            Conversation current_conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
 
-            if (conversation != null) {
-                InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, conversation);
+            if (current_conversation != null) {
+                InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
                 final InnerConversation innerConversation = buildObjectFromJsonData(data, converastionDataManager);
                 if (innerConversationDataManager.saveData(innerConversation) == true) {
 
@@ -128,6 +154,7 @@ public class SocketManager {
                             Toast.makeText(context, " you have a new message from " + innerConversation.getName(), Toast.LENGTH_SHORT).show();
                         }
                     });
+
 
                 } else {
                     if (AgentDataManager.getAgentInstanse() != null)
@@ -175,6 +202,7 @@ public class SocketManager {
     //if(innerConversation.datatype==ChanelsTypes.callback)
        // converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_EMAIL,innerConversation.from_s);//set phone
     //todo:check the type field in data also
+        converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_UNREAD,1);
     }
 
 

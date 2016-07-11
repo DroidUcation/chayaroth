@@ -11,9 +11,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/background_visitor_message"
-        >
-
+        android:layout_marginRight="40dp">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/chanelIcon"
+    android:text="@string/email_icon"
+    android:textSize="10sp"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
         <TextView
+            android:id="@+id/displayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="agent"
+            android:layout_marginLeft="9dp"
+            android:layout_marginStart="9dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/chanelIcon"
+            android:layout_toEndOf="@+id/chanelIcon"
+            android:textSize="10sp"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/chanelIcon"
             android:id="@+id/mess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +52,7 @@
              android:layout_height="wrap_content"
             android:text="22/03, 11:20"
             android:textSize="10sp"
+
            />
     </RelativeLayout>
 

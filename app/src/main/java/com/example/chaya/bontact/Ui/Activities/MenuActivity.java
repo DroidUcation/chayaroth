@@ -1,12 +1,13 @@
 package com.example.chaya.bontact.Ui.Activities;
-import android.animation.ObjectAnimator;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.animation.DecelerateInterpolator;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,15 +24,13 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
-
-import java.util.logging.Logger;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener,ServerCallResponseToUi {
@@ -48,13 +47,6 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
         getSupportFragmentManager().beginTransaction().add(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
         agentDataManager=new AgentDataManager();
-/*
-
-        TextView loggedInAs = (TextView) findViewById(R.id.loggedInAsTxt);
-        loggedInAs.setText(R.string.logged_in_as);
-        loggedInAs.append( agentDataManager.getAgentName(this));
-*/
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,8 +56,12 @@ public class MenuActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header=  navigationView.getHeaderView(0);
+        TextView loggedInAs= (TextView) header.findViewById(R.id.loggedInAsTxt);
+        loggedInAs.append(" "+ agentDataManager.getAgentName(this));
+
         progressBarCenter= (ProgressBar) findViewById(R.id.loading_center);
 
 
@@ -89,7 +85,6 @@ public class MenuActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-          //  super.onBackPressed();
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
             builder .setIcon(R.mipmap.bontact_launcher)
                     .setTitle("Exit")
@@ -98,7 +93,7 @@ public class MenuActivity extends AppCompatActivity
                     {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                         exitApp();
                         }
 
                     })
@@ -106,7 +101,10 @@ public class MenuActivity extends AppCompatActivity
                     .show();
         }
     }
-
+    private void exitApp()
+    {
+        super.onBackPressed();
+    }
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -123,12 +121,13 @@ public class MenuActivity extends AppCompatActivity
         {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
-        } else if (id == R.id.nav_online_v || id==R.id.onlineVisitors_dashboard_layout)
+        } else
+        if (id == R.id.nav_online_v || id==R.id.onlineVisitors_dashboard_layout)
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).addToBackStack(null).commit();
+            AlertComingSoon.show(this);
             return true;
         } else
-        if (id == R.id.nav_inbox|| id==R.id.visitorsRequest_dashboard_layout){
+        if (id == R.id.nav_inbox|| id==R.id.requests_dashboard_layout){
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_settings)

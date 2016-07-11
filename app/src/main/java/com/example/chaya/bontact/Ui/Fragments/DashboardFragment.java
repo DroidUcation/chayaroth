@@ -1,11 +1,14 @@
 package com.example.chaya.bontact.Ui.Fragments;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.sax.RootElement;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -39,9 +42,9 @@ public class DashboardFragment extends Fragment{
         //Inflate the layout for this fragment
         RootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        LinearLayout request_v = (LinearLayout) RootView.findViewById(R.id.visitorsRequest_dashboard_layout);
+        RelativeLayout request_v = (RelativeLayout) RootView.findViewById(R.id.requests_dashboard_layout);
         request_v.setOnClickListener((View.OnClickListener) getActivity());
-        LinearLayout online_v = (LinearLayout) RootView.findViewById(R.id.onlineVisitors_dashboard_layout);
+        RelativeLayout online_v = (RelativeLayout) RootView.findViewById(R.id.onlineVisitors_dashboard_layout);
         online_v.setOnClickListener((View.OnClickListener) getActivity());
         Log.d("this", this.toString());
         agentDataManager=new AgentDataManager();
@@ -51,6 +54,11 @@ public class DashboardFragment extends Fragment{
         else {
             //TODO:handle the case that a user name not found
         }
+         TextView arrow= (TextView) RootView.findViewById(R.id.online_arrow_btn);
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf" );
+        arrow.setTypeface(font);
+        arrow= (TextView) RootView.findViewById(R.id.visitors_arrow_btn);
+        arrow.setTypeface(font);
         return RootView;
     }
 

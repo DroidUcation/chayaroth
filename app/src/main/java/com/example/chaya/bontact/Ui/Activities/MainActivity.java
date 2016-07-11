@@ -206,73 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
-
-
-   /* public void getUserFromServer(String userName,String password)
-    {
-
-        String url = getResources().getString(R.string.domain_api) + getResources().getString(R.string.login_api);
-        url += "?username=" + userName + "&pass=" + password;
-        Callback callback= new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                reEnterDetails(ErrorType.network_problems);
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    //throw new IOException("Unexpected code " + response);
-                    reEnterDetails(ErrorType.other);
-                }
-                try {
-                    final JSONObject jsonObject =new JSONObject(response.body().string());
-                    if(jsonObject.getString("message").equals("success"))//user exists
-                    {
-                        SharedPreferences Preferences = getSharedPreferences(getResources().getString(R.string.sp_user_details), MODE_PRIVATE);
-                        SharedPreferences.Editor editor=Preferences.edit();
-                        editor.clear();
-                        editor.putString(getResources().getString(R.string.agent),jsonObject.getJSONObject("rep").toString());
-                        editor.putString(getResources().getString(R.string.settings),jsonObject.getJSONObject("settings").toString());
-                        editor.putString(getResources().getString(R.string.token),jsonObject.getString("token"));
-                        editor.apply();
-                        finish();
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent =new Intent(MainActivity.this,MenuActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                    else
-                    {//user not exists
-                        runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                reEnterDetails(ErrorType.user_not_exists);}
-                        });
-                    }
-
-                } catch (JSONException e) {
-                    reEnterDetails(ErrorType.other);
-                }
-
-            }
-        };
-
-        OkHttpRequests requests = new OkHttpRequests(url,callback);
-        try {
-            requests.run();
-        } catch (Exception e) {
-            // e.printStackTrace();
-            reEnterDetails(ErrorType.other);
-        }
-    }*/}
-
-
-
-
+}
 
 /*   private void setupFloatingLabelError() {
         final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.username_text_input_layout);

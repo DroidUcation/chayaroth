@@ -72,7 +72,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
         refreshLayout= (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setOnRefreshListener(refreshListener);
-       refreshLayout.setColorSchemeColors(R.color.orange_dark);
+       //refreshLayout.setColorSchemeColors(R.color.orange_dark);
         initLoader();
         return rootView;
 

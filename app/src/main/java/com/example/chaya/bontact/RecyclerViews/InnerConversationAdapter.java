@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.R;
 
@@ -55,7 +56,9 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         int type=getItemViewType(position);
         cursor.moveToPosition(position);
         String msg=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
-       String date=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_TIME_REQUEST));
+         String date=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_TIME_REQUEST));
+        int action_type=cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE));
+        int chanel=ChanelsTypes.getIconByChanelType(action_type);
          date=DateTimeHelper.getTimeFromDateToDisplay(date);
         switch(type)
         {
@@ -65,12 +68,12 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     InnerConversationAgentHolder agentHolder= (InnerConversationAgentHolder)holder;
                     agentHolder.msg.setText(msg);
                     agentHolder.date.setText(date);
+
                     String name=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME));
                     if(name==null)
                         name="agent";
-//
-//                agentHolder.name.setText(name);
-                    agentHolder.chanelIcon.setText(R.string.chat_icon);
+                   agentHolder.name.setText(name);
+                   agentHolder.chanelIcon.setText(chanel);
 
 
                 }
@@ -78,9 +81,16 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
 
             case VISITOR_VH_ITEM:
-                if(msg!=null)
-                ((InnerConversationVisitorHolder)holder).msg.setText(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)));
-
+                if(msg!=null) {
+                    InnerConversationVisitorHolder visitorHolder = (InnerConversationVisitorHolder) holder;
+                    visitorHolder.msg.setText(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)));
+                    visitorHolder.chanelIcon.setText(chanel);
+                    String name=cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_NAME));
+                 if(name==null)
+                             name="visitor";
+                    visitorHolder.name.setText(name);
+                    visitorHolder.date.setText(date);
+                }
                 break;
         }
     }
@@ -111,16 +121,16 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     class InnerConversationAgentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView msg,name,date,chanelIcon;
+        TextView msg,chanelIcon,date,name;
 
         public InnerConversationAgentHolder(View itemView) {
             super(itemView);
             msg = (TextView) itemView.findViewById(R.id.mess);
-           // name = (TextView) itemView.findViewById(R.id.name);
-            date = (TextView) itemView.findViewById(R.id.date);
-            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
+            chanelIcon=(TextView) itemView.findViewById(R.id.chanelIcon);
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
-//            chanelIcon.setTypeface(font);
+            chanelIcon.setTypeface(font);
+            date= (TextView) itemView.findViewById(R.id.date);
+            name= (TextView) itemView.findViewById(R.id.displayName);
             itemView.setOnClickListener(this);
         }
 
@@ -132,11 +142,16 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
 }
     class InnerConversationVisitorHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView msg;
+        TextView msg,chanelIcon,date,name;
 
         public InnerConversationVisitorHolder(View itemView) {
             super(itemView);
             msg = (TextView) itemView.findViewById(R.id.mess);
+            chanelIcon=(TextView) itemView.findViewById(R.id.chanelIcon);
+            Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
+            chanelIcon.setTypeface(font);
+            date= (TextView) itemView.findViewById(R.id.date);
+            name= (TextView) itemView.findViewById(R.id.displayName);
             itemView.setOnClickListener(this);
         }
 

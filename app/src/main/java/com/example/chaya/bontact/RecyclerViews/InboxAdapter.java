@@ -94,9 +94,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
           holder.setUnRead(true);
         }
-
     }
-
 
         @Override
     public int getItemCount() {
