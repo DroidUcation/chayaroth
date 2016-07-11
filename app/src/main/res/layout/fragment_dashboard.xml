@@ -21,13 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/welcome_name_msg"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+                android:textSize="20sp"/>
             <TextView
             android:id="@+id/txt_welcom_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/welcome_msg"
             android:textColor="@color/white"
+                android:textSize="20sp"
             />
     </LinearLayout>
 

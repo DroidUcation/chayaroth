@@ -6,7 +6,7 @@
             <menu>
         <item
             android:id="@+id/nav_dashboard"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_home"
             android:title="@string/dashboard_title"
             />
         <item
