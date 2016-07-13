@@ -19,13 +19,18 @@
     <color name="lblFromName">#777777</color>
     <color name="bg_bubble_self">#e1e1e1</color>
 
+
     <!--************* new colors ******************* -->
+    <color name="purple_meduim">#7a4478</color>
     <color name="purple_dark">#241323 </color>
     <color name="purple">#462445</color>
     <color name="orange_dark">#f2a71c</color>
     <color name="orange_light">#FFE0B2</color>
     <color name="white">#ffffff</color>
-    <color name="gray_light">#ECEFF1</color>
+    <color name="gray_very_light">#ECEFF1</color>
     <color name="green">#35ac19</color>
+    <color name="black">#FF000000</color>
+    <color name="gray_light">#c5c5c5</color>
+    <color name="gray_dark">#FF828181</color>
 
 </resources>

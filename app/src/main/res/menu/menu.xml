@@ -29,6 +29,16 @@ tools:context="com.maliros.giftcard.activities.DisplayCardsActivity">
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
    />
+    <item
+        android:id="@+id/avatar"
+        android:orderInCategory="200"
+        android:title="Search"
+        android:icon="@drawable/avatar1"
+        app:showAsAction="ifRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        />
     <!--<item
         android:id="@+id/picture"
         android:showAsAction="always"

@@ -3,6 +3,8 @@ package com.example.chaya.bontact.DataManagers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+
+import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
@@ -119,6 +121,18 @@ public class AgentDataManager implements ServerCallResponse{
             return true;
         }
         return false;
+    }
+    public boolean logOut(Context context)
+    {
+        //clear agent details
+        SharedPreferences Preferences =context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=Preferences.edit();
+        editor.clear().commit();
+        //claer db
+        context.getContentResolver().delete(Contract.Conversation.INBOX_URI,null,null);
+        context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI,null,null);
+        return true;
+
     }
     @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {

@@ -1,55 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/purple_dark"
     android:gravity="bottom"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:id="@+id/l">
+    android:paddingTop="@dimen/activity_vertical_margin">
     <!--   android:theme="@style/ThemeOverlay.AppCompat.Dark">
     android:background="@drawable/side_nav_bar"-->
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/agent_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@mipmap/bontact_launcher" />
+
     <TextView
         android:id="@+id/loggedInAsTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/agent_pic"
+        android:layout_marginTop="15dp"
         android:text="@string/logged_in_as"
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white" />
 
-   <!-- <android.support.v7.widget.SwitchCompat
-        android:id="@+id/switch_compat"
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="25dp"
-        android:checked="false"
-        android:text="Logged in"
-        android:textOff="OFF"
-        android:textOn="ON"
-        />-->
-    <!--
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Logged in as"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />-->
+        android:layout_alignTop="@+id/loggedInAsTxt"
+        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp"
+        android:layout_toEndOf="@+id/loggedInAsTxt"
+        android:layout_toRightOf="@+id/loggedInAsTxt"
+        android:checked="true"
+        />
 
 
-
-</LinearLayout>
+</RelativeLayout>

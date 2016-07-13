@@ -1,60 +1,63 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="left"
     android:orientation="horizontal"
-    android:paddingTop="5dp"
     android:paddingLeft="16dp"
-    android:paddingRight="50dp">
+    android:paddingRight="50dp"
+    android:paddingTop="5dp">
 
     <RelativeLayout
         android:id="@+id/visitor_chat_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_visitor_message"
-        android:layout_marginRight="40dp">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/chanelIcon"
-    android:text="@string/email_icon"
-    android:textSize="10sp"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+        android:layout_marginRight="40dp"
+        android:background="@drawable/background_visitor_message">
+
+        <TextView
+            android:id="@+id/chanelIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/email_icon"
+            android:textSize="10sp" />
+
         <TextView
             android:id="@+id/displayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="agent"
-            android:layout_marginLeft="9dp"
-            android:layout_marginStart="9dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/chanelIcon"
-            android:layout_toEndOf="@+id/chanelIcon"
-            android:textSize="10sp"/>
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@id/chanelIcon"
+            android:layout_toRightOf="@id/chanelIcon"
+            android:text="agent"
+            android:textSize="10sp"
+            android:textColor="@color/black"/>
+
         <TextView
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/chanelIcon"
             android:id="@+id/mess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:textIsSelectable="true"
-            android:textSize="14dp"
+            android:layout_below="@id/chanelIcon"
+            android:layout_marginTop="5dp"
             android:autoLink="all"
-            android:text="hi, what else?"
-            />
+            android:textIsSelectable="true"
+            android:textSize="14dp" />
+
         <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/mess"
-             android:id="@+id/date"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
             android:text="22/03, 11:20"
             android:textSize="10sp"
-
-           />
+android:visibility="gone"
+            />
     </RelativeLayout>
 
 
-</RelativeLayout>
+</FrameLayout>

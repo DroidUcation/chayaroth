@@ -5,7 +5,7 @@
 
     <!-- view background color -->
     <solid
-        android:color="@color/gray_very_light" >
+        android:color="@color/white" >
     </solid>
 
 

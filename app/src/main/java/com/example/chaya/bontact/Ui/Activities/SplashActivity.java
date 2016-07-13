@@ -22,15 +22,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        setContentView(R.layout.activity_splash);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //todo:bring numbers to dashbord.
+             //todo:bring numbers to dashbord.
         AgentDataManager agentDataManager = new AgentDataManager();
         Intent intent;
         if (agentDataManager.isLoggedIn(this) == true) {
@@ -40,6 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         } else
             intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        //finish();
     }
 
 

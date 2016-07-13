@@ -5,8 +5,13 @@ import android.database.Cursor;
 
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Models.Conversation;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -40,13 +45,35 @@ public class DbToolsHelper {
         }
       return contentValues;
     }
-    public static Conversation convertCursorToConversation(Cursor cursor)
+    public static JSONObject convertCursorToJsonObject(Cursor cursor)
     {
-        if(cursor==null&&!cursor.moveToFirst())
+        if (cursor == null )
             return null;
-        Conversation conversation=new Conversation();
 
-        return conversation;
+        JSONObject jsonObject = new JSONObject();
+        String resStr = null;
+        int resInt;
+
+        for (String column : cursor.getColumnNames()) {
+            try {
+                if(cursor.isNull(cursor.getColumnIndex(column))) {
+                    jsonObject.put(column, null);
+                }
+                else {
+                    resStr = cursor.getString(cursor.getColumnIndex(column));
+                    if (resStr == null) {
+                        resInt = cursor.getInt(cursor.getColumnIndex(column));
+                        jsonObject.put(column, resInt);
+                    } else
+                        jsonObject.put(column, resStr);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        return jsonObject;
     }
 
 }

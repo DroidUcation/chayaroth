@@ -56,7 +56,7 @@
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
     <string name="tbd">Don\'t worry!<br/> coming soon....:)</string>
-
+    <string name="webcall_cancled">The web call was cancelled by the visitor.</string>
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
 
     <!-- time strings-->
@@ -82,6 +82,11 @@
     <string name="audio_icon">&#xf028;</string>
     <string name="sms_icon">&#xf27a;</string>
     <string name="arrow_click">&#xf105;</string>
+    <string name="password_icon">&#xf023;</string>
+    <string name="user_name_icon">&#xf183;</string>
+
+    <!--fonts names-->
+    <string name="font_awesome">fontawesome-webfont.ttf</string>
 </resources>
 
 

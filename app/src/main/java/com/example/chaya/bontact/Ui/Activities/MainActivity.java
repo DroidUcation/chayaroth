@@ -3,6 +3,7 @@ package com.example.chaya.bontact.Ui.Activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.Socket.io.SocketManager;
@@ -31,27 +33,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  EditText passEditText;
     private ProgressBar progressBar;
     AgentDataManager agentDataManager;
+    Button btn_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //TODO:Maybe put this lines when application is starting and also manage accounts...
-        //checks if user is logged in
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btn_login = (Button)findViewById(R.id.btn_login);
+        btn_login = (Button)findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
         usernameEditText = (EditText) findViewById(R.id.etxt_user_name);
         passEditText = (EditText) findViewById(R.id.etxt_password);
         usernameEditText.setOnKeyListener(this);
         passEditText.setOnKeyListener(this);
+        TextView icon=(TextView) findViewById(R.id.icon_username);
+        icon.setTypeface(SpecialFontsHelper.getFont(this,R.string.font_awesome));
+        icon=(TextView) findViewById(R.id.icon_password);
+        icon.setTypeface(SpecialFontsHelper.getFont(this,R.string.font_awesome));
         progressBar = (ProgressBar)findViewById(R.id.progress_bar_login_loading);
+        setupFloatingLabelError();
     }
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
-        Dialog dialog=new Dialog(this);
-        dialog.show();
+       // super.onBackPressed();
+       // finish();
+        //System.exit(0);
+
+        finish();
+
     }
 
     @Override
@@ -82,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String userName = usernameEditText.getText().toString();
         String password = passEditText.getText().toString();
+
+        //close keybosrd
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -148,35 +159,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                final TextView errorString=(TextView) findViewById(R.id.error_details);
+              //  final TextView errorString=(TextView) findViewById(R.id.error_details);
                 progressBar.setVisibility(View.GONE);
                 usernameEditText.setText("");
                 passEditText.setText("");
                 // errorString.setText();
-                errorString.setVisibility(View.VISIBLE);
+              //  errorString.setVisibility(View.VISIBLE);
 
             }
         });
         //  passEditText.addTextChangedListener(textWatcher);
     }
-
-    TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //if(s.length()>0)
-            //errorString.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
 
 
     @Override
@@ -206,16 +199,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-}
-
-/*   private void setupFloatingLabelError() {
+    private void setupFloatingLabelError() {
         final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.username_text_input_layout);
         floatingUsernameLabel.getEditText().addTextChangedListener(new TextWatcher() {
             // ...
             @Override
             public void onTextChanged(CharSequence text, int start, int count, int after) {
                 if (text.length() > 0 && text.length() <= 4) {
-                    floatingUsernameLabel.setError(getString(R.string.empty_deatails));
+                    floatingUsernameLabel.setError("errror");
                     floatingUsernameLabel.setErrorEnabled(true);
                 } else {
                     floatingUsernameLabel.setErrorEnabled(false);
@@ -224,13 +215,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-                // TODO Auto-generated method stub
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
             }
-        });*/
+        });
+    }
+
+}
 
 

@@ -1,59 +1,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="right"
     android:orientation="horizontal"
-    android:paddingTop="5dp"
+    android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingLeft="50dp">
+    android:paddingTop="5dp">
 
     <RelativeLayout
-        android:id="@+id/agent_chat_box"
+        android:id="@+id/item_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_agent_message"
-        android:layout_marginLeft="60dp">
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/background_agent_message">
+
         <TextView
+            android:id="@+id/chanelIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/chanelIcon"
-            android:text="@string/email_icon"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:text="@string/chat_icon"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
         <TextView
             android:id="@+id/displayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/chanelIcon"
+            android:layout_marginLeft="5dp"
             android:text="agent"
-            android:layout_marginRight="9dp"
-            android:layout_marginEnd="9dp"
-            android:layout_alignParentTop="true"
+            android:textSize="10sp"
+            android:textColor="@color/black"/>
 
-            android:layout_toLeftOf="@+id/chanelIcon"
-            android:layout_toStartOf="@+id/chanelIcon"
-            android:textSize="10sp"/>
         <TextView
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/displayName"
             android:id="@+id/mess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textIsSelectable="true"
-            android:textSize="14dp"
+            android:layout_below="@id/displayName"
             android:autoLink="all"
-            android:text="hi, what else?"
-            />
+            android:textIsSelectable="true"
+            android:textSize="14dp" />
+
         <TextView
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/mess"
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22/03, 11:20"
+            android:layout_below="@id/mess"
             android:textSize="10sp"
+            android:visibility="gone" />
 
-            />
     </RelativeLayout>
 
 

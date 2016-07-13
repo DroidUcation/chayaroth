@@ -31,7 +31,7 @@ import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
 
-public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,View.OnClickListener,EditText.OnKeyListener {
+public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, EditText.OnKeyListener {
 
     private static final int INNER_CONVERSATION_LOADER = 1;
     private RecyclerView recyclerView;
@@ -43,12 +43,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,35 +55,33 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         setContentView(R.layout.activity_inner_conversation);
         Bundle args = getIntent().getExtras();
         if (args != null) {
-             int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
-             ConverastionDataManager  converastionDataManager=new ConverastionDataManager(this);
-           this.current_conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
+            int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+            ConverastionDataManager converastionDataManager = new ConverastionDataManager(this);
+            this.current_conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
             setTitle(current_conversation.displayname);
-           // avatar= (ImageView) findViewById(R.id.avatar);
-              //  avatar.setImageResource(Integer.parseInt(current_conversation.avatar));
 
         }
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
+            adapter = new InnerConversationAdapter(this, null);
+            recyclerView.setAdapter(adapter);
         }
-        response_mess= (EditText) findViewById(R.id.response_message);
+        response_mess = (EditText) findViewById(R.id.response_message);
         response_mess.setOnKeyListener(this);
-        Button btn_send_mess= (Button) findViewById(R.id.btn_send_message);
+        Button btn_send_mess = (Button) findViewById(R.id.btn_send_message);
         btn_send_mess.setOnClickListener(this);
-         setProgressBarState(View.VISIBLE);
+        setProgressBarState(View.VISIBLE);
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
     }
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {
-        if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-        {
-            switch (view.getId())
-            {
+        if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            switch (view.getId()) {
                 case R.id.response_message:
-                    Log.d("enter pressed","enter pressed");
+                    Log.d("enter pressed", "enter pressed");
                     response_mess.setText("");
                     SendResponseMessage(response_mess.getText().toString());
                     break;
@@ -93,48 +90,47 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
         return false; // pass on to other listeners.
     }
-    public void SendResponseMessage(String textMsg)
-    {
+
+    public void SendResponseMessage(String textMsg) {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
 
         String sortOrder = null;
-        String selectionCoulmns=Contract.InnerConversation.COLUMN_ID_SURFUR;
-        String[] selectionArgs = { current_conversation.idSurfer+""};
-        CursorLoader cursorLoader=new CursorLoader(this,Contract.InnerConversation.INNER_CONVERSATION_URI,null,selectionCoulmns+ "=?",selectionArgs,null);
+        String selectionCoulmns = Contract.InnerConversation.COLUMN_ID_SURFUR;
+        String[] selectionArgs = {current_conversation.idSurfer + ""};
+        CursorLoader cursorLoader = new CursorLoader(this, Contract.InnerConversation.INNER_CONVERSATION_URI, null, selectionCoulmns + "=?", selectionArgs, null);
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-       // loading.setVisibility(View.GONE);
         if (cursor != null && cursor.moveToFirst()) {
-            if(cursor.getCount()>0)
+            if (cursor.getCount() > 0)
                 setProgressBarState(View.GONE);
-            adapter = new InnerConversationAdapter(this, cursor);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setVisibility(View.VISIBLE);
+        /*    adapter = new InnerConversationAdapter(this, cursor);
+            recyclerView.setAdapter(adapter);*/
+            adapter.swapCursor(cursor);
             recyclerView.smoothScrollToPosition(cursor.getCount());
+            recyclerView.setVisibility(View.VISIBLE);
         } else {
-            recyclerView.setVisibility(View.GONE);
+            setProgressBarState(View.VISIBLE);
         }
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
-
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.btn_send_message:
                 response_mess.setText("");
                 SendResponseMessage(response_mess.getText().toString());
@@ -142,30 +138,28 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-       switch (item.getItemId()) {
-           case android.R.id.home:
-               onBackPressed();
-               return true;
-
-
-           default:
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
                 AlertComingSoon.show(this);
-       }
-       return true;
-   }
-    public void setProgressBarState(int state)
-    {
-        if(loading==null)
-            loading= (ProgressBar) findViewById(R.id.loading_inner_conversation);
+        }
+        return true;
+    }
+
+    public void setProgressBarState(int state) {
+        if (loading == null)
+            loading = (ProgressBar) findViewById(R.id.loading_inner_conversation);
         loading.setVisibility(state);
     }
 
     @Override
     public void onBackPressed() {
-        ConverastionDataManager converastionDataManager=new ConverastionDataManager(this);
-        converastionDataManager.updateConversation(this,current_conversation.idSurfer,Contract.Conversation.COLUMN_UNREAD,0);
+        ConverastionDataManager converastionDataManager = new ConverastionDataManager(this);
+        converastionDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
         super.onBackPressed();
     }
 }

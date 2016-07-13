@@ -11,10 +11,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
@@ -24,7 +27,7 @@ import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 
 
-public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,View.OnKeyListener {
 
 
     private static final int INBOX_LOADER = 0;
@@ -74,8 +77,20 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         refreshLayout.setOnRefreshListener(refreshListener);
        //refreshLayout.setColorSchemeColors(R.color.orange_dark);
         initLoader();
+       rootView.setOnKeyListener( this );
         return rootView;
 
+    }
+    @Override
+    public boolean onKey( View v, int keyCode, KeyEvent event )
+    {
+        if( keyCode == KeyEvent.KEYCODE_BACK )
+        {
+            int x=0;
+            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
     public void initLoader()
     {
@@ -181,4 +196,5 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             initLoader();
         }
  };
+
    }

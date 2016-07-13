@@ -2,6 +2,7 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -34,122 +35,132 @@ public class InnerConversationDataManager implements ServerCallResponse {
     private Conversation current_conversation;
     private List<InnerConversation> innerConversationsList;
 
-    public InnerConversationDataManager(Context context, Conversation current_conversation)
-    {
+    public InnerConversationDataManager(Context context, Conversation current_conversation) {
 
-        this.current_conversation =current_conversation;
-        this.context=context;
-        innerConversationsList=new ArrayList<>();
+        this.current_conversation = current_conversation;
+        this.context = context;
+        innerConversationsList = new ArrayList<>();
     }
-    public void getData(Context context, String token)
-    {
-        this.context=context;
+    public InnerConversationDataManager(Context context, int currentIdSurfer)
+        {
+            this(context,null);
+            ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
+             current_conversation= converastionDataManager.getConversationByIdSurfer(currentIdSurfer);
+        }
+
+
+        public void getData(Context context, String token) {
+        this.context = context;
         sendResToUi();
        /* String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
         String[]  selectionArgs={current_conversation.idSurfer+""};
         if(context.getContentResolver().query(Contract.InnerConversation.INNER_CONVERSATION_URI,null,selectionStr,selectionArgs,null)!=null)//there ara culomns for this user
        */
-       // sendResToUi();
-        getDataFromServer(context,token);
+        // sendResToUi();
+        getDataFromServer(context, token);
     }
 
-    public void getDataFromServer(Context context, String token)
-    {
-        if(current_conversation!=null)
-        {
-            String id_surfer_string=current_conversation.idSurfer+"";
-        if(token!=null&&id_surfer_string!=null) {
-            this.context = context;
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("https")
-                    .authority(context.getResources().getString(R.string.base_api))
-                    .appendPath(context.getResources().getString(R.string.rout_api))
-                    .appendPath(context.getResources().getString(R.string.inner_conversation_api))
-                    .appendPath(token)
-                    .appendPath(id_surfer_string);
+    public void getDataFromServer(Context context, String token) {
+        if (current_conversation != null) {
+            String id_surfer_string = current_conversation.idSurfer + "";
+            if (token != null && id_surfer_string != null) {
+                this.context = context;
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("https")
+                        .authority(context.getResources().getString(R.string.base_api))
+                        .appendPath(context.getResources().getString(R.string.rout_api))
+                        .appendPath(context.getResources().getString(R.string.inner_conversation_api))
+                        .appendPath(token)
+                        .appendPath(id_surfer_string);
 
-            String url = builder.build().toString();
+                String url = builder.build().toString();
 
-            OkHttpRequests requests = new OkHttpRequests(url, this);
+                OkHttpRequests requests = new OkHttpRequests(url, this);
+            }
         }
     }
-    }
-    public boolean saveData(String data)
-    {
+
+    public boolean saveData(String data) {
         try {
-            JSONArray DataArray=new JSONArray(data);
-            Gson gson  =new Gson();
+            JSONArray DataArray = new JSONArray(data);
+            Gson gson = new Gson();
             //delete this users data
-            String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
-            String[]  selectionArgs={current_conversation.idSurfer+""};
+            String selectionStr = Contract.InnerConversation.COLUMN_ID_SURFUR + "=?";
+            String[] selectionArgs = {current_conversation.idSurfer + ""};
             context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
 
-            InnerConversation innerConversation=null;
-            for(int i=0;i<DataArray.length();i++)
-            {
-                String strObj= null;
+            InnerConversation innerConversation = null;
+            for (int i = 0; i < DataArray.length(); i++) {
+                String strObj = null;
                 try {
                     strObj = DataArray.getJSONObject(i).toString();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                innerConversation=  gson.fromJson(strObj,InnerConversation.class);
-            saveData(innerConversation);
+                innerConversation = gson.fromJson(strObj, InnerConversation.class);
+                saveData(innerConversation);
             }
 
-            if(innerConversation!=null&&innerConversation.getMess()!=null)//check type
+            if (innerConversation != null && innerConversation.getMess() != null)//check type
             {
-                ConverastionDataManager converastionDataManager=new ConverastionDataManager(context);
-                converastionDataManager.setLastSentence(context, current_conversation,innerConversation.getMess());
+                ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
+                converastionDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
             }
             return true;
 
         } catch (JSONException e) {
-          return false;
+            return false;
         }
     }
-    public boolean saveData(InnerConversation innerConversation)
-    {
-        ContentValues contentValues= DbToolsHelper.convertObjectToContentValues(innerConversation,DbBontact.getAllInnerConversationFields());
-        if(innerConversationsList==null)
-            innerConversationsList=new ArrayList<>();
+
+    public boolean saveData(InnerConversation innerConversation) {
+        ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(innerConversation, DbBontact.getAllInnerConversationFields());
+        if (innerConversationsList == null)
+            innerConversationsList = new ArrayList<>();
         innerConversationsList.add(innerConversation);
-        if(context!=null&&contentValues!=null)
-        {
+        if (context != null && contentValues != null) {
             context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI, contentValues);
             return true;
         }
         return false;
     }
+
     @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-        if(isSuccsed==true)
-        {
+        if (isSuccsed == true) {
             try {
-                JSONObject res=new JSONObject(response);
-               if(res.getString("status").equals("true"))
-               {
-                 String inner_data=res.getJSONArray("data").toString();
-                boolean result= saveData(inner_data);
-                  // sendResToUi();
-               }
+                JSONObject res = new JSONObject(response);
+                if (res.getString("status").equals("true")) {
+                    String inner_data = res.getJSONArray("data").toString();
+                    boolean result = saveData(inner_data);
+                    // sendResToUi();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
     }
+
     public Conversation getCurrent_conversation() {
         return current_conversation;
     }
 
-    public void sendResToUi()
-    {
-        if(context!=null&&context instanceof ServerCallResponseToUi)
-        {
-            ((ServerCallResponseToUi)context).OnServerCallResponseToUi(true,current_conversation.idSurfer+"",null,getClass());
+    public void sendResToUi() {
+        if (context != null && context instanceof ServerCallResponseToUi) {
+            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, current_conversation.idSurfer + "", null, getClass());
         }
 
+    }
+
+    public InnerConversation convertCursorToInnerConversation(Cursor cursor) {
+        JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(cursor);
+        if (jsonObject.length() > 0) {
+            Gson gson = new Gson();
+            InnerConversation innerConversation = gson.fromJson(jsonObject.toString(), InnerConversation.class);
+            return innerConversation;
+        }
+        return null;
     }
 
 }

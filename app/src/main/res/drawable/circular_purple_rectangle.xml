@@ -5,18 +5,8 @@
 
     <!-- view background color -->
     <solid
-        android:color="@color/gray_very_light" >
+        android:color="@color/purple_meduim" >
     </solid>
-
-
-
-    <!-- If you want to add some padding -->
-    <padding
-        android:left="10dp"
-        android:top="10dp"
-        android:right="10dp"
-        android:bottom="10dp"    >
-    </padding>
 
     <!-- Here is the corner radius -->
     <corners

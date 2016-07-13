@@ -1,8 +1,10 @@
 package com.example.chaya.bontact.Helpers;
 
 import android.content.Context;
+import android.graphics.Typeface;
 
 import com.example.chaya.bontact.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by chaya on 7/3/2016.
@@ -14,6 +16,7 @@ public class ChanelsTypes {
     public static final int email=4;
     public static final int whatsapp=5;
     public static final int webCall=16;
+
 
     public static String getDefultStringByChanelType(Context context, int chanelType)
     {
@@ -76,6 +79,7 @@ public class ChanelsTypes {
          return 0;
         }
     }
+
 
 }
 
