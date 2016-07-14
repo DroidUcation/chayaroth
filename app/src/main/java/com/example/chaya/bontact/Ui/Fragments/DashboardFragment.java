@@ -1,4 +1,5 @@
 package com.example.chaya.bontact.Ui.Fragments;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.sax.RootElement;
@@ -15,10 +16,11 @@ import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.R;
 
 
-public class DashboardFragment extends Fragment{
+public class DashboardFragment extends Fragment {
 
     private View RootView;
     AgentDataManager agentDataManager;
+
     public DashboardFragment() {
     }
 
@@ -47,17 +49,17 @@ public class DashboardFragment extends Fragment{
         RelativeLayout online_v = (RelativeLayout) RootView.findViewById(R.id.onlineVisitors_dashboard_layout);
         online_v.setOnClickListener((View.OnClickListener) getActivity());
         Log.d("this", this.toString());
-        agentDataManager=new AgentDataManager();
+        agentDataManager = new AgentDataManager();
         TextView welcome_msg = (TextView) RootView.findViewById(R.id.txt_welcom_name);
-        if (agentDataManager.getAgentName(getContext())!=null)
-            welcome_msg.append(" "+agentDataManager.getAgentName(getContext()));
+        if (agentDataManager.getAgentName(getContext()) != null)
+            welcome_msg.append(" " + agentDataManager.getAgentName(getContext()));
         else {
             //TODO:handle the case that a user name not found
         }
-         TextView arrow= (TextView) RootView.findViewById(R.id.online_arrow_btn);
-        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf" );
+        TextView arrow = (TextView) RootView.findViewById(R.id.online_arrow_btn);
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         arrow.setTypeface(font);
-        arrow= (TextView) RootView.findViewById(R.id.visitors_arrow_btn);
+        arrow = (TextView) RootView.findViewById(R.id.visitors_arrow_btn);
         arrow.setTypeface(font);
         return RootView;
     }
@@ -66,8 +68,6 @@ public class DashboardFragment extends Fragment{
     public void onDetach() {
         super.onDetach();
     }
-
-
 
 
 }
