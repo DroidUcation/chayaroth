@@ -53,15 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupFloatingLabelError();
     }
 
-    @Override
-    public void onBackPressed() {
-       // super.onBackPressed();
-       // finish();
-        //System.exit(0);
-
-        finish();
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -168,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        //  passEditText.addTextChangedListener(textWatcher);
+
     }
 
 
@@ -205,12 +196,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // ...
             @Override
             public void onTextChanged(CharSequence text, int start, int count, int after) {
-                if (text.length() > 0 && text.length() <= 4) {
+               /* if (text.length() > 0 && text.length() <= 4) {
                     floatingUsernameLabel.setError("errror");
                     floatingUsernameLabel.setErrorEnabled(true);
                 } else {
                     floatingUsernameLabel.setErrorEnabled(false);
-                }
+                }*/
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,

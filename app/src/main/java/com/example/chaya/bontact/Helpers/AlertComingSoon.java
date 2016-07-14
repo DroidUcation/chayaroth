@@ -15,7 +15,7 @@ public class AlertComingSoon {
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         builder.setMessage(context.getResources().getString(R.string.tbd))
-                .setPositiveButton("Cancle", new DialogInterface.OnClickListener()
+                .setPositiveButton("Cancel", new DialogInterface.OnClickListener()
                 {  @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();

@@ -222,6 +222,7 @@ public class ConverastionDataManager implements ServerCallResponse {
         Cursor cursor = context.getContentResolver().query(Contract.Conversation.INBOX_URI, null, selectionStr, selectionArgs, null);
         if (cursor.moveToFirst())
             insertOrUpdateConversationInList(convertCursorToConversation(cursor));
+        cursor.close();
 
     }
 

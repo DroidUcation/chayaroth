@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -27,19 +28,20 @@ import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 
 
-public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,View.OnKeyListener {
+public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
     private static final int INBOX_LOADER = 0;
     private RecyclerView recyclerView;
     private InboxAdapter adapter;
-    private  View rootView;
+    private View rootView;
     ProgressBar progressBarBottom;
     SwipeRefreshLayout refreshLayout;
     private boolean isFirstLoadData;
     private LinearLayoutManager linearLayoutManager;
 
     int lastVisibleItem;
+
     public InboxFragment() {
     }
 
@@ -62,65 +64,52 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
-        linearLayoutManager= new LinearLayoutManager(getActivity());
-        if(recyclerView != null) {
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             recyclerView.addOnScrollListener(scrollListener);
-            adapter= new InboxAdapter(getContext(),null);
+            adapter = new InboxAdapter(getContext(), null);
             recyclerView.setAdapter(adapter);
         }
 
         progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
-        refreshLayout= (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
+        refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setOnRefreshListener(refreshListener);
-       //refreshLayout.setColorSchemeColors(R.color.orange_dark);
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.orange_dark));
         initLoader();
-       rootView.setOnKeyListener( this );
         return rootView;
 
     }
-    @Override
-    public boolean onKey( View v, int keyCode, KeyEvent event )
-    {
-        if( keyCode == KeyEvent.KEYCODE_BACK )
-        {
-            int x=0;
-            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
-    }
-    public void initLoader()
-    {
-        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null,this);
-        isFirstLoadData=true;
+
+    public void initLoader() {
+        getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null, this);
+        isFirstLoadData = true;
     }
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        ((MenuActivity)getActivity()).setProgressBarCenterState(View.VISIBLE);
-        lastVisibleItem=0;
-        String sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
-        CursorLoader cursorLoader= new CursorLoader(getContext(),Contract.Conversation.INBOX_URI,null,null,null,sortOrder);
+        ((MenuActivity) getActivity()).setProgressBarCenterState(View.VISIBLE);
+        lastVisibleItem = 0;
+        String sortOrder = Contract.Conversation.COLUMN_LAST_DATE + " DESC"; //Sort by modified date as default
+        CursorLoader cursorLoader = new CursorLoader(getContext(), Contract.Conversation.INBOX_URI, null, null, null, sortOrder);
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        ((MenuActivity)getActivity()).setProgressBarCenterState(View.GONE);
-        if(refreshLayout==null)
-            refreshLayout=(SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
+        if (getActivity() instanceof MenuActivity && getActivity() != null)
+            ((MenuActivity) getActivity()).setProgressBarCenterState(View.GONE);
+        if (refreshLayout == null)
+            refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setRefreshing(false);
         progressBarBottom.setVisibility(View.GONE);
-       // if (cursor != null && cursor.moveToFirst()) {
-            adapter.swapCursor(cursor);
-       // }
-      //  else
-        if(cursor==null)
-            recyclerView.setVisibility(View.VISIBLE);
+        adapter.swapCursor(cursor);
+        recyclerView.setVisibility(View.VISIBLE);
+        //if(cursor==null)
+        //no columns message
 
     }
   /*      ((MenuActivity)getActivity()).setProgressBarCenterState(View.GONE);
@@ -168,8 +157,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onDetach();
 
     }
-    RecyclerView.OnScrollListener scrollListener =  new RecyclerView.OnScrollListener()
-    {
+
+    RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
@@ -178,23 +167,23 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if(linearLayoutManager.findLastCompletelyVisibleItemPosition()+1 ==adapter.getItemCount())//end of data
+            if (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1 == adapter.getItemCount())//end of data
             {
-                lastVisibleItem=linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                AgentDataManager agentDataManager=new AgentDataManager();
-                ConverastionDataManager converastionDataManager=new ConverastionDataManager(getContext());
-                converastionDataManager.getNextDataFromServer(getContext(),agentDataManager.getAgentToken(getContext()));
+                lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                AgentDataManager agentDataManager = new AgentDataManager();
+                ConverastionDataManager converastionDataManager = new ConverastionDataManager(getContext());
+                converastionDataManager.getNextDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
                 progressBarBottom.setVisibility(View.VISIBLE);
             }
 
         }
     };
-   SwipeRefreshLayout.OnRefreshListener refreshListener=  new SwipeRefreshLayout.OnRefreshListener() {
+    SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
 
             initLoader();
         }
- };
+    };
 
-   }
+}

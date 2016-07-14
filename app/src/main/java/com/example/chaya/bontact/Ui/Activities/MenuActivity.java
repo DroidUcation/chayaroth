@@ -81,34 +81,11 @@ public class MenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } /*else {
-            DashboardFragment dashboardFragment = (DashboardFragment) getSupportFragmentManager().findFragmentByTag("DASHBOARD_FRAGMENT");
-            if (dashboardFragment != null && dashboardFragment.isVisible()) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-                builder.setIcon(R.mipmap.bontact_launcher)
-                        .setTitle("Exit")
-                        .setMessage("Are you sure you want to Exit the app?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                exitApp();
-                            }
-
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-            }
-            else
-            {
-               // super.onBackPressed();
-            }
-        }*/
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    private void exitApp() {
-       super.onBackPressed();
-    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -122,7 +99,7 @@ public class MenuActivity extends AppCompatActivity
 
     public boolean ReplaceFragments(int id) {
         if (id == R.id.nav_dashboard) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance(),"DASHBOARD_FRAGMENT").addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout) {
             AlertComingSoon.show(this);
