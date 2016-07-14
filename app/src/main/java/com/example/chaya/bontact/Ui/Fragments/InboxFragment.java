@@ -112,34 +112,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         //no columns message
 
     }
-  /*      ((MenuActivity)getActivity()).setProgressBarCenterState(View.GONE);
-        if(refreshLayout==null)
-            refreshLayout=(SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
-        refreshLayout.setRefreshing(false);
-        progressBarBottom.setVisibility(View.GONE);
-        if (cursor != null && cursor.moveToFirst()) {
-        if(isFirstLoadData) {
-            adapter = new InboxAdapter(getContext(), cursor);
-            recyclerView.setAdapter(adapter);
-
-        }
-                adapter = new InboxAdapter(getContext(), cursor);
-                recyclerView.setAdapter(adapter);
-
-            else
-            {
-               // recyclerView.
-               adapter = new InboxAdapter(getContext(), cursor);
-                recyclerView.swapAdapter(adapter, false);*//**//*
-            }
-
-           // recyclerView.scrollToPosition(lastVisibleItem);*//*
-            recyclerView.setVisibility(View.VISIBLE);
-
-        } else {
-            recyclerView.setVisibility(View.GONE);
-        }*/
-
 
     @Override
     public void onLoaderReset(Loader loader) {
