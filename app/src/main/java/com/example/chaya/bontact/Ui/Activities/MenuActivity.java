@@ -43,7 +43,7 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_menu);
-        getSupportFragmentManager().beginTransaction().add(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_fragment, DashboardFragment.newInstance()).commit();
         agentDataManager = new AgentDataManager();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_layout);

@@ -13,7 +13,11 @@
         android:id="@+id/content_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+<!--<fragment
+    android:name="com.example.chaya.bontact.Ui.Fragments.DashboardFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    />-->
         </FrameLayout>
     <ProgressBar
         android:id="@+id/loading_center"

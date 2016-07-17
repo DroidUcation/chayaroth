@@ -54,7 +54,7 @@ public class ConverastionDataManager implements ServerCallResponse {
         getDataFromServer(context, token, current_page);
     }
 
-    private void getDataFromServer(Context context, String token, int current_page) {
+    public void getDataFromServer(Context context, String token, int current_page) {
         if (token != null) {
             this.context = context;
 

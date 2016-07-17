@@ -51,7 +51,7 @@ public class SocketManager {
 
     public void connectSocket() {
         try {
-            socket = IO.socket("https://prd-socket01-eus.azurewebsites.net/");
+            socket = IO.socket("https://dev-socket01-eus.azurewebsites.net/");
         } catch (URISyntaxException e) {
 
         }
@@ -99,7 +99,6 @@ public class SocketManager {
                     int idSurfer = jsonArray.getJSONObject(i).getInt("id_Surfer");
                     ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
                     converastionDataManager.updateOnlineState(context, idSurfer, 1);
-
                 }
 
             } catch (JSONException e) {
@@ -166,6 +165,7 @@ public class SocketManager {
                     });
 
 
+
                 } else {
                     if (AgentDataManager.getAgentInstanse() != null)
                         converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
@@ -212,7 +212,9 @@ public class SocketManager {
         //if(innerConversation.datatype==ChanelsTypes.callback)
         // converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_EMAIL,innerConversation.from_s);//set phone
         //todo:check the type field in data also
-        converastionDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_UNREAD, 1);
+       Conversation  conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
+        if(conversation!=null)
+         converastionDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_UNREAD,++conversation.unread );
     }
 
 
