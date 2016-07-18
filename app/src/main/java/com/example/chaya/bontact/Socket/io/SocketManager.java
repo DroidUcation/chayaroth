@@ -51,7 +51,7 @@ public class SocketManager {
 
     public void connectSocket() {
         try {
-            socket = IO.socket("https://dev-socket01-eus.azurewebsites.net/");
+            socket = IO.socket("https://prd-socket01-eus.azurewebsites.net/");
         } catch (URISyntaxException e) {
 
         }

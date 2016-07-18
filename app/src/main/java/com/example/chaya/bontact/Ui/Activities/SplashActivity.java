@@ -31,11 +31,17 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        AgentDataManager agentDataManager = new AgentDataManager();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       AgentDataManager agentDataManager = new AgentDataManager();
         Intent intent;
         if (agentDataManager.isLoggedIn(this) == true) {
             SocketManager socketManager = new SocketManager(this);
-          //  exportDB();
+            //  exportDB();
             intent = new Intent(this, MenuActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
@@ -44,6 +50,7 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     private void exportDB(){
          String package_name="com.example.chaya.bontact";
       String  Db_name= Contract.Conversation.TABLE_NAME;

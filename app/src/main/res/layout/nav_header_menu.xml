@@ -39,7 +39,7 @@
         android:layout_toEndOf="@+id/loggedInAsTxt"
         android:layout_toRightOf="@+id/loggedInAsTxt"
         android:checked="true"
-        android:visibility="gone"
+
         />
 
 

@@ -48,6 +48,8 @@
     <string name="connection_problem">Please check your network connection. something is wrong! </string>
 
     <!--URLS to api -->
+    <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
+
     <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
     <string name="base_api">prd-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>

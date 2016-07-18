@@ -2,6 +2,8 @@ package com.example.chaya.bontact.Ui.Activities;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -30,6 +32,8 @@ import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
+
+import java.io.IOException;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, EditText.OnKeyListener {
 
@@ -160,6 +164,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void onBackPressed() {
         ConverastionDataManager converastionDataManager = new ConverastionDataManager(this);
         converastionDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
+        getSupportMediaController();
+
         super.onBackPressed();
     }
+
+
 }
