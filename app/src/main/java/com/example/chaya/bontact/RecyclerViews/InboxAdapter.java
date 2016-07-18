@@ -1,6 +1,7 @@
 
 
 package com.example.chaya.bontact.RecyclerViews;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -38,7 +39,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         this.context = context;
         this.cursor = cursor;
     }
-
 
 
     @Override
@@ -82,19 +82,19 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         cursor.moveToPosition(position);
 
         // init data to display
-        int lastType=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
-        int chanelIcon= ChanelsTypes.getIconByChanelType(lastType);
-        String avatarUrl=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
-        int isUnread=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
-        String lastSentences =cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_SENTENCE));
-        if(lastSentences==null)
-            lastSentences= ChanelsTypes.getDefultStringByChanelType(context,lastType);
+        int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
+        int chanelIcon = ChanelsTypes.getIconByChanelType(lastType);
+        String avatarUrl = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
+        int isUnread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
+        String lastSentences = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_SENTENCE));
+        if (lastSentences == null)
+            lastSentences = ChanelsTypes.getDefultStringByChanelType(context, lastType);
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
-        String timeAgo=null;
-        if(dateStringToConvert!=null && context!=null) {
+        String timeAgo = null;
+        if (dateStringToConvert != null && context != null) {
             timeAgo = DateTimeHelper.getDiffToNow(dateStringToConvert, context);
         }
-        int isOnline=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE));
+        int isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE));
 
         //set in item
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
@@ -105,22 +105,20 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
       /*  else {
             holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
        }*/
-        String avatarStr=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
+        String avatarStr = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
         holder.avatar.setImageResource(Integer.parseInt(avatarStr));
         holder.chanelIcon.setText(chanelIcon);
-        if(lastType==ChanelsTypes.webCall||lastType==ChanelsTypes.sms||lastType==ChanelsTypes.callback)
+        if (lastType == ChanelsTypes.webCall || lastType == ChanelsTypes.sms || lastType == ChanelsTypes.callback)
             holder.chanelIcon.setTextSize(14);
-        if(lastSentences!=null)
+        if (lastSentences != null)
             holder.lastSentence.setText(lastSentences);
 
-        if(timeAgo!=null)
+        if (timeAgo != null)
             holder.date.setText(timeAgo);
-        if(isOnline==1)
-        {
+        if (isOnline == 1) {
             holder.onlinePoint.setVisibility(View.VISIBLE);
         }
-        if(isUnread>=1)
-        {
+        if (isUnread >= 1) {
             holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
             holder.setUnRead(true);
         }
@@ -128,7 +126,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     @Override
     public int getItemCount() {
-        if(cursor!=null)
+        if (cursor != null)
             return cursor.getCount();
         return 0;
     }
@@ -149,8 +147,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar,onlinePoint;
-        TextView displayName, lastSentence,date,unread;
+        ImageView avatar, onlinePoint;
+        TextView displayName, lastSentence, date, unread;
         TextView chanelIcon;
 
 
@@ -163,18 +161,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             date = (TextView) itemView.findViewById(R.id.date);
             unread = (TextView) itemView.findViewById(R.id.unread);
 
-            chanelIcon=(TextView) itemView.findViewById(R.id.chanelIcon);
-            Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf" );
+            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
+            Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
-            onlinePoint=(ImageView) itemView.findViewById(R.id.online_point);;
+            onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
+            ;
             itemView.setOnClickListener(this);
             avatar.setOnClickListener(imagesClickListener);
 
         }
-        public void setUnRead(boolean status)
-        {
-            if(status==true)
-            {
+
+        public void setUnRead(boolean status) {
+            if (status == true) {
                 displayName.setTypeface(null, Typeface.BOLD);
                 lastSentence.setTypeface(null, Typeface.BOLD);
                 date.setTypeface(null, Typeface.BOLD);
@@ -187,26 +185,25 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         @Override
         public void onClick(View v) {
 
-            Conversation conversation=null;
-            int position= this.getAdapterPosition();
+            Conversation conversation = null;
+            int position = this.getAdapterPosition();
             cursor.moveToPosition(position);
-            ConverastionDataManager converastionDataManager=new ConverastionDataManager(v.getContext());
+            ConverastionDataManager converastionDataManager = new ConverastionDataManager(v.getContext());
 
             int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
-            conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
+            conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
 
-            AgentDataManager agentDataManager=new AgentDataManager();
-            String token= agentDataManager.getAgentToken(v.getContext());
-            if(token!=null&&conversation!=null)
-            {
-                InnerConversationDataManager innerConversationDataManager=new InnerConversationDataManager(v.getContext(),conversation);
-                ((MenuActivity)v.getContext()).setProgressBarCenterState(View.VISIBLE);
-                innerConversationDataManager.getData(v.getContext(),token);
+            AgentDataManager agentDataManager = new AgentDataManager();
+            String token = agentDataManager.getAgentToken(v.getContext());
+            if (token != null && conversation != null) {
+                InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(v.getContext(), conversation);
+                ((MenuActivity) v.getContext()).setProgressBarCenterState(View.VISIBLE);
+                innerConversationDataManager.getData(v.getContext(), token);
 
             }
         }
 
-        View.OnClickListener imagesClickListener=new View.OnClickListener() {
+        View.OnClickListener imagesClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

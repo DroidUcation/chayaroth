@@ -27,6 +27,7 @@ import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
+import com.google.android.exoplayer.C;
 
 import nl.changer.audiowife.AudioWife;
 
@@ -142,21 +143,26 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                         else
                             name = innerConversation.from_s;
                     }
-                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1) {
-                        InnerConversationvVisitorRecordHolder visitorRecordHolder = ((InnerConversationvVisitorRecordHolder) holder);
+                    String url = null;
+                    InnerConversationvVisitorRecordHolder visitorRecordHolder = ((InnerConversationvVisitorRecordHolder) holder);
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1 &&
+                            innerConversation.mess != null && Integer.parseInt(innerConversation.mess) > 5 &&
+                            (innerConversation.actionType == ChanelsTypes.callback || innerConversation.actionType == ChanelsTypes.webCall)) {
                         visitorRecordHolder.name.setText(name);
                         visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
-                        String url;
-                        if (Integer.parseInt(innerConversation.mess) < 5)
-                            url = "http://programmerguru.com/android-tutorial/wp-content/uploads/2013/04/hosannatelugu.mp3";
-                        else {
-                            AgentDataManager agentDataManager = new AgentDataManager();
-                            url = context.getResources().getString(R.string.domain_api);
-                            url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
-                        }
-                        visitorRecordHolder.setRecordUrl(url);
 
-                    }
+                        AgentDataManager agentDataManager = new AgentDataManager();
+                        url = context.getResources().getString(R.string.domain_api);
+                        url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
+                    } else if (innerConversation.actionType == ChanelsTypes.callback
+                            && cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1)
+                        url = "android.resource://com.example.chaya.bontact/R.raw.recorder.mp3";
+                    else if (innerConversation.actionType == ChanelsTypes.callback)
+                        url = "android.resource://com.example.chaya.bontact/R.raw.callrecord.mp3";
+                  //  visitorRecordHolder.setRecordUrl(url);
+
+                    visitorRecordHolder.msg.setText(url);
+                    visitorRecordHolder.msg.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -218,10 +224,11 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
     class InnerConversationvVisitorRecordHolder extends RecyclerView.ViewHolder {
 
-        TextView chanelIcon, name;
+        TextView chanelIcon, name,msg;
         ImageView playBtn, pauseBtn;
         //AppCompatSeekBar seekBar;
         RelativeLayout playerLayout;
+
 
         public InnerConversationvVisitorRecordHolder(View itemView) {
             super(itemView);
@@ -230,25 +237,26 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             name = (TextView) itemView.findViewById(R.id.displayName);
             name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
             playerLayout = (RelativeLayout) itemView.findViewById(R.id.player_layout);
-            //playBtn = (ImageView) itemView.findViewById(R.id.play_btn);
-            //pauseBtn = (ImageView) itemView.findViewById(R.id.pause_btn);
+            msg= (TextView) itemView.findViewById(R.id.mess);
 
-         //   playBtn.setOnClickListener(playListener);
+            //   playBtn.setOnClickListener(playListener);
 
         }
 
         public void setRecordUrl(String recordUrl) {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            AudioWife.getInstance().init(context, Uri.parse(recordUrl))
-                    .useDefaultUi(playerLayout, li).addOnPlayClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
+  //       AudioWife.getInstance().init(context, Uri.parse(recordUrl))
+   //                .useDefaultUi(playerLayout, li).addOnPlayClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
         }
 
-           }
+    }
+
     class InnerConversationMsgHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView msg;
 

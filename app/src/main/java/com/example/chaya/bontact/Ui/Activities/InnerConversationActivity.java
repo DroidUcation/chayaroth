@@ -117,11 +117,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
-                setProgressBarState(View.GONE);
+
         /*    adapter = new InnerConversationAdapter(this, cursor);
             recyclerView.setAdapter(adapter);*/
             adapter.swapCursor(cursor);
             recyclerView.smoothScrollToPosition(cursor.getCount());
+            setProgressBarState(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         } else {
             setProgressBarState(View.VISIBLE);
