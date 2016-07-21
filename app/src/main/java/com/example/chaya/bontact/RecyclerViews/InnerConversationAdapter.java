@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -16,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -27,7 +28,8 @@ import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
-import com.google.android.exoplayer.C;
+
+import java.io.IOException;
 
 import nl.changer.audiowife.AudioWife;
 
@@ -60,6 +62,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View view = null;
         RecyclerView.ViewHolder viewHolder = null;
         switch (viewType) {
@@ -73,7 +76,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
             case VISITOR_RECORD_VH:
                 view = LayoutInflater.from(context).inflate(R.layout.inner_conversation_visitor_record, null);
-                viewHolder = new InnerConversationvVisitorRecordHolder(view);
+                viewHolder = new InnerConversationVisitorRecordHolder(view);
                 break;
             case SYSTEM_MSG_VH:
                 view = LayoutInflater.from(context).inflate(R.layout.inner_conversation_system_item, null);
@@ -92,9 +95,6 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             InnerConversationDataManager dataManager = new InnerConversationDataManager(context, idSurfer);
             InnerConversation innerConversation = dataManager.convertCursorToInnerConversation(cursor);
 
-            int type = getItemViewType(position);
-
-            //initial parameter msgand date
             String msg = null;
             if (innerConversation.actionType == ChanelsTypes.callback || innerConversation.actionType == ChanelsTypes.webCall) {
                 if (innerConversation.recordUrl != null)
@@ -117,7 +117,6 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     innerConversationBaseHolder.msg.setText(span);
                     innerConversationBaseHolder.msg.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
                     break;
-
                 case AGENT_TEXT_VH:
                     if (innerConversation.agentName == null)
                         name = "agent";
@@ -134,7 +133,6 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     innerConversationHolder.msg.setText(span);
                     innerConversationHolder.name.setText(name);
                     innerConversationHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
-
                     break;
                 case VISITOR_RECORD_VH:
                     if (name == null) {
@@ -143,29 +141,50 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                         else
                             name = innerConversation.from_s;
                     }
-                    String url = null;
-                    InnerConversationvVisitorRecordHolder visitorRecordHolder = ((InnerConversationvVisitorRecordHolder) holder);
+                    InnerConversationVisitorRecordHolder visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
+                    visitorRecordHolder.name.setText(name);
+                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
+                    //  visitorRecordHolder.seekBar.setMax(50);
+                    //  visitorRecordHolder.seekBar.setProgress(0);
+
+                    //get url to record
+                    /*String url = null;
                     if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1 &&
                             innerConversation.mess != null && Integer.parseInt(innerConversation.mess) > 5 &&
                             (innerConversation.actionType == ChanelsTypes.callback || innerConversation.actionType == ChanelsTypes.webCall)) {
-                        visitorRecordHolder.name.setText(name);
-                        visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
-
                         AgentDataManager agentDataManager = new AgentDataManager();
                         url = context.getResources().getString(R.string.domain_api);
                         url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
+                        Uri recordUri = Uri.parse(url);
+                        // visitorRecordHolder.setplayer(recordUri);
+                        visitorRecordHolder.mediaPlayer = new MediaPlayer();
+                        visitorRecordHolder.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                        try {
+                            visitorRecordHolder.mediaPlayer.setDataSource(context, recordUri);
+                            visitorRecordHolder.mediaPlayer.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     } else if (innerConversation.actionType == ChanelsTypes.callback
                             && cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1)
-                        url = "android.resource://com.example.chaya.bontact/R.raw.recorder.mp3";
+                        setShortCall(visitorRecordHolder);
                     else if (innerConversation.actionType == ChanelsTypes.callback)
-                        url = "android.resource://com.example.chaya.bontact/R.raw.callrecord.mp3";
-                  //  visitorRecordHolder.setRecordUrl(url);
-
-                    visitorRecordHolder.msg.setText(url);
-                    visitorRecordHolder.msg.setVisibility(View.VISIBLE);
+                        setCallNotActive(visitorRecordHolder);*/
+                    /*  visitorRecordHolder.msg.setText(url);
+                    visitorRecordHolder.msg.setVisibility(View.VISIBLE);*/
                     break;
             }
         }
+    }
+
+
+    public void setShortCall(InnerConversationVisitorRecordHolder visitorRecordHolder) {
+        visitorRecordHolder.mediaPlayer = MediaPlayer.create(context, R.raw.recorder);
+    }
+
+    public void setCallNotActive(InnerConversationVisitorRecordHolder visitorRecordHolder) {
+        visitorRecordHolder.mediaPlayer = MediaPlayer.create(context, R.raw.callrecord);
     }
 
 
@@ -178,7 +197,8 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                 if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_REP_REQUEST)) == 1) {
                     return AGENT_TEXT_VH;
                 } else {
-                    if (cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD_URL)) != null)
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.webCall ||
+                            cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.callback)
                         return VISITOR_RECORD_VH;
                     return VISITOR_TEXT_VH;
                 }
@@ -207,6 +227,69 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     //********************View Holder************************************
+
+    class InnerConversationVisitorRecordHolder extends RecyclerView.ViewHolder {
+
+        TextView chanelIcon, name, playBtn, pauseBtn;
+        AppCompatSeekBar seekBar;
+        MediaPlayer mediaPlayer;
+        private double startTime = 0;
+        private double finalTime = 0;
+        Handler seekHandler;
+        Uri recordUrl = null;
+
+        public InnerConversationVisitorRecordHolder(View itemView) {
+            super(itemView);
+            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
+            chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            name = (TextView) itemView.findViewById(R.id.displayName);
+            name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+            playBtn = (TextView) itemView.findViewById(R.id.play_btn);
+            pauseBtn = (TextView) itemView.findViewById(R.id.pause_btn);
+            seekBar = (AppCompatSeekBar) itemView.findViewById(R.id.seekbar_visitor_record);
+            playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            playBtn.setOnClickListener(playListener);
+            pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+
+            // seekHandler=new Handler();
+        }
+
+        public void setplayer(Uri uri) {
+            recordUrl = uri;
+        }
+
+
+        View.OnClickListener playListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    playBtn.setText(R.string.play_btn_icon);
+                } else {
+                    if (mediaPlayer == null)
+                        return;
+                    playBtn.setText(R.string.pause_btn_icon);
+                    mediaPlayer.start();
+                    finalTime = mediaPlayer.getDuration();
+                    startTime = mediaPlayer.getCurrentPosition();
+                    seekBar.setMax((int) finalTime);
+                    seekBar.setProgress((int) startTime);
+                    // seekHandler.postDelayed(UpdateSongTime, 100);
+                }
+            }
+        };
+        private Runnable UpdateSongTime = new Runnable() {
+            public void run() {
+                startTime = mediaPlayer.getCurrentPosition();
+                seekBar.setProgress((int) startTime);
+                seekHandler.postDelayed(this, 100);
+            }
+        };
+
+
+    }
+
     class InnerConversationHolder extends InnerConversationMsgHolder {
         TextView chanelIcon, name;
 
@@ -218,41 +301,6 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
 
             itemView.setOnClickListener(this);
-        }
-
-    }
-
-    class InnerConversationvVisitorRecordHolder extends RecyclerView.ViewHolder {
-
-        TextView chanelIcon, name,msg;
-        ImageView playBtn, pauseBtn;
-        //AppCompatSeekBar seekBar;
-        RelativeLayout playerLayout;
-
-
-        public InnerConversationvVisitorRecordHolder(View itemView) {
-            super(itemView);
-            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
-            chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
-            name = (TextView) itemView.findViewById(R.id.displayName);
-            name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
-            playerLayout = (RelativeLayout) itemView.findViewById(R.id.player_layout);
-            msg= (TextView) itemView.findViewById(R.id.mess);
-
-            //   playBtn.setOnClickListener(playListener);
-
-        }
-
-        public void setRecordUrl(String recordUrl) {
-            LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-  //       AudioWife.getInstance().init(context, Uri.parse(recordUrl))
-   //                .useDefaultUi(playerLayout, li).addOnPlayClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
         }
 
     }
@@ -272,4 +320,299 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 }
+
+
+/*
+public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    public static final int VISITOR_TEXT_VH = 0;
+    public static final int AGENT_TEXT_VH = 1;
+    public static final int SYSTEM_MSG_VH = 2;
+    public static final int VISITOR_RECORD_VH = 3;
+    Cursor cursor;
+    Context context;
+
+    public InnerConversationAdapter(Context context, Cursor cursor) {
+        this.context = context;
+        setCursor(cursor);
+    }
+
+    public Cursor getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(Cursor cursor) {
+        this.cursor = cursor;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view = null;
+        RecyclerView.ViewHolder viewHolder = null;
+        switch (viewType) {
+            case VISITOR_TEXT_VH:
+                view = LayoutInflater.from(context).inflate(R.layout.inner_conversation_visitor_item, null);
+                viewHolder = new InnerConversationHolder(view);
+                break;
+            case AGENT_TEXT_VH:
+                view = LayoutInflater.from(context).inflate(R.layout.inner_conversation_agent_item, null);
+                viewHolder = new InnerConversationHolder(view);
+                break;
+            case VISITOR_RECORD_VH:
+                view = LayoutInflater.from(context).inflate(R.layout.inner_conversation_visitor_record, null);
+                viewHolder = new InnerConversationVisitorRecordHolder(view);
+                break;
+            case SYSTEM_MSG_VH:
+                view = LayoutInflater.from(context).inflate(R.layout.inner_conversation_system_item, null);
+                viewHolder = new InnerConversationMsgHolder(view);
+                break;
+        }
+
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (cursor.moveToPosition(position)) {
+            //convert to object
+            int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
+            InnerConversationDataManager dataManager = new InnerConversationDataManager(context, idSurfer);
+            InnerConversation innerConversation = dataManager.convertCursorToInnerConversation(cursor);
+
+            int type = getItemViewType(position);
+
+            //initial parameter msg and date
+            String msg = null;
+            if (innerConversation.actionType == ChanelsTypes.callback || innerConversation.actionType == ChanelsTypes.webCall) {
+                if (innerConversation.recordUrl != null)
+                    msg = innerConversation.recordUrl;
+                else
+                    msg = context.getResources().getString(R.string.webcall_cancled);
+            } else
+                msg = innerConversation.getMess();
+            String date = DateTimeHelper.getTimeFromDateToDisplay(innerConversation.getTimeRequest());
+            if (msg != null && date != null)
+                msg = msg.concat("   " + date);
+            int index = msg.indexOf(date);
+            Spannable span = new SpannableString(msg);
+            span.setSpan(new RelativeSizeSpan(0.7f), index, msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            String name = null;
+            switch (getItemViewType(position)) {
+                case SYSTEM_MSG_VH:
+                    InnerConversationMsgHolder innerConversationBaseHolder = (InnerConversationMsgHolder) holder;
+                    innerConversationBaseHolder.msg.setText(span);
+                    innerConversationBaseHolder.msg.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                    break;
+                case AGENT_TEXT_VH:
+                    if (innerConversation.agentName == null)
+                        name = "agent";
+                    else
+                        name = innerConversation.agentName;
+                case VISITOR_TEXT_VH:
+                    if (name == null) {
+                        if (innerConversation.from_s == null)
+                            name = "visitor";
+                        else
+                            name = innerConversation.from_s;
+                    }
+                    InnerConversationHolder innerConversationHolder = (InnerConversationHolder) holder;
+                    innerConversationHolder.msg.setText(span);
+                    innerConversationHolder.name.setText(name);
+                    innerConversationHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
+                    break;
+                case VISITOR_RECORD_VH:
+                    if (name == null) {
+                        if (innerConversation.from_s == null)
+                            name = "visitor";
+                        else
+                            name = innerConversation.from_s;
+                    }
+                    InnerConversationVisitorRecordHolder visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
+                    visitorRecordHolder.name.setText(name);
+                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
+                    //  visitorRecordHolder.seekBar.setMax(50);
+                    //  visitorRecordHolder.seekBar.setProgress(0);
+
+                    //get url to record
+                    String url = null;
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1 &&
+                            innerConversation.mess != null && Integer.parseInt(innerConversation.mess) > 5 &&
+                            (innerConversation.actionType == ChanelsTypes.callback || innerConversation.actionType == ChanelsTypes.webCall)) {
+                        AgentDataManager agentDataManager = new AgentDataManager();
+                        url = context.getResources().getString(R.string.domain_api);
+                        url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
+                        Uri recordUri = Uri.parse(url);
+                        visitorRecordHolder.setplayer(recordUri);
+                        visitorRecordHolder.mediaPlayer=new MediaPlayer();
+                        visitorRecordHolder.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                        try {
+                            visitorRecordHolder.mediaPlayer.setDataSource(context,recordUri);
+                            visitorRecordHolder.mediaPlayer.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (innerConversation.actionType == ChanelsTypes.callback
+                            && cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1)
+                        setShortCall(visitorRecordHolder);
+                    else if (innerConversation.actionType == ChanelsTypes.callback)
+                        setCallNotActive(visitorRecordHolder);
+                    visitorRecordHolder.msg.setText(url);
+                    visitorRecordHolder.msg.setVisibility(View.VISIBLE);
+
+   */
+    /*
+    public void setShortCall(InnerConversationVisitorRecordHolder visitorRecordHolder) {
+        visitorRecordHolder.mediaPlayer = MediaPlayer.create(context, R.raw.recorder);
+    }
+
+    public void setCallNotActive(InnerConversationVisitorRecordHolder visitorRecordHolder) {
+        visitorRecordHolder.mediaPlayer = MediaPlayer.create(context, R.raw.callrecord);
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (cursor != null && cursor.moveToPosition(position)) {
+            if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_SYSTEM_MSG)) == 0)//not a system msg
+            {
+                if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_REP_REQUEST)) == 1) {
+                    return AGENT_TEXT_VH;
+                } else {
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.webCall ||
+                            cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.callback)
+                        return VISITOR_RECORD_VH;
+                    return VISITOR_TEXT_VH;
+                }
+            }
+        }
+        return SYSTEM_MSG_VH;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (cursor != null)
+            return cursor.getCount();
+        return 0;
+    }
+
+    public Cursor swapCursor(Cursor cursor) {
+        if (getCursor() == cursor) {
+            return null;
+        }
+        Cursor oldCursor = getCursor();
+        setCursor(cursor);
+        if (cursor != null) {
+            this.notifyDataSetChanged();
+        }
+        return oldCursor;
+    }
+
+    //********************View Holder************************************
+
+    class InnerConversationVisitorRecordHolder extends RecyclerView.ViewHolder {
+
+        TextView chanelIcon, name, playBtn, pauseBtn;
+        AppCompatSeekBar seekBar;
+        MediaPlayer mediaPlayer;
+        private double startTime = 0;
+        private double finalTime = 0;
+        Handler seekHandler;
+        Uri recordUrl = null;
+
+        public InnerConversationVisitorRecordHolder(View itemView) {
+            super(itemView);
+            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
+            chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            name = (TextView) itemView.findViewById(R.id.displayName);
+            name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+            playBtn = (TextView) itemView.findViewById(R.id.play_btn);
+            pauseBtn = (TextView) itemView.findViewById(R.id.pause_btn);
+            seekBar = (AppCompatSeekBar) itemView.findViewById(R.id.seekbar_visitor_record);
+            playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            playBtn.setOnClickListener(playListener);
+            pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+
+            // seekHandler=new Handler();
+        }
+
+        public void setplayer(Uri uri) {
+            recordUrl = uri;
+        }
+
+
+        View.OnClickListener playListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    playBtn.setText(R.string.play_btn_icon);
+                } else {
+                    if (mediaPlayer == null)
+                        return;
+                    playBtn.setText(R.string.pause_btn_icon);
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    try {
+                        mediaPlayer.setDataSource(context, recordUrl);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                        finalTime = mediaPlayer.getDuration();
+                        startTime = mediaPlayer.getCurrentPosition();
+                        seekBar.setMax((int) finalTime);
+                        seekBar.setProgress((int) startTime);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // seekHandler.postDelayed(UpdateSongTime, 100);
+                }
+            }
+        };
+        private Runnable UpdateSongTime = new Runnable() {
+            public void run() {
+                startTime = mediaPlayer.getCurrentPosition();
+                seekBar.setProgress((int) startTime);
+                seekHandler.postDelayed(this, 100);
+            }
+        };
+
+
+    }
+
+    class InnerConversationHolder extends InnerConversationMsgHolder {
+        TextView chanelIcon, name;
+
+        public InnerConversationHolder(View itemView) {
+            super(itemView);
+            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
+            chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            name = (TextView) itemView.findViewById(R.id.displayName);
+            name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+
+            itemView.setOnClickListener(this);
+        }
+
+    }
+
+    class InnerConversationMsgHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView msg;
+
+        public InnerConversationMsgHolder(View itemView) {
+            super(itemView);
+            msg = (TextView) itemView.findViewById(R.id.mess);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+}
+
+*/
 

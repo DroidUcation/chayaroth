@@ -50,7 +50,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     @Override
     public void onBindViewHolder(InboxHolder holder, int position) {
-/*
+
         if (!cursor.moveToPosition(position))
             return;
         ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
@@ -78,7 +78,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.unread.setText(Integer.toString(conversation.unread));
                 holder.setUnRead(true);
             }
-        }*/
+        }/*
         cursor.moveToPosition(position);
 
         // init data to display
@@ -98,13 +98,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         //set in item
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-       /* if(avatarUrl!=null)
-        Picasso.with(context)
-                .load(avatarUrl)
-                .into(holder.avatar);*/
-      /*  else {
-            holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
-       }*/
+
         String avatarStr = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
         holder.avatar.setImageResource(Integer.parseInt(avatarStr));
         holder.chanelIcon.setText(chanelIcon);
@@ -121,7 +115,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if (isUnread >= 1) {
             holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
             holder.setUnRead(true);
-        }
+        }*/
     }
 
     @Override

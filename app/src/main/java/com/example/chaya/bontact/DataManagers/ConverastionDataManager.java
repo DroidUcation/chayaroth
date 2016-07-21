@@ -133,7 +133,7 @@ public class ConverastionDataManager implements ServerCallResponse {
     }
 
     public Conversation convertCursorToConversation(Cursor cursor) {
-    JSONObject jsonObject=  DbToolsHelper.convertCursorToJsonObject(cursor);
+    JSONObject jsonObject=  DbToolsHelper.convertCursorToJsonObject(new Conversation(),cursor);
         if (jsonObject.length() > 0) {
             Gson gson=new Gson();
             Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);

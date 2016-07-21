@@ -86,6 +86,8 @@
     <string name="arrow_click">&#xf105;</string>
     <string name="password_icon">&#xf023;</string>
     <string name="user_name_icon">&#xf183;</string>
+    <string name="play_btn_icon">&#xf04b;</string>
+    <string name="pause_btn_icon">&#xf04c;</string>
 
     <!--fonts names-->
     <string name="font_awesome">fontawesome-webfont.ttf</string>

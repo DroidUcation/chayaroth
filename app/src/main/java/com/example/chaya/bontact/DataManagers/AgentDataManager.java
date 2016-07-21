@@ -136,6 +136,9 @@ public class AgentDataManager implements ServerCallResponse{
     }
     @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+       if(isSuccsed==false)
+           sendResToUi(false, null, ErrorType.network_problems);
+
         try {
              JSONObject jsonObject =new JSONObject(response);
             String msg=jsonObject.getString("message");//user exists

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.style.RelativeSizeSpan;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
@@ -154,7 +155,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
     }
 
     public InnerConversation convertCursorToInnerConversation(Cursor cursor) {
-        JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(cursor);
+        JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new InnerConversation(), cursor);
         if (jsonObject.length() > 0) {
             Gson gson = new Gson();
             InnerConversation innerConversation = gson.fromJson(jsonObject.toString(), InnerConversation.class);

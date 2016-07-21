@@ -37,21 +37,39 @@
             android:textSize="10sp" />
 
         <TextView
-            android:id="@+id/mess"
+            android:id="@+id/play_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/chanelIcon"
-            android:layout_marginTop="5dp"
-            android:autoLink="all"
-            android:textIsSelectable="true"
-            android:textSize="14dp"
-            android:visibility="gone"/>
+            android:layout_below="@+id/chanelIcon"
+            android:text="@string/play_btn_icon"
+            android:layout_marginTop="4dp"/>
+     <TextView
+            android:id="@+id/pause_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/chanelIcon"
+            android:text="@string/pause_btn_icon"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"/>
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seekbar_visitor_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_toEndOf="@id/play_btn"
+            android:layout_toRightOf="@id/play_btn"
+            android:layout_marginLeft="10dp"
+            android:layout_alignTop="@id/play_btn"
+            android:indeterminate="false"/>
+
+
     </RelativeLayout>
 
 
-</FrameLayout>
-<!--
+</FrameLayout><!--
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
