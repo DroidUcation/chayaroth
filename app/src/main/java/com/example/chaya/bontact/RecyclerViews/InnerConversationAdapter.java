@@ -7,7 +7,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -16,13 +15,12 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.Helpers.AudioPlayerInnerHelper;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
@@ -30,8 +28,6 @@ import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
 
 import java.io.IOException;
-
-import nl.changer.audiowife.AudioWife;
 
 
 /**
@@ -139,7 +135,10 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             url = context.getResources().getString(R.string.domain_api);
             url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
             Uri recordUri = Uri.parse(url);
-            visitorRecordHolder.setplayer(recordUri);
+
+            if (visitorRecordHolder.player.preparePlayer(recordUri) == false)
+                return false;
+           /* visitorRecordHolder.setPlayer(recordUri);
             visitorRecordHolder.mediaPlayer = new MediaPlayer();
             try {
                 visitorRecordHolder.mediaPlayer.setDataSource(context, recordUri);
@@ -148,11 +147,11 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
-            }
+            }*/
         } else if (innerConversation.actionType == ChanelsTypes.callback && innerConversation.record == true)
-            visitorRecordHolder.mediaPlayer = MediaPlayer.create(context, R.raw.recorder);
+            visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.short_record);
         else if (innerConversation.actionType == ChanelsTypes.callback)
-            visitorRecordHolder.mediaPlayer = MediaPlayer.create(context, R.raw.callrecord);
+            visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.account_not_allow);
 
 
                     /*String url = null;
@@ -163,7 +162,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                         url = context.getResources().getString(R.string.domain_api);
                         url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
                         Uri recordUri = Uri.parse(url);
-                        // visitorRecordHolder.setplayer(recordUri);
+                        // visitorRecordHolder.setPlayer(recordUri);
                         visitorRecordHolder.mediaPlayer = new MediaPlayer();
                         visitorRecordHolder.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -213,6 +212,11 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             return innerConversation.from_s;
     }
 
+    public AudioPlayerInnerHelper getPlayer(InnerConversationVisitorRecordHolder visitorRecordHolder)
+    {
+        return visitorRecordHolder.player;
+    }
+
     @Override
     public int getItemViewType(int position) {
 
@@ -256,15 +260,17 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
     //********************View Holder************************************
 
-    class InnerConversationVisitorRecordHolder extends RecyclerView.ViewHolder {
+    public class InnerConversationVisitorRecordHolder extends RecyclerView.ViewHolder {
 
-        TextView chanelIcon, name, playBtn, pauseBtn;
+        TextView chanelIcon, name;
+        AudioPlayerInnerHelper player;
+       /* TextView playBtn, pauseBtn;
         AppCompatSeekBar seekBar;
         MediaPlayer mediaPlayer;
-        private double startTime = 0;
-        private double finalTime = 0;
+        double startTime = 0;
+        double finalTime = 0;
         Handler seekHandler;
-        Uri recordUrl = null;
+        Uri recordUrl = null;*/
 
         public InnerConversationVisitorRecordHolder(View itemView) {
             super(itemView);
@@ -272,17 +278,17 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
             name = (TextView) itemView.findViewById(R.id.displayName);
             name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
-            playBtn = (TextView) itemView.findViewById(R.id.play_btn);
+            player = new AudioPlayerInnerHelper(itemView);
+          /*  playBtn = (TextView) itemView.findViewById(R.id.play_btn);
             pauseBtn = (TextView) itemView.findViewById(R.id.pause_btn);
             seekBar = (AppCompatSeekBar) itemView.findViewById(R.id.seekbar_visitor_record);
             playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
             playBtn.setOnClickListener(playListener);
             pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
-
-            seekHandler = new Handler();
+            seekHandler = new Handler();*/
         }
 
-        public void setplayer(Uri uri) {
+       /*public void setPlayer(Uri uri) {
             recordUrl = uri;
         }
 
@@ -291,7 +297,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             @Override
             public void onClick(View view) {
                 if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
+                    stopRecord();
                     playBtn.setText(R.string.play_btn_icon);
                 } else {
                     if (mediaPlayer == null)
@@ -299,7 +305,10 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     playBtn.setText(R.string.pause_btn_icon);
                     playRecord();
                     finalTime = mediaPlayer.getDuration();
-                    startTime = mediaPlayer.getCurrentPosition();
+                    if (mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration())
+                        startTime = 0;
+                    else
+                        startTime = mediaPlayer.getCurrentPosition();
                     seekBar.setMax((int) finalTime);
                     seekBar.setProgress((int) startTime);
                 }
@@ -314,13 +323,18 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
         }
 
+        public void stopRecord() {
+            if (mediaPlayer != null)
+                mediaPlayer.pause();
+        }
+
         Runnable UpdateSongTime = new Runnable() {
             public void run() {
                 startTime = mediaPlayer.getCurrentPosition();
                 seekBar.setProgress((int) startTime);
                 seekHandler.postDelayed(this, 100);
             }
-        };
+        };*/
 
 
     }
@@ -479,7 +493,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                         url = context.getResources().getString(R.string.domain_api);
                         url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
                         Uri recordUri = Uri.parse(url);
-                        visitorRecordHolder.setplayer(recordUri);
+                        visitorRecordHolder.setPlayer(recordUri);
                         visitorRecordHolder.mediaPlayer=new MediaPlayer();
                         visitorRecordHolder.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -574,7 +588,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             // seekHandler=new Handler();
         }
 
-        public void setplayer(Uri uri) {
+        public void setPlayer(Uri uri) {
             recordUrl = uri;
         }
 

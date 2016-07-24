@@ -170,5 +170,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         super.onBackPressed();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
 
+      //  adapter.getPlayer().stopRecord();
+    }
 }

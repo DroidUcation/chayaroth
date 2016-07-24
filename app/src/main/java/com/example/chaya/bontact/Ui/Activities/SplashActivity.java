@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
 
         }
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     private void exportDB(){

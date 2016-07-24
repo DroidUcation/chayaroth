@@ -11,7 +11,7 @@
     <string name="login_title">Login</string>
     <string name="inbox_title">Inbox</string>
     <string name="settings_title">Settings</string>
-<string name="title_inner_conversation">Visitor</string>
+    <string name="title_inner_conversation">Visitor</string>
     <string name="sp_user_details">user_details</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -33,9 +33,9 @@
     <string name="txt_online_v"><b>online site visitors</b>\n see who\'s in your site, and invite them for a chat</string>
     <string name="txt_request_v"><b>new visitors requests</b>\n
      manage all conversation with your visitors</string>
-<string name="welcome_msg">Manage and convert your visitors</string>
+    <string name="welcome_msg">Manage and convert your visitors</string>
     <string name="logged_in_as">logged in as </string>
-<string name="visitor_details">Visitor details</string>
+    <string name="visitor_details">Visitor details</string>
     <string name="send_in_email">Send in Email</string>
     <string name="open_Ticket">Open Ticket</string>
 
@@ -49,7 +49,6 @@
 
     <!--URLS to api -->
     <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
-
     <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
     <string name="base_api">prd-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
@@ -57,7 +56,7 @@
     <string name="main_conversation_api">getmainconversations/</string>
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
-    <string name="tbd">Don\'t worry!<br/> coming soon....:)</string>
+    <string name="tbd">Don\'t worry!<br /> coming soon....:)</string>
     <string name="webcall_cancled">The web call was cancelled by the visitor.</string>
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
 
@@ -73,7 +72,7 @@
     <string name="unread_email">Unread Email, read now.</string>
     <string name="unread_callback">New voice recording ,play now</string>
     <string name="unread_webcall">New voice recording ,play now</string>
-
+    <!--icons-->
 
     <string name="email_icon">&#xf0e0;</string>
     <string name="chat_icon">&#xf086;</string>
@@ -91,6 +90,11 @@
 
     <!--fonts names-->
     <string name="font_awesome">fontawesome-webfont.ttf</string>
+
+
+    <!--mediaplayer errors-->
+    <string name="short_record">short</string>
+    <string name="account_not_allow">account not allow</string>
 </resources>
 
 

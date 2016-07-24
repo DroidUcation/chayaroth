@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="right"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="5dp">
+
+    <RelativeLayout
+        android:id="@+id/item_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/background_agent_message">
+
+        <TextView
+            android:id="@+id/chanelIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="@string/chat_icon"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/displayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/chanelIcon"
+            android:layout_marginLeft="5dp"
+            android:text="agent"
+            android:textSize="10sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/chanelIcon"
+            android:layout_marginTop="4dp"
+            android:text="@string/play_btn_icon" />
+
+        <TextView
+            android:id="@+id/pause_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/chanelIcon"
+            android:layout_marginTop="4dp"
+            android:text="@string/pause_btn_icon"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seekbar_visitor_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/play_btn"
+            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@id/play_btn"
+            android:layout_toRightOf="@id/play_btn"
+            android:indeterminate="false" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
