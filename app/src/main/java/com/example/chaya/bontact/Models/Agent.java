@@ -38,7 +38,7 @@ public class Agent {
         public String code;
         @SerializedName("telephone")
         @Expose
-        public Object telephone;
+        public String telephone;
         @SerializedName("key")
         @Expose
         public String key;

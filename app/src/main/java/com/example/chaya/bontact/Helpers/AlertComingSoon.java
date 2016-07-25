@@ -11,6 +11,7 @@ import com.example.chaya.bontact.R;
  * Created by chaya on 7/11/2016.
  */
 public class AlertComingSoon {
+
     public static void show(Context context)
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
@@ -24,4 +25,5 @@ public class AlertComingSoon {
         AlertDialog alertDialog= builder.create();
         alertDialog.show();
     }
+
 }

@@ -29,18 +29,5 @@
         android:text="@string/logged_in_as"
         android:textColor="@color/white" />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/switch_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/loggedInAsTxt"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp"
-        android:layout_toEndOf="@+id/loggedInAsTxt"
-        android:layout_toRightOf="@+id/loggedInAsTxt"
-        android:checked="true"
-
-        />
-
 
 </RelativeLayout>

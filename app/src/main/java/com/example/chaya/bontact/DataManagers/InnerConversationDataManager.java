@@ -11,6 +11,7 @@ import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.Helpers.SendResponseHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
@@ -35,6 +36,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
     private Context context;
     private Conversation current_conversation;
     private List<InnerConversation> innerConversationsList;
+    SendResponseHelper sendResponseHelper;
 
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
 
@@ -162,6 +164,11 @@ public class InnerConversationDataManager implements ServerCallResponse {
             return innerConversation;
         }
         return null;
+    }
+    public void makeCallbackResponse(String phone_number) {
+        if(sendResponseHelper==null)
+            sendResponseHelper=new SendResponseHelper();
+        sendResponseHelper.sendCallBack(context,current_conversation.idSurfer,phone_number);
     }
 
 }

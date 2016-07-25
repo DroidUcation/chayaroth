@@ -58,9 +58,8 @@ public class MenuActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
-        loggedInAs.append(" " + agentDataManager.getAgentName(this));
-        SwitchCompat logOut= (SwitchCompat) header.findViewById(R.id.switch_logout);
-        logOut.setOnCheckedChangeListener(logoutListener);
+        if (loggedInAs != null)
+            loggedInAs.append(" " + agentDataManager.getAgentName(this));
         progressBarCenter = (ProgressBar) findViewById(R.id.loading_center);
 
         String token = agentDataManager.getAgentToken(this);
@@ -147,19 +146,6 @@ public class MenuActivity extends AppCompatActivity
 
     }
 
-    CompoundButton.OnCheckedChangeListener logoutListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if(isChecked==false)//user logged out
-            {
-                agentDataManager.logOut(MenuActivity.this);
-                Intent intent= new Intent(MenuActivity.this,MainActivity.class);
-                startActivity(intent);
-
-            }
-
-        }
-    };
 
 }
 

@@ -10,18 +10,16 @@ import com.squareup.picasso.Picasso;
  * Created by chaya on 7/3/2016.
  */
 public class ChanelsTypes {
-    public static final int callback=1;
-    public static final int sms=2;
-    public static final int chat=3;
-    public static final int email=4;
-    public static final int whatsapp=5;
-    public static final int webCall=16;
+    public static final int callback = 1;
+    public static final int sms = 2;
+    public static final int chat = 3;
+    public static final int email = 4;
+    public static final int whatsapp = 5;
+    public static final int webCall = 16;
 
 
-    public static String getDefultStringByChanelType(Context context, int chanelType)
-    {
-        switch (chanelType)
-        {
+    public static String getDefultStringByChanelType(Context context, int chanelType) {
+        switch (chanelType) {
             case callback:
                 return context.getResources().getString(R.string.unread_callback);
             case sms:
@@ -39,10 +37,9 @@ public class ChanelsTypes {
         }
         return null;
     }
-    public static int getIconByChanelType(int chanelType)
-    {
-        switch (chanelType)
-        {
+
+    public static int getIconByChanelType(int chanelType) {
+        switch (chanelType) {
             case callback:
                 return R.string.phone_calling_icon;
             case sms:
@@ -61,6 +58,21 @@ public class ChanelsTypes {
 
         return 0;
     }
+
+    public static int getChanelTypeByIcon(int resIcon) {
+        switch (resIcon) {
+            case R.string.phone_calling_icon:
+                return callback;
+            case R.string.sms_icon:
+                return sms;
+            case R.string.chat_icon:
+                return chat;
+            case R.string.email_icon:
+                return email;
+        }
+        return 0;
+    }
+
     public static int convertStringChannelToInt(String chanelString) {
         if (chanelString.toLowerCase().equals("whatsapp"))
             return whatsapp;
@@ -74,9 +86,8 @@ public class ChanelsTypes {
             return callback;
        /* if (chanelString.toLowerCase() == "webcall")
             return webCall;*/
-        else
-        {
-         return 0;
+        else {
+            return 0;
         }
     }
 

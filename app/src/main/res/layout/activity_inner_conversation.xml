@@ -1,99 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--content-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Ui.Activities.InnerConversationActivity"
-    tools:menu="menu">-->
-    <!--header-->
-<!--
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+    tools:menu="menu">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/inner_conversation_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_marginBottom="50dp"
+        android:paddingBottom="30dp"
+        android:scrollbars="vertical" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
-
-           <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/avatar_jen"
-                />&ndash;&gt;
-
-       </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
--->
-
-    <!--content-->
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ProgressBar
+        android:id="@+id/loading_inner_conversation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:foregroundGravity="fill"
+        android:padding="5dp"
+        android:visibility="gone" />
+    <!--send messege box and button-->
+    <LinearLayout
+        android:id="@+id/chanel_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="@color/white"
-    tools:context=".Ui.Activities.InnerConversationActivity"
-    tools:menu="menu"
-    >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/inner_conversation_recyclerView"
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttom_layout"
+        android:background="@color/orange_dark"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/chanel_sms"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="30dp"
-            android:layout_marginBottom="50dp"
-            android:scrollbars="vertical"
-           />
-        <ProgressBar
-            android:id="@+id/loading_inner_conversation"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/chanel_chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/chanel_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/chanel_phone_call"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:weightSum="7">
+
+        <EditText
+            android:id="@+id/response_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="6"
+            android:hint="Enter message"
+            android:lines="1"
+            android:paddingLeft="10dp" />
+        <!--android:background="@drawable/edittext_with_shadow"-->
+        <Button
+            android:id="@+id/btn_send_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_send_24dp" />
+
+    </LinearLayout>
+
+</RelativeLayout><!--    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            android:padding="5dp"
+            android:layout_marginLeft="16dp"
+            app:fabSize="mini"
+            android:src="@drawable/ic_chat_black_18dp"
+            app:backgroundTint="@color/orange_dark"
 
-            android:foregroundGravity="fill"
-            />
-        <!--send messege box and button-->
-        <LinearLayout
-            android:background="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:weightSum="7">
-
-            <EditText
-                android:id="@+id/response_message"
-                android:layout_width="0dp"
-                android:hint="Enter message"
-                android:paddingLeft="10dp"
-                android:background="@null"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="16dp"
-                android:lines="1"
-                android:layout_height="wrap_content"
-                android:layout_weight="6" />
-
-            <Button android:id="@+id/btn_send_message"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/ic_send_24dp" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-<!--
-</android.support.design.widget.CoordinatorLayout>-->
-
+            />-->
