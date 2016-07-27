@@ -170,7 +170,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 displayName.setTypeface(null, Typeface.BOLD);
                 lastSentence.setTypeface(null, Typeface.BOLD);
                 date.setTypeface(null, Typeface.BOLD);
-
                 unread.setVisibility(View.VISIBLE);
             }
         }
@@ -178,6 +177,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         @Override
         public void onClick(View v) {
+            Log.d("on click", "inbox adaptrer");
 
             Conversation conversation = null;
             int position = this.getAdapterPosition();

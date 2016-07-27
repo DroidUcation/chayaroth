@@ -24,6 +24,8 @@
     <string name="name">name</string>
     <string name="password">Password</string>
     <string name="user_name">User name</string>
+    <string name="post">post</string>
+    <string name="get">get</string>
 
 
     <!--text view messegaes -->
@@ -38,7 +40,8 @@
     <string name="visitor_details">Visitor details</string>
     <string name="send_in_email">Send in Email</string>
     <string name="open_Ticket">Open Ticket</string>
-
+    <string name="tbd">Don\'t worry!<br /> coming soon....:)</string>
+    <string name="webcall_cancled">The web call was cancelled by the visitor.</string>
 
     <!--Error messages -->
     <string name="empty_deatails">Plese enter User name and password</string>
@@ -56,8 +59,9 @@
     <string name="main_conversation_api">getmainconversations/</string>
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
-    <string name="tbd">Don\'t worry!<br /> coming soon....:)</string>
-    <string name="webcall_cancled">The web call was cancelled by the visitor.</string>
+
+    <string name="socket_url">https://dev-socket01-eus.azurewebsites.net/</string>
+
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
 
     <!-- time strings-->
@@ -95,6 +99,14 @@
     <!--mediaplayer errors-->
     <string name="short_record">short</string>
     <string name="account_not_allow">account not allow</string>
+
+    <!--channel strings-->
+    <string name="callback">callback</string>
+    <string name="sms">sms</string>
+    <string name="chat">chat</string>
+    <string name="email">email</string>
+    <string name="whatsup">whatsup</string>
+
 </resources>
 
 

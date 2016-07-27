@@ -36,7 +36,6 @@ public class InnerConversationDataManager implements ServerCallResponse {
     private Context context;
     private Conversation current_conversation;
     private List<InnerConversation> innerConversationsList;
-    SendResponseHelper sendResponseHelper;
 
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
 
@@ -44,15 +43,15 @@ public class InnerConversationDataManager implements ServerCallResponse {
         this.context = context;
         innerConversationsList = new ArrayList<>();
     }
-    public InnerConversationDataManager(Context context, int currentIdSurfer)
-        {
-            this(context,null);
-            ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
-             current_conversation= converastionDataManager.getConversationByIdSurfer(currentIdSurfer);
-        }
+
+    public InnerConversationDataManager(Context context, int currentIdSurfer) {
+        this(context, null);
+        ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
+        current_conversation = converastionDataManager.getConversationByIdSurfer(currentIdSurfer);
+    }
 
 
-        public void getData(Context context, String token) {
+    public void getData(Context context, String token) {
         this.context = context;
         sendResToUi();
        /* String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
@@ -164,11 +163,6 @@ public class InnerConversationDataManager implements ServerCallResponse {
             return innerConversation;
         }
         return null;
-    }
-    public void makeCallbackResponse(String phone_number) {
-        if(sendResponseHelper==null)
-            sendResponseHelper=new SendResponseHelper();
-        sendResponseHelper.sendCallBack(context,current_conversation.idSurfer,phone_number);
     }
 
 }

@@ -17,6 +17,7 @@ import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
+import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -35,23 +36,25 @@ import io.socket.emitter.Emitter;
 
 public class SocketManager {
 
-    public static Socket socket;
+    public static Socket socket = null;
     private Context context;
     private Gson gson = null;
 
     public Socket getSocket() {
+
         return socket;
     }
 
     public SocketManager(Context context) {
         this.context = context;
         gson = new Gson();
-        connectSocket();
+        if (socket == null)
+            connectSocket();
     }
 
     public void connectSocket() {
         try {
-            socket = IO.socket("https://prd-socket01-eus.azurewebsites.net/");
+            socket = IO.socket(context.getResources().getString(R.string.socket_url));
         } catch (URISyntaxException e) {
 
         }
@@ -62,7 +65,6 @@ public class SocketManager {
                 .on("surferLeaved", surferLeavedListener);
         socket.connect();
     }
-
 
     Emitter.Listener connectListener = new Emitter.Listener() {
         @Override
@@ -165,7 +167,6 @@ public class SocketManager {
                     });
 
 
-
                 } else {
                     if (AgentDataManager.getAgentInstanse() != null)
                         converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
@@ -212,10 +213,29 @@ public class SocketManager {
         //if(innerConversation.datatype==ChanelsTypes.callback)
         // converastionDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_EMAIL,innerConversation.from_s);//set phone
         //todo:check the type field in data also
-       Conversation  conversation= converastionDataManager.getConversationByIdSurfer(id_surfer);
-        if(conversation!=null)
-         converastionDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_UNREAD,++conversation.unread );
+        Conversation conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
+        if (conversation != null)
+            converastionDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_UNREAD, ++conversation.unread);
     }
+
+    public void emitChatMsg(JSONObject chatMsg, Conversation conversation) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("messageObj", chatMsg)
+                       .put("surfer", new JSONObject(gson.toJson(conversation)));
+            socket.emit("sendChatTxt", jsonObject, sendChatEmitCallBack);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    Ack sendChatEmitCallBack = new Ack() {
+        @Override
+        public void call(Object... args) {
+            String json = gson.toJson(args);
+            Log.d("emit chat",json);
+        }
+    };
 
 
 }

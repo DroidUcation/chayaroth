@@ -44,8 +44,10 @@ public class AlertCallbackResponse {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         if (checkValidNumber(phone_num_edit_txt.getText().toString()) == true) {
-                            innerConversationDataManager = new InnerConversationDataManager(context, currentConversation);
-                            innerConversationDataManager.makeCallbackResponse(phone_num_edit_txt.getText().toString());
+                           /* innerConversationDataManager = new InnerConversationDataManager(context, currentConversation);
+                            innerConversationDataManager.makeCallbackResponse(phone_num_edit_txt.getText().toString());*/
+                            SendResponseHelper sendResponseHelper=new SendResponseHelper();
+                            sendResponseHelper.sendCallBack(context,currentConversation.idSurfer,phone_num_edit_txt.getText().toString());
                         }
                         else
                         alertBuilder.setTitle("not valid phone number");

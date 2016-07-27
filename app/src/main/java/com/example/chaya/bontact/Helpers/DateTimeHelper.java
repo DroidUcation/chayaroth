@@ -82,4 +82,8 @@ public class DateTimeHelper {
       String strDate=  dateHoursMinutesFormat.format(date);
         return strDate;
     }
+    public static String convertDateToFullFormatString(Date date)
+    {
+        return dateFullFormat.format(date);
+    }
 }

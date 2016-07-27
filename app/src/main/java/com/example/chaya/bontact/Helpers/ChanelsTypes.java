@@ -18,8 +18,8 @@ public class ChanelsTypes {
     public static final int webCall = 16;
 
 
-    public static String getDefultStringByChanelType(Context context, int chanelType) {
-        switch (chanelType) {
+    public static String getDefultStringByChanelType(Context context, int channelType) {
+        switch (channelType) {
             case callback:
                 return context.getResources().getString(R.string.unread_callback);
             case sms:
@@ -88,6 +88,25 @@ public class ChanelsTypes {
             return webCall;*/
         else {
             return 0;
+        }
+    }
+
+    public static String convertChannelTypeToString(Context context, int channelType) {
+        switch (channelType) {
+            case callback:
+                return context.getResources().getString(R.string.callback);
+            case sms:
+                return context.getResources().getString(R.string.sms);
+            case chat:
+                return context.getResources().getString(R.string.chat);
+            case email:
+                return context.getResources().getString(R.string.email);
+       /*     case whatsapp:
+                return context.getResources().getString(R.string.whatsup);
+            case webCall:
+                return context.getResources().getString(R.string.webcall);*/
+            default:
+                return context.getResources().getString(R.string.chat);
         }
     }
 

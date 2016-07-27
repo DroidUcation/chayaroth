@@ -24,21 +24,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertCallbackResponse;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
+import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, EditText.OnKeyListener {
@@ -52,8 +57,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     Conversation current_conversation;
     int selected_reply_type;
     List<TextView> channel_icons;
-
-
+    SendResponseHelper sendResponseHelper;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,6 +91,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         btn_send_mess.setOnClickListener(this);
         setProgressBarState(View.VISIBLE);
         channel_icons = new ArrayList<>();
+        sendResponseHelper = new SendResponseHelper();
         initChannelIcons();
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
     }
@@ -110,8 +115,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (current_conversation != null && current_conversation.lasttype == (int) btn.getTag()) {
             setAsSelectedChannel(btn);
         }
+        setDisableChannelIcons();
         return btn;
     }
+
 
     View.OnClickListener channelListener = new View.OnClickListener() {
         @Override
@@ -121,17 +128,27 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     setAsSelectedChannel(btn);
                     if (selected_reply_type == ChanelsTypes.callback)
                         sendCallBack();
-                }
-                else
+                } else {
                     btn.setTextColor(getResources().getColor(R.color.white));
+                    setDisableChannelIcons();
+                }
         }
     };
+
+    public void setDisableChannelIcons() {
+        if (channel_icons != null)
+            for (TextView btn : channel_icons)
+                if (!sendResponseHelper.isAllowedCurrentChannelResponse(current_conversation, (Integer) btn.getTag())) {
+                    btn.setEnabled(false);
+                    btn.setTextColor(getResources().getColor(R.color.gray_dark));
+                }
+    }
 
     public void setAsSelectedChannel(TextView btn) {
         btn.setTextColor(getResources().getColor(R.color.purple));
         selected_reply_type = (int) btn.getTag();
-       // if(selected_reply_type == ChanelsTypes.callback)
-            //((Button) findViewById(R.id.btn_send_message)).setBackgroundResource(R.id.chanel_phone_call);
+        // if(selected_reply_type == ChanelsTypes.callback)
+        //((Button) findViewById(R.id.btn_send_message)).setBackgroundResource(R.id.chanel_phone_call);
     }
 
     public boolean onKey(View view, int keyCode, KeyEvent event) {
@@ -139,15 +156,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             switch (view.getId()) {
                 case R.id.response_message:
                     Log.d("enter pressed", "enter pressed");
-                    response_mess.setText("");
                     SendResponseMessage(response_mess.getText().toString());
+                    response_mess.setText("");
                     break;
             }
             return true;
         }
         return false; // pass on to other listeners.
     }
-
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
@@ -184,28 +200,65 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send_message:
-                response_mess.setText("");
-                SendResponseMessage(response_mess.getText().toString());
+                if (response_mess != null && !response_mess.equals("")) {
+                    SendResponseMessage(response_mess.getText().toString());
+                    response_mess.setText("");
+                }
                 View view = this.getCurrentFocus();
                 if (view != null) {
                     InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
-
         }
     }
 
     public void SendResponseMessage(String textMsg) {
-        if (selected_reply_type == ChanelsTypes.callback)
-            sendCallBack();
+        if (current_conversation == null)
+            return;
 
+        sendResponseHelper = new SendResponseHelper();
+        if (!sendResponseHelper.isAllowedCurrentChannelResponse(current_conversation, selected_reply_type)) {
+            return;
+        }
+        if (selected_reply_type == ChanelsTypes.callback) {
+            sendCallBack();
+            return;
+        }
+        addTextMsgToList(textMsg);
+        //todo:check package allows channel
+        if (selected_reply_type == ChanelsTypes.chat) {
+            sendResponseHelper.sendChat(this,textMsg,current_conversation.idSurfer);
+        } else {
+            sendResponseHelper.sendSmsOrEmail(this, selected_reply_type, textMsg, current_conversation.idSurfer);
+        }
     }
 
-    public void sendCallBack() {
+    private void addTextMsgToList(String textMsg) {
+        InnerConversation innerConversation = new InnerConversation();
+        innerConversation.actionType = selected_reply_type;
+        innerConversation.mess = textMsg;
+        innerConversation.rep_request = true;
+        if (AgentDataManager.getAgentInstanse() != null)
+            innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
+        innerConversation.name = innerConversation.agentName;
+        if (current_conversation != null)
+            innerConversation.idSurfer = current_conversation.idSurfer;
+        innerConversation.timeRequest = DateTimeHelper.convertDateToFullFormatString(new Date());
+        if (selected_reply_type != ChanelsTypes.callback && selected_reply_type != ChanelsTypes.webCall)
+            innerConversation.datatype = 1;//txt msg
+        innerConversation.systemMsg = false;
+        InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this, current_conversation);
+        Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();
+
+        innerConversationDataManager.saveData(innerConversation);
+    }
+
+    private void sendCallBack() {
         AlertCallbackResponse alertCallbackResponse = new AlertCallbackResponse(this);
         alertCallbackResponse.create(current_conversation);
         alertCallbackResponse.show();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
