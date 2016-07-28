@@ -18,7 +18,7 @@ public class ChanelsTypes {
     public static final int webCall = 16;
 
 
-    public static String getDefultStringByChanelType(Context context, int channelType) {
+    public static String getDeafultMsgByChanelType(Context context, int channelType) {
         switch (channelType) {
             case callback:
                 return context.getResources().getString(R.string.unread_callback);
@@ -110,6 +110,25 @@ public class ChanelsTypes {
         }
     }
 
+   public static String getPlaceHolderByChannelIcon(Context context, int channelType)
+   {
+       switch (channelType) {
+           case callback:
+               return context.getResources().getString(R.string.phone_call_place_holder);
+           case sms:
+               return context.getResources().getString(R.string.sms_place_holder);
+           case chat:
+               return context.getResources().getString(R.string.chat_place_holder);
+           case email:
+               return context.getResources().getString(R.string.email_place_holder);
+         /*  case whatsapp:
+               return "a whatsapp is waiting";
+           case webCall:
+               return context.getResources().getString(R.string.unread_webcall);*/
+           default:
+       }
+       return null;
+   }
 
 }
 

@@ -112,7 +112,9 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     innerConversationHolder = (InnerConversationHolder) holder;
                     innerConversationHolder.msg.setText(getMsgConcatWithDate(innerConversation));
                     innerConversationHolder.name.setText(getNameForVisitor(innerConversation));
-                    innerConversationHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
+                    int icon = ChanelsTypes.getIconByChanelType(innerConversation.actionType);
+                    if (icon != 0)
+                        innerConversationHolder.chanelIcon.setText(icon);
                     break;
                 case VISITOR_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
@@ -146,15 +148,15 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     /*       url = context.getResources().getString(R.string.domain_api);
             url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
            */
-              Uri.Builder builder = new Uri.Builder();
+            Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
                     .authority(context.getResources().getString(R.string.base_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
                     .appendPath("record")
                     .appendPath(agentDataManager.getAgentToken(context))
                     .appendPath(String.valueOf(innerConversation.req_id))
-                    .appendPath( innerConversation.req_id+ ".mp3");
-             url = builder.build().toString();
+                    .appendPath(innerConversation.req_id + ".mp3");
+            url = builder.build().toString();
             Uri recordUri = Uri.parse(url);
 
             if (!visitorRecordHolder.player.preparePlayer(recordUri))

@@ -2,6 +2,7 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.util.Log;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -17,6 +17,7 @@ import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -29,17 +30,27 @@ import java.util.List;
 /**
  * Created by chaya on 6/23/2016.
  */
-public class ConverastionDataManager implements ServerCallResponse {
+public class ConverastionDataManager {
 
     public static List<Conversation> conversationList = null;
     private Context context;
     public static int current_page = 0;
+    public static int unread_conversations = 0;
+
 
     public ConverastionDataManager(Context context) {
         if (conversationList == null)
             conversationList = new ArrayList<>();
         this.context = context;
         fillConversationList(context);
+    }
+
+    public static int getUnreadConversations(Context context) {
+        return unread_conversations;
+    }
+
+    public static void setUnreadConversations(Context context, int unread) {
+        unread_conversations = unread;
     }
 
     public void getFirstDataFromServer(Context context, String token) {
@@ -68,7 +79,7 @@ public class ConverastionDataManager implements ServerCallResponse {
 
             String url = builder.build().toString();
 
-            OkHttpRequests requests = new OkHttpRequests(url, this);
+            OkHttpRequests requests = new OkHttpRequests(url, getConversationOnResponse);
         }
 
     }
@@ -97,29 +108,24 @@ public class ConverastionDataManager implements ServerCallResponse {
         }
     }
 
-    @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+    ServerCallResponse getConversationOnResponse = new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
+            if (isSuccsed == true && response != null) {
+                JSONObject resObj = null;
+                try {
+                    resObj = new JSONObject(response);
+                    resObj = resObj.getJSONObject("conversations");
+                    Log.e("response conversation", resObj.toString());
 
-        if (isSuccsed == true && response != null) {
-            JSONObject resObj = null;
-            try {
-                resObj = new JSONObject(response);
-                resObj = resObj.getJSONObject("conversations");
-                boolean result = saveData(resObj.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    boolean result = saveData(resObj.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
 
+                }
             }
-        } else {
-            //don't do anything
         }
-    }
-
-    public void sendResToUi(boolean isSuccsed, String response, ErrorType errorType) {
-        if (context != null && context instanceof ServerCallResponseToUi) {
-            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(isSuccsed, response, errorType, getClass());
-        }
-    }
+    };
 
     public Conversation getConversationByIdSurfer(int idSurfer) {
 
@@ -133,9 +139,9 @@ public class ConverastionDataManager implements ServerCallResponse {
     }
 
     public Conversation convertCursorToConversation(Cursor cursor) {
-    JSONObject jsonObject=  DbToolsHelper.convertCursorToJsonObject(new Conversation(),cursor);
+        JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new Conversation(), cursor);
         if (jsonObject.length() > 0) {
-            Gson gson=new Gson();
+            Gson gson = new Gson();
             Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
             return conversation;
         }
@@ -169,12 +175,12 @@ public class ConverastionDataManager implements ServerCallResponse {
 
     public boolean setLastSentence(Context context, Conversation conversation, String sentence) {
         if (conversation != null && sentence != null) {
-            conversation.setLastSentence(sentence);
+            conversation.setLastMessage(sentence);
             if (context != null) {
                 String selectionStr = Contract.Conversation.COLUMN_ID_SURFER + "=?";
                 String[] selectionArgs = {conversation.idSurfer + ""};
                 ContentValues values = new ContentValues();
-                values.put(Contract.Conversation.COLUMN_LAST_SENTENCE, sentence);
+                values.put(Contract.Conversation.COLUMN_LAST_MESSAGE, sentence);
                 context.getContentResolver().update(Contract.Conversation.INBOX_URI, values, selectionStr, selectionArgs);
             }
             return true;
@@ -226,7 +232,43 @@ public class ConverastionDataManager implements ServerCallResponse {
 
     }
 
+    public void getConversationsUnreadCount(Context context) {
 
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(context.getResources().getString(R.string.base_api))
+                .appendPath(context.getResources().getString(R.string.rout_api))
+                .appendPath(context.getResources().getString(R.string.count_conversation_api))
+                .appendPath(AgentDataManager.getAgentInstanse().getToken());
+        String url = builder.build().toString();
+        OkHttpRequests okHttpRequests = new OkHttpRequests(url, getCountConversationOnResponse);
+    }
+
+    ServerCallResponse getCountConversationOnResponse = new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
+            if (isSuccsed == true && response != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String msg = jsonObject.getString("status");//user exists
+                    if (msg.equals("true")) {
+                        int unread_conversations = jsonObject.getJSONObject("conversations").getInt("newitems");
+                        SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_count_numbers), context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = Preferences.edit();
+                        editor.clear();
+                        editor.putInt(context.getResources().getString(R.string.count_unread_conversation), unread_conversations);
+                        editor.apply();
+                        setUnreadConversations(context, unread_conversations);
+                        if (context != null && context instanceof ServerCallResponseToUi) {
+                            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, response, null, ConverastionDataManager.class);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
 
 }

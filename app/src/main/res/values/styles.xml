@@ -10,6 +10,7 @@
         <item name="colorControlActivated">@color/purple_meduim</item>
         <item name="colorControlHighlight">@color/purple</item>
         <item name="colorSwitchThumbNormal">@color/orange_dark</item>
+     <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -24,5 +25,12 @@
         <item name="android:textSize">10sp</item>
         <item name="android:background">@color/gray_very_light</item>
     </style>
+    <!--<style name="AppTheme.inner" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>-->
 
+    <style name="MyActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:padding">80dp</item>
+        <item name="android:textColor">@color/green</item>
+    </style>
 </resources>

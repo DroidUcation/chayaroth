@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
 @Generated("org.jsonschema2pojo")
 public class InnerConversation {
 
+    @SerializedName("id")
+    @Expose
+    public String id;
     @SerializedName("conversationPage")
     @Expose
     public String conversationPage;

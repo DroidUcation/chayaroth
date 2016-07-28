@@ -7,7 +7,8 @@
     android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Ui.Activities.InnerConversationActivity"
-    tools:menu="menu">
+    tools:menu="menu"
+    >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/inner_conversation_recyclerView"
@@ -93,8 +94,9 @@
             android:layout_weight="6"
             android:hint="Enter message"
             android:lines="1"
-            android:paddingLeft="10dp" />
-        <!--android:background="@drawable/edittext_with_shadow"-->
+            android:paddingLeft="10dp"
+            android:textColorHint="@color/gray_light"/>
+
         <Button
             android:id="@+id/btn_send_message"
             android:layout_width="0dp"
@@ -104,7 +106,8 @@
 
     </LinearLayout>
 
-</RelativeLayout><!--    <android.support.design.widget.FloatingActionButton
+</RelativeLayout>
+    <!--    <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

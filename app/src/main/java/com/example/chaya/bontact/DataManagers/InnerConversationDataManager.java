@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
@@ -87,9 +88,9 @@ public class InnerConversationDataManager implements ServerCallResponse {
             JSONArray DataArray = new JSONArray(data);
             Gson gson = new Gson();
             //delete this users data
-            String selectionStr = Contract.InnerConversation.COLUMN_ID_SURFUR + "=?";
+          /*  String selectionStr = Contract.InnerConversation.COLUMN_ID_SURFUR + "=?";
             String[] selectionArgs = {current_conversation.idSurfer + ""};
-            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);
+            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);*/
 
             InnerConversation innerConversation = null;
             for (int i = 0; i < DataArray.length(); i++) {
@@ -103,7 +104,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
                 saveData(innerConversation);
             }
 
-            if (innerConversation != null && innerConversation.getMess() != null)//check type
+           if (innerConversation != null && innerConversation.getMess() != null)//check type
             {
                 ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
                 converastionDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
@@ -128,19 +129,19 @@ public class InnerConversationDataManager implements ServerCallResponse {
     }
 
     @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType,Object sender) {
         if (isSuccsed == true) {
             try {
                 JSONObject res = new JSONObject(response);
                 if (res.getString("status").equals("true")) {
                     String inner_data = res.getJSONArray("data").toString();
+                    Log.e("inner conversation",inner_data);
                     boolean result = saveData(inner_data);
                     // sendResToUi();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

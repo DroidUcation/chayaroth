@@ -50,7 +50,7 @@ public class InboxProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        long rowID =  dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME,values,Contract.Conversation.COLUMN_ID_SURFER);
+        long rowID =  dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME,values,new String[]{Contract.Conversation.COLUMN_ID_SURFER});
         if (rowID > 0) {
            // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
             getContext().getContentResolver().notifyChange(uri, null);

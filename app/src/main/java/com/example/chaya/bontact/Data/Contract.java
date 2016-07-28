@@ -33,7 +33,7 @@ public class Contract {
         public static final String COLUMN_EMAIL="email";
         public static final String COLUMN_AGENT="agent";
         public static final String COLUMN_DISPLAY_NAME="displayname";
-        public static final String COLUMN_LAST_SENTENCE="lastSentence";
+        public static final String COLUMN_LAST_MESSAGE ="lastMessage";
         public static final String COLUMN_IS_ONLINE="isOnline";
     }
     public static class InnerConversation implements BaseColumns{
@@ -41,6 +41,7 @@ public class Contract {
         public static final String URL = "content://" + AUTHORITY;
         public static final Uri INNER_CONVERSATION_URI = Uri.parse(URL);
         public static final String TABLE_NAME="InnerConversation";
+        public static final String COLUMN_ID="id";
         public static final String COLUMN_CONVERSATION_PAGE="conversationPage";
         public static final String COLUMN_ID_SURFUR="idSurfer";
         public static final String COLUMN_ACTION_TYPE="actionType";

@@ -12,7 +12,7 @@
     <string name="inbox_title">Inbox</string>
     <string name="settings_title">Settings</string>
     <string name="title_inner_conversation">Visitor</string>
-    <string name="sp_user_details">user_details</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -24,9 +24,9 @@
     <string name="name">name</string>
     <string name="password">Password</string>
     <string name="user_name">User name</string>
-    <string name="post">post</string>
-    <string name="get">get</string>
-
+    <string name="sp_user_details">user_details</string>
+    <string name="sp_count_numbers">sp_count_numbers</string>
+    <string name="count_unread_conversation">count_unread_conversation</string>
 
     <!--text view messegaes -->
     <string name="welcome_name_msg">Hi</string>
@@ -43,20 +43,30 @@
     <string name="tbd">Don\'t worry!<br /> coming soon....:)</string>
     <string name="webcall_cancled">The web call was cancelled by the visitor.</string>
 
+    <!--place holders-->
+
+    <string name="email_place_holder">reply to email </string>
+    <string name="chat_place_holder">reply to chat </string>
+    <string name="sms_place_holder"> reply to sms</string>
+    <string name="phone_call_place_holder">press to phone call </string>
+
+
     <!--Error messages -->
-    <string name="empty_deatails">Plese enter User name and password</string>
+    <string name="empty_user_name">Please enter User name</string>
+    <string name="empty_password">Please enter password</string>
+
     <string name="invalid_deatails">Invalid User name or password</string>
     <string name="user_not_exists">the user is not found please try again</string>
-    <string name="some_problem">Please reenter the details. there was some problem </string>
-    <string name="connection_problem">Please check your network connection. something is wrong! </string>
+    <string name="some_problem">Please re enter the details. there was some problem </string>
+    <string name="network_problem">Please check your internet connections!</string>
 
     <!--URLS to api -->
     <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
-    <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
-    <string name="base_api">prd-api01-eus.azurewebsites.net</string>
+    <string name="domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
+    <string name="base_api">dev-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
     <string name="conversation_api">getConversations</string>
-    <string name="main_conversation_api">getmainconversations/</string>
+    <string name="count_conversation_api">getmainConversations</string>
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
 
@@ -71,6 +81,7 @@
     <string name="hours">hours ago</string>
     <string name="hour">an hour ago</string>
 
+    <!--unread msg-->
     <string name="unread_sms">Unread SMS, read now.</string>
     <string name="unread_chat">Unread Chat, read now. </string>
     <string name="unread_email">Unread Email, read now.</string>
@@ -106,6 +117,7 @@
     <string name="chat">chat</string>
     <string name="email">email</string>
     <string name="whatsup">whatsup</string>
+
 
 </resources>
 

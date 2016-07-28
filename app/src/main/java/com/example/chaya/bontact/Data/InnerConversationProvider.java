@@ -9,20 +9,22 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Created by chaya on 6/26/2016.
  */
 public class InnerConversationProvider extends ContentProvider {
-   // private SQLiteDatabase db;
-    private DbBontact dbBontact ;
+    // private SQLiteDatabase db;
+    private DbBontact dbBontact;
+
     @Override
     public boolean onCreate() {
 
         dbBontact = new DbBontact(getContext());
         return true;
         //db = dbBontact.getWritableDatabase();
-       // return (db != null);
+        // return (db != null);
     }
 
     @Nullable
@@ -31,7 +33,7 @@ public class InnerConversationProvider extends ContentProvider {
         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
         sqLiteQueryBuilder.setTables(Contract.InnerConversation.TABLE_NAME);
         Cursor cursor = sqLiteQueryBuilder.query(dbBontact.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
 
     }
@@ -46,12 +48,10 @@ public class InnerConversationProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-
-        long rowID =  dbBontact.insert(Contract.InnerConversation.TABLE_NAME,values);
+        long rowID = dbBontact.insertOrUpdateById(Contract.InnerConversation.TABLE_NAME, values, new String[]{Contract.InnerConversation.COLUMN_ID, Contract.InnerConversation.COLUMN_ACTION_TYPE});
         if (rowID > 0) {
-            Uri _uri = ContentUris.withAppendedId(Contract.InnerConversation.INNER_CONVERSATION_URI, rowID);
-            getContext().getContentResolver().notifyChange(_uri, null);
-
+            // Uri _uri = ContentUris.withAppendedId(Contract.InnerConversation.INNER_CONVERSATION_URI, rowID);
+            getContext().getContentResolver().notifyChange(uri, null);
             return uri;
         }
         return null;
@@ -59,8 +59,8 @@ public class InnerConversationProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        long result= dbBontact.delete(Contract.InnerConversation.TABLE_NAME, selection,selectionArgs);
-        return  (int) result;
+        long result = dbBontact.delete(Contract.InnerConversation.TABLE_NAME, selection, selectionArgs);
+        return (int) result;
     }
 
     @Override

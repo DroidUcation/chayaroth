@@ -73,7 +73,7 @@ public class AgentDataManager implements ServerCallResponse{
         agent.settings= agentFromJson.settings;
         if(agent!=null&&context!=null)
         {
-            String agent_str= gson.toJson(getAgentInstanse());
+           // String agent_str= gson.toJson(getAgentInstanse());
             SharedPreferences Preferences =context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
             SharedPreferences.Editor editor=Preferences.edit();
             editor.clear();
@@ -135,7 +135,7 @@ public class AgentDataManager implements ServerCallResponse{
 
     }
     @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType,Object sender) {
        if(isSuccsed==false)
            sendResToUi(false, null, ErrorType.network_problems);
 

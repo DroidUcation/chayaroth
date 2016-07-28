@@ -87,7 +87,7 @@ public class OkHttpRequests implements Callback {
 
     public void sendRes(boolean isSuccsed, String response, ErrorType errorType) {
         if (sender != null && sender instanceof ServerCallResponse)
-            ((ServerCallResponse) sender).OnServerCallResponse(isSuccsed, response, errorType);
+            ((ServerCallResponse) sender).OnServerCallResponse(isSuccsed, response, errorType,sender);
     }
 
 }

@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+    /*    ImageView homeBtn = (ImageView) findViewById(android.R.id.home);
+        if (homeBtn != null)
+            homeBtn.setBackgroundResource(R.drawable.avatar1);*/
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -69,6 +73,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inner_conversation);
         Bundle args = getIntent().getExtras();
@@ -147,6 +152,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void setAsSelectedChannel(TextView btn) {
         btn.setTextColor(getResources().getColor(R.color.purple));
         selected_reply_type = (int) btn.getTag();
+        response_mess.setHint(ChanelsTypes.getPlaceHolderByChannelIcon(this,selected_reply_type));
         // if(selected_reply_type == ChanelsTypes.callback)
         //((Button) findViewById(R.id.btn_send_message)).setBackgroundResource(R.id.chanel_phone_call);
     }
@@ -227,7 +233,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         addTextMsgToList(textMsg);
         //todo:check package allows channel
         if (selected_reply_type == ChanelsTypes.chat) {
-            sendResponseHelper.sendChat(this,textMsg,current_conversation.idSurfer);
+            sendResponseHelper.sendChat(this, textMsg, current_conversation.idSurfer);
         } else {
             sendResponseHelper.sendSmsOrEmail(this, selected_reply_type, textMsg, current_conversation.idSurfer);
         }
@@ -280,9 +286,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public void onBackPressed() {
+        int current_unread_conversation_count=ConverastionDataManager.getUnreadConversations(this);
+        ConverastionDataManager.setUnreadConversations(this,current_unread_conversation_count-1);
         ConverastionDataManager converastionDataManager = new ConverastionDataManager(this);
         converastionDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
-
         super.onBackPressed();
     }
 

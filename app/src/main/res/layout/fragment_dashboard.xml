@@ -122,7 +122,7 @@
             android:textColor="@color/purple"
             android:textSize="@dimen/content_text_size_dashboard"
             android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/count_new_requests"
+            android:layout_below="@id/count_new_requests"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 

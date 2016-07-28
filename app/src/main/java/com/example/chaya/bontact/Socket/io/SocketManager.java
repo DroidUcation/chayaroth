@@ -157,7 +157,6 @@ public class SocketManager {
                 InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
                 final InnerConversation innerConversation = buildObjectFromJsonData(data, converastionDataManager);
                 if (innerConversationDataManager.saveData(innerConversation) == true) {
-
                     updateConversationDeatails(converastionDataManager, id_surfer, innerConversation);
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
@@ -165,11 +164,12 @@ public class SocketManager {
                             Toast.makeText(context, " you have a new message from " + innerConversation.getName(), Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
-                } else {
-                    if (AgentDataManager.getAgentInstanse() != null)
-                        converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
+                }
+            } else {
+                if (AgentDataManager.getAgentInstanse() != null) {
+                    converastionDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
+                    int current_unread_conversation_count = ConverastionDataManager.getUnreadConversations(context);
+                    ConverastionDataManager.setUnreadConversations(context, current_unread_conversation_count + 1);
                 }
             }
         }
@@ -222,18 +222,19 @@ public class SocketManager {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("messageObj", chatMsg)
-                       .put("surfer", new JSONObject(gson.toJson(conversation)));
+                    .put("surfer", new JSONObject(gson.toJson(conversation)));
             socket.emit("sendChatTxt", jsonObject, sendChatEmitCallBack);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
+
     Ack sendChatEmitCallBack = new Ack() {
         @Override
         public void call(Object... args) {
             String json = gson.toJson(args);
-            Log.d("emit chat",json);
+            Log.d("emit chat", json);
         }
     };
 

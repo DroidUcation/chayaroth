@@ -2,7 +2,9 @@
 package com.example.chaya.bontact.Models;
 
 import java.sql.Date;
+
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -30,9 +32,6 @@ public class Conversation {
     @SerializedName("lastdate")
     @Expose
     public String lastdate;
-    @SerializedName("lastSentence")
-    @Expose
-    public String lastSentence;
     @SerializedName("lasttype")
     @Expose
     public int lasttype;
@@ -42,6 +41,9 @@ public class Conversation {
     @SerializedName("reply")
     @Expose
     public boolean reply;
+    @SerializedName("lastMessage")
+    @Expose
+    public String lastMessage;
     @SerializedName("page")
     @Expose
     public String page;
@@ -125,6 +127,10 @@ public class Conversation {
 
     public String getLastdate() {
         return lastdate;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
     }
 
     public void setLastdate(String lastdate) {
@@ -227,12 +233,8 @@ public class Conversation {
         this.displayname = displayname;
     }
 
-    public String getLastSentence() {
-        return lastSentence;
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
-    public void setLastSentence(String lastSentence) {
-
-        this.lastSentence = lastSentence;
-    }
 }

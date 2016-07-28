@@ -3,6 +3,7 @@ package com.example.chaya.bontact.Ui.Activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
@@ -25,10 +26,14 @@ import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ServerCallResponseToUi {
@@ -65,8 +70,11 @@ public class MenuActivity extends AppCompatActivity
         String token = agentDataManager.getAgentToken(this);
         if (token != null) {
             converastionDataManager = new ConverastionDataManager(this);
+            converastionDataManager.getConversationsUnreadCount(this);
             converastionDataManager.getFirstDataFromServer(this, token);
+
         }
+
     }
 
     public void setProgressBarCenterState(int state) {
@@ -137,13 +145,22 @@ public class MenuActivity extends AppCompatActivity
                         intent.putExtras(b); //Put your id to your next Intent
                         setProgressBarCenterState(View.GONE);
                         startActivity(intent);
+                    }
+                });
+            }
+        }
+        if (sender == ConverastionDataManager.class) {
+            if (isSuccsed == true) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView count_new_requests = (TextView) findViewById(R.id.count_new_requests);
+                        count_new_requests.setText(String.valueOf(ConverastionDataManager.getUnreadConversations(MenuActivity.this)));
 
                     }
                 });
-
             }
         }
-
     }
 
 

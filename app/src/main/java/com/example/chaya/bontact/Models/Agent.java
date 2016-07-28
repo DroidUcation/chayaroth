@@ -1,14 +1,15 @@
 package com.example.chaya.bontact.Models;
 
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
 public class Agent {
     public Agent() {
-        rep=new Rep();
-        settings=new Settings();
+        rep = new Rep();
+        settings = new Settings();
     }
 
     @SerializedName("token")
@@ -47,7 +48,7 @@ public class Agent {
         public int idRepresentive;
 
         public String getName() {
-            if(name==null)
+            if (name == null)
                 return username;
             return name;
         }
@@ -80,8 +81,8 @@ public class Agent {
     }
 
     public String getName() {
-        if( rep!=null)
-        return rep.getName();
+        if (rep != null)
+            return rep.getName();
         return null;
     }
 

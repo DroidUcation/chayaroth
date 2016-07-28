@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.sax.RootElement;
@@ -13,6 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 
 
@@ -20,6 +25,8 @@ public class DashboardFragment extends Fragment {
 
     private View RootView;
     AgentDataManager agentDataManager;
+    TextView new_requests_count;
+    int unread_conversation;
 
     public DashboardFragment() {
     }
@@ -27,6 +34,8 @@ public class DashboardFragment extends Fragment {
     public static DashboardFragment newInstance() {//String param1, String param2) {
         DashboardFragment fragment = new DashboardFragment();
         return fragment;
+
+
     }
 
     @Override
@@ -34,6 +43,7 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         RootView = null;
         getActivity().setTitle(R.string.dashboard_title);
+        unread_conversation = ConverastionDataManager.getUnreadConversations(getContext());
 
     }
 
@@ -56,6 +66,9 @@ public class DashboardFragment extends Fragment {
         else {
             //TODO:handle the case that a user name not found
         }
+        new_requests_count = (TextView) request_v.findViewById(R.id.count_new_requests);
+        if (new_requests_count != null)
+            new_requests_count.setText(String.valueOf(ConverastionDataManager.getUnreadConversations(getContext())));
         TextView arrow = (TextView) RootView.findViewById(R.id.online_arrow_btn);
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         arrow.setTypeface(font);

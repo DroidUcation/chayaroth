@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Socket.io.SocketManager;
 
@@ -37,28 +38,28 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       AgentDataManager agentDataManager = new AgentDataManager();
+        AgentDataManager agentDataManager = new AgentDataManager();
         Intent intent;
         if (agentDataManager.isLoggedIn(this) == true) {
-            SocketManager socketManager = new SocketManager(this);
+            InitData initData = new InitData();
+            initData.start(this);
             //  exportDB();
             intent = new Intent(this, MenuActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
-
         }
         startActivity(intent);
         //finish();
     }
 
-    private void exportDB(){
-         String package_name="com.example.chaya.bontact";
-      String  Db_name= Contract.Conversation.TABLE_NAME;
+    private void exportDB() {
+        String package_name = "com.example.chaya.bontact";
+        String Db_name = Contract.Conversation.TABLE_NAME;
         File sd = Environment.getExternalStorageDirectory();
         File data = Environment.getDataDirectory();
-        FileChannel source=null;
-        FileChannel destination=null;
-        String currentDBPath = "/data/"+ package_name +"/databases/"+Db_name;
+        FileChannel source = null;
+        FileChannel destination = null;
+        String currentDBPath = "/data/" + package_name + "/databases/" + Db_name;
         String backupDBPath = Db_name;
         File currentDB = new File(data, currentDBPath);
         File backupDB = new File(sd, backupDBPath);
@@ -68,7 +69,7 @@ public class SplashActivity extends AppCompatActivity {
             destination.transferFrom(source, 0, source.size());
             source.close();
             destination.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
