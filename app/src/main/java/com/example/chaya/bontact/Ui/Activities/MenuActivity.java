@@ -1,13 +1,7 @@
 package com.example.chaya.bontact.Ui.Activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.SwitchCompat;
-import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,30 +10,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ServerCallResponseToUi {
 
     AgentDataManager agentDataManager;
-    ConverastionDataManager converastionDataManager;
+    ConversationDataManager conversationDataManager;
     ProgressBar progressBarCenter = null;
 
 
@@ -69,9 +58,9 @@ public class MenuActivity extends AppCompatActivity
 
         String token = agentDataManager.getAgentToken(this);
         if (token != null) {
-            converastionDataManager = new ConverastionDataManager(this);
-            converastionDataManager.getConversationsUnreadCount(this);
-            converastionDataManager.getFirstDataFromServer(this, token);
+            conversationDataManager = new ConversationDataManager(this);
+            conversationDataManager.getConversationsUnreadCount(this);
+            conversationDataManager.getFirstDataFromServer(this, token);
 
         }
 
@@ -149,13 +138,14 @@ public class MenuActivity extends AppCompatActivity
                 });
             }
         }
-        if (sender == ConverastionDataManager.class) {
+        if (sender == ConversationDataManager.class) {
             if (isSuccsed == true) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         TextView count_new_requests = (TextView) findViewById(R.id.count_new_requests);
-                        count_new_requests.setText(String.valueOf(ConverastionDataManager.getUnreadConversations(MenuActivity.this)));
+                        if (count_new_requests != null)
+                            count_new_requests.setText(String.valueOf(ConversationDataManager.getUnreadConversations(MenuActivity.this)));
 
                     }
                 });

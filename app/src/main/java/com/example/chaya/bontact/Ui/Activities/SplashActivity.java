@@ -13,6 +13,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Services.RegisterGcmService;
 import com.example.chaya.bontact.Socket.io.SocketManager;
 
 import java.io.File;
@@ -41,8 +42,10 @@ public class SplashActivity extends AppCompatActivity {
         AgentDataManager agentDataManager = new AgentDataManager();
         Intent intent;
         if (agentDataManager.isLoggedIn(this) == true) {
+
             InitData initData = new InitData();
             initData.start(this);
+
             //  exportDB();
             intent = new Intent(this, MenuActivity.class);
         } else {

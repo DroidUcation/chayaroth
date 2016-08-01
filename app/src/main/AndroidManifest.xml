@@ -12,27 +12,16 @@
         android:icon="@mipmap/bontact_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
 
-        <activity android:name=".Ui.Activities.MainActivity"
+        <activity
+            android:name=".Ui.Activities.MainActivity"
             android:label="@string/login_title"
-            android:noHistory="true" >
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+            android:noHistory="true"></activity>
         <activity
             android:name=".Ui.Activities.MenuActivity"
             android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar"
-          >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
             android:name=".Data.InboxProvider"
@@ -44,14 +33,31 @@
         <activity android:name=".Ui.Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Ui.Activities.InnerConversationActivity"
+        <activity
+            android:name=".Ui.Activities.InnerConversationActivity"
             android:label="@string/title_inner_conversation">
 
         </activity>
+
+        <service android:name=".Services.RegisterGcmService">
+            <!--  <intent-filter>
+                  <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
+              </intent-filter>-->
+        </service>
+        <!-- <receiver
+             android:name="com.google.android.gms.gcm.GcmReceiver"
+             android:exported="true"
+             android:permission="com.google.android.c2dm.permission.SEND">
+             <intent-filter>
+                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                 <category android:name="com.gnirt69.gcmexample"/>
+                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+             </intent-filter>
+         </receiver>-->
     </application>
 
 </manifest>

@@ -4,22 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.Helpers.SendResponseHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -47,8 +43,8 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
     public InnerConversationDataManager(Context context, int currentIdSurfer) {
         this(context, null);
-        ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
-        current_conversation = converastionDataManager.getConversationByIdSurfer(currentIdSurfer);
+        ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+        current_conversation = conversationDataManager.getConversationByIdSurfer(currentIdSurfer);
     }
 
 
@@ -106,8 +102,8 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
            if (innerConversation != null && innerConversation.getMess() != null)//check type
             {
-                ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
-                converastionDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
+                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+                conversationDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
             }
             return true;
 

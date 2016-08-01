@@ -26,6 +26,7 @@ import com.example.chaya.bontact.Helpers.NetworkCheckConnection;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
+import com.example.chaya.bontact.Services.RegisterGcmService;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ServerCallResponseToUi, View.OnKeyListener {
 

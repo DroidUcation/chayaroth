@@ -1,11 +1,9 @@
 package com.example.chaya.bontact.Helpers;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
@@ -31,12 +29,12 @@ public class SendResponseHelper {
         if (agent == null) {
             agent = AgentDataManager.getAgentInstanse();
         }
-            url = context.getResources().getString(R.string.dev_domain_api) +
-                    "returnchannel/callback/" +
-                    agent.getToken() +
-                    "?surferid=" + idSurfer +
-                    "&name=" + agent.getName() +
-                    "&telephone=" + telephone;
+        url = context.getResources().getString(R.string.dev_domain_api) +
+                "returnchannel/callback/" +
+                agent.getToken() +
+                "?surferid=" + idSurfer +
+                "&name=" + agent.getName() +
+                "&telephone=" + telephone;
 
         OkHttpRequests okHttpRequests = new OkHttpRequests(url, this);
 
@@ -44,7 +42,7 @@ public class SendResponseHelper {
 
     }
 
-    public void sendChat(Context context,String txt,int id_surfer) {
+    public void sendChat(Context context, String txt, int id_surfer) {
         if (agent == null) {
             agent = AgentDataManager.getAgentInstanse();
         }
@@ -54,19 +52,18 @@ public class SendResponseHelper {
                 postData.put("rep_Sur", true)
                         .put("systemMsg", false)
                         .put("id_Representive", agent.getRep().idRepresentive)
-                        .put("name",agent.getName())
-                        .put("txt",txt)
-                        .put("agentReply",true)
-                        .put("id_Surfer",id_surfer)
-                        .put("id_Call",0)
-                        .put("id_Customer",agent.getRep().idCustomer);
+                        .put("name", agent.getName())
+                        .put("txt", txt)
+                        .put("agentReply", true)
+                        .put("id_Surfer", id_surfer)
+                        .put("id_Call", 0)
+                        .put("id_Customer", agent.getRep().idCustomer);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
             }
-            ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
-            SocketManager socketManager= new SocketManager(context);
-            socketManager.emitChatMsg(postData, converastionDataManager.getConversationByIdSurfer(id_surfer));
+            ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+            SocketManager.getInstance().emitChatMsg(postData, conversationDataManager.getConversationByIdSurfer(id_surfer));
         }
     }
 
@@ -75,20 +72,20 @@ public class SendResponseHelper {
         if (agent == null) {
             agent = AgentDataManager.getAgentInstanse();
         }
-            url = context.getResources().getString(R.string.dev_domain_api) +
-                    "returnchannel/" +
-                    ChanelsTypes.convertChannelTypeToString(context, ChannelType) + "/" +
-                    agent.getToken();
+        url = context.getResources().getString(R.string.dev_domain_api) +
+                "returnchannel/" +
+                ChanelsTypes.convertChannelTypeToString(context, ChannelType) + "/" +
+                agent.getToken();
 
-            JSONObject postDataObject = new JSONObject();
-            try {
-                postDataObject.put("surferid", idSurfer).put("name", agent.getName()).put("content",contentMsg);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return;
-            }
-            OkHttpRequests okHttpRequests = new OkHttpRequests(url, this,postDataObject.toString() );
+        JSONObject postDataObject = new JSONObject();
+        try {
+            postDataObject.put("surferid", idSurfer).put("name", agent.getName()).put("content", contentMsg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
         }
+        OkHttpRequests okHttpRequests = new OkHttpRequests(url, this, postDataObject.toString());
+    }
 
 
     public boolean isAllowedCurrentChannelResponse(Conversation conversation, int current_channel) {

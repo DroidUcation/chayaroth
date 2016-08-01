@@ -1,18 +1,15 @@
 package com.example.chaya.bontact.Ui.Activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,14 +19,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertCallbackResponse;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
@@ -37,7 +33,6 @@ import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
-import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
@@ -79,8 +74,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         Bundle args = getIntent().getExtras();
         if (args != null) {
             int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
-            ConverastionDataManager converastionDataManager = new ConverastionDataManager(this);
-            this.current_conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
+            ConversationDataManager conversationDataManager = new ConversationDataManager(this);
+            this.current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
+            int current_unread_conversation_count= ConversationDataManager.getUnreadConversations(this);
+            ConversationDataManager.setUnreadConversations(this,current_unread_conversation_count-1);
+            conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
             setTitle(current_conversation.displayname);
         }
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
@@ -286,10 +284,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public void onBackPressed() {
-        int current_unread_conversation_count=ConverastionDataManager.getUnreadConversations(this);
-        ConverastionDataManager.setUnreadConversations(this,current_unread_conversation_count-1);
-        ConverastionDataManager converastionDataManager = new ConverastionDataManager(this);
-        converastionDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
         super.onBackPressed();
     }
 

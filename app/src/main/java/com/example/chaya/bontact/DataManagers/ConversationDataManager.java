@@ -17,7 +17,6 @@ import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -30,7 +29,7 @@ import java.util.List;
 /**
  * Created by chaya on 6/23/2016.
  */
-public class ConverastionDataManager {
+public class ConversationDataManager {
 
     public static List<Conversation> conversationList = null;
     private Context context;
@@ -38,7 +37,7 @@ public class ConverastionDataManager {
     public static int unread_conversations = 0;
 
 
-    public ConverastionDataManager(Context context) {
+    public ConversationDataManager(Context context) {
         if (conversationList == null)
             conversationList = new ArrayList<>();
         this.context = context;
@@ -260,7 +259,7 @@ public class ConverastionDataManager {
                         editor.apply();
                         setUnreadConversations(context, unread_conversations);
                         if (context != null && context instanceof ServerCallResponseToUi) {
-                            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, response, null, ConverastionDataManager.class);
+                            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, response, null, ConversationDataManager.class);
                         }
                     }
                 } catch (JSONException e) {

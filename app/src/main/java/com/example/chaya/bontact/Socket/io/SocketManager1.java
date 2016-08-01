@@ -1,4 +1,11 @@
+/*
 package com.example.chaya.bontact.Socket.io;
+
+*/
+/**
+ * Created by chaya on 7/5/2016.
+ *//*
+
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +24,7 @@ import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,31 +38,29 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-/**
- * Created by chaya on 7/31/2016.
- */
-public class SocketManager {
-    private static SocketManager socketManager = new SocketManager();
+ public class SocketManager {
+
     public static Socket socket = null;
-    public static Context context;
+    public static SocketManager socketManager = null;
+    public static Context contextSocket;
     private Gson gson = null;
 
-    public static SocketManager getInstance() {
-        if (socketManager == null)
-            socketManager = new SocketManager();
-
-        return socketManager;
-    }
-
     public Socket getSocket() {
+
         return socket;
     }
 
-    public void initSocketManager(Context context) {
-        this.context = context;
+    private static void initSocketManager(Context context) {
+        contextSocket = context;
         gson = new Gson();
         if (socket == null)
             connectSocket();
+    }
+
+    public static SocketManager getInstance(Context context) {
+        if (socketManager == null)
+            initSocketManager(context);
+        return socketManager;
     }
 
     public void connectSocket() {
@@ -107,9 +113,11 @@ public class SocketManager {
                 for (int i = 0; i < surfers.length(); i++) {
                     Visitor visitor = gson.fromJson(surfers.getJSONObject(i).toString(), Visitor.class);
                     visitorsDataManager.addVisitorToList(visitor);
-                 /*   int idSurfer = surfers.getJSONObject(i).getInt("id_Surfer");
+                 */
+/*   int idSurfer = surfers.getJSONObject(i).getInt("id_Surfer");
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    conversationDataManager.updateOnlineState(context, idSurfer, 1);*/
+                    conversationDataManager.updateOnlineState(context, idSurfer, 1);*//*
+
                 }
 
             } catch (JSONException e) {
@@ -137,13 +145,15 @@ public class SocketManager {
         @Override
         public void call(Object... args) {
 //            JSONObject data=(JSONObject) args[0];
-          /*  try {
+          */
+/*  try {
                 int idSurfer= data.getJSONObject("surfer").getInt("idSurfer");
                 ConversationDataManager converastionDataManager =new ConversationDataManager(context);
                 converastionDataManager.updateOnlineState(context,idSurfer,0);
             } catch (JSONException e) {
                 e.printStackTrace();
-            }*/
+            }*//*
+
         }
     };
 
@@ -228,22 +238,17 @@ public class SocketManager {
     }
 
     public void emitNotificationRegister(String token) {
-      String[] split= token.split(":");
-
-        if(socket==null)
-            return;
         JSONObject jsonObject = new JSONObject();
         if (AgentDataManager.getAgentInstanse() != null && AgentDataManager.getAgentInstanse().getRep() != null)
             try {
                 jsonObject.put("idRepresentative", AgentDataManager.getAgentInstanse().getRep().idRepresentive);
-                jsonObject.put("registrationId", split[1].toString());
+                jsonObject.put("registrationId", token);
                 jsonObject.put("allow", true);
                 jsonObject.put("device", "android");
                 jsonObject.put("allServices", true);
                 jsonObject.put("lastconnect", DateTimeHelper.convertDateToFullFormatString(new Date()));
                 jsonObject.put("pushversion", 3);
-                Log.d("emit",jsonObject.toString());
-                socket.emit("registerDevice", jsonObject);
+                socket.emit("registerDevice", jsonObject, registerNotificationEmitCallBack);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -269,6 +274,16 @@ public class SocketManager {
             Log.d("emit chat", json);
         }
     };
+    Ack registerNotificationEmitCallBack = new Ack() {
+        @Override
+        public void call(Object... args) {
+            String json = gson.toJson(args);
+            Log.d("emit register", json);
+        }
+    };
 
 
 }
+
+
+*/

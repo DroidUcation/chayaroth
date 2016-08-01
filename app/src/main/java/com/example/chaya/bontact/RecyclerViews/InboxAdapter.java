@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
@@ -49,8 +49,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         if (!cursor.moveToPosition(position))
             return;
-        ConverastionDataManager converastionDataManager = new ConverastionDataManager(context);
-        Conversation conversation = converastionDataManager.convertCursorToConversation(cursor);
+        ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+        Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
 
         if (conversation != null) {
             holder.displayName.setText(conversation.displayname);
@@ -184,10 +184,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             Conversation conversation = null;
             int position = this.getAdapterPosition();
             cursor.moveToPosition(position);
-            ConverastionDataManager converastionDataManager = new ConverastionDataManager(v.getContext());
+            ConversationDataManager conversationDataManager = new ConversationDataManager(v.getContext());
 
             int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
-            conversation = converastionDataManager.getConversationByIdSurfer(id_surfer);
+            conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
 
             AgentDataManager agentDataManager = new AgentDataManager();
             String token = agentDataManager.getAgentToken(v.getContext());

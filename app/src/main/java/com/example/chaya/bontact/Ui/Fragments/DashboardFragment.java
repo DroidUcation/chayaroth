@@ -1,23 +1,17 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.sax.RootElement;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
-import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.R;
 
 
@@ -43,7 +37,7 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         RootView = null;
         getActivity().setTitle(R.string.dashboard_title);
-        unread_conversation = ConverastionDataManager.getUnreadConversations(getContext());
+        unread_conversation = ConversationDataManager.getUnreadConversations(getContext());
 
     }
 
@@ -68,7 +62,7 @@ public class DashboardFragment extends Fragment {
         }
         new_requests_count = (TextView) request_v.findViewById(R.id.count_new_requests);
         if (new_requests_count != null)
-            new_requests_count.setText(String.valueOf(ConverastionDataManager.getUnreadConversations(getContext())));
+            new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
         TextView arrow = (TextView) RootView.findViewById(R.id.online_arrow_btn);
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         arrow.setTypeface(font);

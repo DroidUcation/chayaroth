@@ -16,12 +16,13 @@ import android.util.Log;
  */
 public class InboxProvider extends ContentProvider {
     private SQLiteDatabase db;
-   private DbBontact dbBontact ;
+    private DbBontact dbBontact;
+
     @Override
     public boolean onCreate() {
 
         dbBontact = new DbBontact(getContext());
-       db = dbBontact.getWritableDatabase();
+        db = dbBontact.getWritableDatabase();
         return (db != null);
     }
 
@@ -30,11 +31,11 @@ public class InboxProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
         sqLiteQueryBuilder.setTables(Contract.Conversation.TABLE_NAME);
-        if(!TextUtils.isEmpty(sortOrder)){
-            sortOrder = Contract.Conversation.COLUMN_LAST_DATE  + " DESC"; //Sort by modified date as default
+        if (!TextUtils.isEmpty(sortOrder)) {
+            sortOrder = Contract.Conversation.COLUMN_LAST_DATE + " DESC"; //Sort by modified date as default
         }
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
 
     }
@@ -50,20 +51,20 @@ public class InboxProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        long rowID =  dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME,values,new String[]{Contract.Conversation.COLUMN_ID_SURFER});
+        long rowID = dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME, values, new String[]{Contract.Conversation.COLUMN_ID_SURFER});
         if (rowID > 0) {
-           // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
+            // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
             getContext().getContentResolver().notifyChange(uri, null);
             checkDb();
             return uri;
-          }
+        }
 
         return null;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-       long result= dbBontact.delete(Contract.Conversation.TABLE_NAME, selection,selectionArgs);
+        long result = dbBontact.delete(Contract.Conversation.TABLE_NAME, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
 
         return (int) result;
@@ -71,22 +72,21 @@ public class InboxProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-      long result=dbBontact.update(Contract.Conversation.TABLE_NAME,values,selection,selectionArgs);
+        long result = dbBontact.update(Contract.Conversation.TABLE_NAME, values, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
         checkDb();
-        return (int)result;
+        return (int) result;
     }
-    public void checkDb()
-    {
-      Cursor cursor=  query(Contract.Conversation.INBOX_URI,null,null,null,null);
-            if(cursor.moveToFirst())
-            {
-                do {
-                    String name=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-                    int online=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE));
-                    Log.d("cursor name " + cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)), cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) + "");
-                }while (cursor.moveToNext());
-            }
+
+    public void checkDb() {
+        Cursor cursor = query(Contract.Conversation.INBOX_URI, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
+                int online = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE));
+                Log.d("cursor name " + cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)), cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) + "");
+            } while (cursor.moveToNext());
+        }
     }
 
 }

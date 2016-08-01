@@ -11,17 +11,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConverastionDataManager;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.R;
@@ -143,8 +140,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             {
                 lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 AgentDataManager agentDataManager = new AgentDataManager();
-                ConverastionDataManager converastionDataManager = new ConverastionDataManager(getContext());
-                converastionDataManager.getNextDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
+                ConversationDataManager conversationDataManager = new ConversationDataManager(getContext());
+                conversationDataManager.getNextDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
                 progressBarBottom.setVisibility(View.VISIBLE);
             }
 
