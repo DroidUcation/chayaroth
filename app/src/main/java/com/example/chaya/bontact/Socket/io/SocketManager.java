@@ -81,7 +81,7 @@ public class SocketManager {
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(gson.toJson(agentDataManager.getAgentInstanse().rep));
-                    socket.emit("repConnected", jsonObject, connectEmitCallBack);
+                    socket.emit("agentConnected", jsonObject, connectEmitCallBack);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -101,15 +101,17 @@ public class SocketManager {
             String json = gson.toJson(args);
             try {
                 JSONObject jsonObject = new JSONObject(args[0].toString());
-                JSONArray surfers = jsonObject.getJSONArray("Surfers");
+                JSONArray visitors = jsonObject.getJSONArray("visitors");
                 VisitorsDataManager visitorsDataManager = new VisitorsDataManager();
 
-                for (int i = 0; i < surfers.length(); i++) {
-                    Visitor visitor = gson.fromJson(surfers.getJSONObject(i).toString(), Visitor.class);
+                for (int i = 0; i < visitors.length(); i++) {
+                    Visitor visitor = gson.fromJson(visitors.getJSONObject(i).toString(), Visitor.class);
                     visitorsDataManager.addVisitorToList(visitor);
-                 /*   int idSurfer = surfers.getJSONObject(i).getInt("id_Surfer");
+
+                    int idSurfer = visitors.getJSONObject(i).getInt("id_Surfer");
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    conversationDataManager.updateOnlineState(context, idSurfer, 1);*/
+                    if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)
+                        conversationDataManager.updateOnlineState(context, idSurfer, 1);
                 }
 
             } catch (JSONException e) {
@@ -126,7 +128,11 @@ public class SocketManager {
             try {
                 int idSurfer = data.getJSONObject("surfer").getInt("idSurfer");
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                conversationDataManager.updateOnlineState(context, idSurfer, 1);
+                if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)//surfer is in conversation
+                    conversationDataManager.updateOnlineState(context, idSurfer, 1);
+                //  VisitorsDataManager.addVisitorToList();
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -228,9 +234,9 @@ public class SocketManager {
     }
 
     public void emitNotificationRegister(String token) {
-      String[] split= token.split(":");
+        String[] split = token.split(":");
 
-        if(socket==null)
+        if (socket == null)
             return;
         JSONObject jsonObject = new JSONObject();
         if (AgentDataManager.getAgentInstanse() != null && AgentDataManager.getAgentInstanse().getRep() != null)
@@ -242,7 +248,7 @@ public class SocketManager {
                 jsonObject.put("allServices", true);
                 jsonObject.put("lastconnect", DateTimeHelper.convertDateToFullFormatString(new Date()));
                 jsonObject.put("pushversion", 3);
-                Log.d("emit",jsonObject.toString());
+                Log.d("emit", jsonObject.toString());
                 socket.emit("registerDevice", jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();

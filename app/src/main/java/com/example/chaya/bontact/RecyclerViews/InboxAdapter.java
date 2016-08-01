@@ -179,7 +179,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         @Override
         public void onClick(View v) {
-            Log.d("on click", "inbox adaptrer");
+            Log.d("on click", "inbox adapter");
 
             Conversation conversation = null;
             int position = this.getAdapterPosition();

@@ -21,8 +21,10 @@ import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.RecyclerViews.OnlineVisitorsAdapter;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
+import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ServerCallResponseToUi {
@@ -98,7 +100,7 @@ public class MenuActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout) {
-            AlertComingSoon.show(this);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_inbox || id == R.id.requests_dashboard_layout) {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).addToBackStack(null).commit();

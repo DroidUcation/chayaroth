@@ -9,6 +9,7 @@ import java.util.List;
  * Created by chaya on 7/31/2016.
  */
 public class VisitorsDataManager {
+
     public static List<Visitor> visitorsList = null;
 
     public VisitorsDataManager() {
@@ -17,6 +18,7 @@ public class VisitorsDataManager {
     }
 
     public static List<Visitor> getVisitorsList() {
+        initVisitorsList();
         return visitorsList;
     }
 
@@ -33,6 +35,13 @@ public class VisitorsDataManager {
     public static void addVisitorToList(Visitor visitor) {
         initVisitorsList();
         getVisitorsList().add(visitor);
+        //adapter.notifyItemInserted(adapter.getItemCount()-1);
+
+
+    }
+    public void notifyItemInserted()
+    {
+
     }
 
   /*  public static void updateVisitorDetails(Visitor visitor) {

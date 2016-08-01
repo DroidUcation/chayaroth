@@ -5,6 +5,7 @@ package com.example.chaya.bontact.RecyclerViews;
         import android.graphics.Canvas;
         import android.graphics.Rect;
         import android.graphics.drawable.Drawable;
+        import android.support.v4.app.Fragment;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
         import android.view.View;
@@ -25,7 +26,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
 
     private int mOrientation;
 
-    public DividerItemDecoration(InboxFragment context, int orientation) {
+    public DividerItemDecoration(Fragment context, int orientation) {
         final TypedArray a = context.getActivity().obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();

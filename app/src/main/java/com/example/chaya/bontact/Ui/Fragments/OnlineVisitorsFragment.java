@@ -1,29 +1,30 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
+import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
+import com.example.chaya.bontact.RecyclerViews.OnlineVisitorsAdapter;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnlineVisitorsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link OnlineVisitorsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class OnlineVisitorsFragment extends Fragment {
-
+    View rootView;
+    RecyclerView recyclerView;
+    OnlineVisitorsAdapter adapter;
 
 
     public OnlineVisitorsFragment() {
-        // Required empty public constructor
     }
 
 
@@ -43,31 +44,21 @@ public class OnlineVisitorsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_online_visitors, container, false);
+        rootView = inflater.inflate(R.layout.fragment_online_visitors, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.online_visitors_recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            adapter = new OnlineVisitorsAdapter(getContext());
+           // adapter.setOnItemChangedListener()
+            recyclerView.setAdapter(adapter);
+            adapter.notifyItemInserted(adapter.getItemCount()-1);
+        }
+       return rootView;
     }
 
 
 
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

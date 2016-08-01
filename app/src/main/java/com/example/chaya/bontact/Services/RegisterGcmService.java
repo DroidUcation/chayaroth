@@ -24,7 +24,6 @@ public class RegisterGcmService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         InstanceID instanceID = InstanceID.getInstance(this);
-
         try {
             String sender = getResources().getString(R.string.SenderId);
             String token = instanceID.getToken(sender, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
