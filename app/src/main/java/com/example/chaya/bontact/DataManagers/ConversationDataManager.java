@@ -10,6 +10,7 @@ import android.util.Log;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
+import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -97,6 +98,8 @@ public class ConversationDataManager {
                 conversationList.add(conversation);
                 ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(conversation, DbBontact.getAllConversationFields());
                 if (contentValues != null && context != null) {
+                    contentValues.put(Contract.Conversation.COLUMN_LAST_DATE,
+                            DateTimeHelper.convertDateStringToDbFormat(conversation.lastdate));
                     context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
                 }
             }

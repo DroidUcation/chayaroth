@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -118,6 +119,8 @@ public class InnerConversationDataManager implements ServerCallResponse {
             innerConversationsList = new ArrayList<>();
         innerConversationsList.add(innerConversation);
         if (context != null && contentValues != null) {
+            contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,
+                    DateTimeHelper.convertDateStringToDbFormat(innerConversation.timeRequest));
             context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI, contentValues);
             return true;
         }

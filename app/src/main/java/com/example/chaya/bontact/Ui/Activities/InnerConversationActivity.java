@@ -2,15 +2,18 @@ package com.example.chaya.bontact.Ui.Activities;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.icu.util.Calendar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,15 +59,15 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     List<TextView> channel_icons;
     SendResponseHelper sendResponseHelper;
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-    /*    ImageView homeBtn = (ImageView) findViewById(android.R.id.home);
+    *//*    ImageView homeBtn = (ImageView) findViewById(android.R.id.home);
         if (homeBtn != null)
-            homeBtn.setBackgroundResource(R.drawable.avatar1);*/
+            homeBtn.setBackgroundResource(R.drawable.avatar1);*//*
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +80,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
             ConversationDataManager conversationDataManager = new ConversationDataManager(this);
             this.current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
-            int current_unread_conversation_count= ConversationDataManager.getUnreadConversations(this);
-            ConversationDataManager.setUnreadConversations(this,current_unread_conversation_count-1);
+            int current_unread_conversation_count = ConversationDataManager.getUnreadConversations(this);
+            ConversationDataManager.setUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
             setTitle(current_conversation.displayname);
         }
@@ -97,7 +101,38 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         sendResponseHelper = new SendResponseHelper();
         initChannelIcons();
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
+        //initToolBar();
     }
+
+    public void initToolBar() {
+
+        setContentView(R.layout.activity_main);
+
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(this);
+
+        View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView.setText("My Own Title");
+
+        /*ImageButton imageButton = (ImageButton) mCustomView
+                .findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Refresh Clicked!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
+    }
+
+
 
     public void initChannelIcons() {
         channel_icons.add(InitEveryChannelIcon(R.id.chanel_chat, R.string.chat_icon));
@@ -150,7 +185,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void setAsSelectedChannel(TextView btn) {
         btn.setTextColor(getResources().getColor(R.color.purple));
         selected_reply_type = (int) btn.getTag();
-        response_mess.setHint(ChanelsTypes.getPlaceHolderByChannelIcon(this,selected_reply_type));
+        response_mess.setHint(ChanelsTypes.getPlaceHolderByChannelIcon(this, selected_reply_type));
         // if(selected_reply_type == ChanelsTypes.callback)
         //((Button) findViewById(R.id.btn_send_message)).setBackgroundResource(R.id.chanel_phone_call);
     }
@@ -252,7 +287,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = false;
         InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this, current_conversation);
-        Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();
 
         innerConversationDataManager.saveData(innerConversation);
     }

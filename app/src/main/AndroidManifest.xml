@@ -2,10 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chaya.bontact">
 
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="24" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <permission
+        android:name="com.example.chaya.bontact.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.chaya.bontact.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,15 +31,9 @@
             android:name=".Ui.Activities.MenuActivity"
             android:label="@string/title_activity_menu"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <provider
-            android:name=".Data.InboxProvider"
-            android:authorities="com.example.chaya.bontact.Data.InboxProvider" />
-        <provider
-            android:name=".Data.InnerConversationProvider"
-            android:authorities="com.example.chaya.bontact.Data.InnerConversationProvider" />
-
-        <activity android:name=".Ui.Activities.SplashActivity">
+        <activity
+            android:name=".Ui.Activities.SplashActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -42,22 +45,36 @@
 
         </activity>
 
-        <service android:name=".Services.RegisterGcmService">
-            <!--  <intent-filter>
-                  <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
-              </intent-filter>-->
-        </service>
-        <!-- <receiver
-             android:name="com.google.android.gms.gcm.GcmReceiver"
-             android:exported="true"
-             android:permission="com.google.android.c2dm.permission.SEND">
-             <intent-filter>
-                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                 <category android:name="com.gnirt69.gcmexample"/>
-                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+        <provider
+            android:name=".Data.InboxProvider"
+            android:authorities="com.example.chaya.bontact.Data.InboxProvider" />
+        <provider
+            android:name=".Data.InnerConversationProvider"
+            android:authorities="com.example.chaya.bontact.Data.InnerConversationProvider" />
 
-             </intent-filter>
-         </receiver>-->
+        <service android:name=".Services.RegisterGcmService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <service android:name=".Services.GCMPushReceiverService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.gnirt69.gcmexample"/>
+            </intent-filter>
+        </receiver>
+
     </application>
+
 
 </manifest>

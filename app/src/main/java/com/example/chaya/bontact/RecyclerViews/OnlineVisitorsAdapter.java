@@ -32,11 +32,10 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     List<Visitor> visitorsList;
     Context context;
-    VisitorsDataManager visitorsDataManager;
+
 
     public OnlineVisitorsAdapter(Context context) {
         this.context = context;
-        visitorsDataManager = new VisitorsDataManager();
         visitorsList = VisitorsDataManager.visitorsList;
     }
 
@@ -52,9 +51,11 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
         if (visitorsList == null)
             return;
         Visitor current_visitor = visitorsList.get(position);
-        holder.time_connect.setText(current_visitor.timeVisit);
-        holder.title.setText(current_visitor.title);
-        holder.flag.setText(current_visitor.country);
+       // if(current_visitor!=null) {
+           // holder.time_connect.setText(current_visitor.timeVisit);
+           // holder.title.setText(current_visitor.title);
+           // holder.flag.setText(current_visitor.country);
+       // }
 
 
     }

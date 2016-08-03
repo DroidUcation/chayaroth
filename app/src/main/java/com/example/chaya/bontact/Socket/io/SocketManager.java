@@ -42,7 +42,6 @@ public class SocketManager {
     public static SocketManager getInstance() {
         if (socketManager == null)
             socketManager = new SocketManager();
-
         return socketManager;
     }
 
@@ -60,15 +59,16 @@ public class SocketManager {
     public void connectSocket() {
         try {
             socket = IO.socket(context.getResources().getString(R.string.socket_url));
+            socket.on(Socket.EVENT_CONNECT, connectListener)
+                    .on(Socket.EVENT_RECONNECT, reconnectListener)
+                    .on("pushmessage", pushMessListener)
+                    .on("surferUpdate", surferUpdatedListener)
+                    .on("surferLeaved", surferLeavedListener);
+            socket.connect();
         } catch (URISyntaxException e) {
 
         }
-        socket.on(Socket.EVENT_CONNECT, connectListener)
-                .on(Socket.EVENT_RECONNECT, reconnectListener)
-                .on("pushmessage", pushMessListener)
-                .on("surferUpdate", surferUpdatedListener)
-                .on("surferLeaved", surferLeavedListener);
-        socket.connect();
+
     }
 
     Emitter.Listener connectListener = new Emitter.Listener() {
@@ -102,14 +102,14 @@ public class SocketManager {
             try {
                 JSONObject jsonObject = new JSONObject(args[0].toString());
                 JSONArray visitors = jsonObject.getJSONArray("visitors");
-                VisitorsDataManager visitorsDataManager = new VisitorsDataManager();
 
+                VisitorsDataManager visitorsDataManager = new VisitorsDataManager(context);
+                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 for (int i = 0; i < visitors.length(); i++) {
                     Visitor visitor = gson.fromJson(visitors.getJSONObject(i).toString(), Visitor.class);
-                    visitorsDataManager.addVisitorToList(visitor);
+                    visitorsDataManager.addVisitorToList(context, visitor);
 
                     int idSurfer = visitors.getJSONObject(i).getInt("id_Surfer");
-                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                     if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)
                         conversationDataManager.updateOnlineState(context, idSurfer, 1);
                 }
@@ -130,7 +130,9 @@ public class SocketManager {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)//surfer is in conversation
                     conversationDataManager.updateOnlineState(context, idSurfer, 1);
-                //  VisitorsDataManager.addVisitorToList();
+
+                Visitor visitor = gson.fromJson(data.getJSONObject("surfer").toString(), Visitor.class);
+                VisitorsDataManager.addVisitorToList(context, visitor);
 
 
             } catch (JSONException e) {
@@ -190,6 +192,13 @@ public class SocketManager {
         }
 
     };
+    Ack sendChatEmitCallBack = new Ack() {
+        @Override
+        public void call(Object... args) {
+            String json = gson.toJson(args);
+            Log.d("emit chat", json);
+        }
+    };
 
     private InnerConversation buildObjectFromJsonData(JSONObject data, ConversationDataManager conversationDataManager) {
         InnerConversation innerConversation = new InnerConversation();
@@ -202,7 +211,7 @@ public class SocketManager {
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstanse() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
-            innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+            innerConversation.timeRequest = DateTimeHelper.dateFullFormatN.format(new Date());
             innerConversation.datatype = data.getInt("datatype");
             innerConversation.from_s = data.getString("from_s");
             Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
@@ -268,13 +277,7 @@ public class SocketManager {
 
     }
 
-    Ack sendChatEmitCallBack = new Ack() {
-        @Override
-        public void call(Object... args) {
-            String json = gson.toJson(args);
-            Log.d("emit chat", json);
-        }
-    };
+
 
 
 }

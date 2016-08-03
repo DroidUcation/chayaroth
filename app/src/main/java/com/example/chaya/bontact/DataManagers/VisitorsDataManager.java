@@ -1,6 +1,11 @@
 package com.example.chaya.bontact.DataManagers;
 
+import android.content.Context;
+import android.content.Intent;
+
+import com.example.chaya.bontact.BroadCastRecivers.NewVisitorReciver;
 import com.example.chaya.bontact.Models.Visitor;
+import com.example.chaya.bontact.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +16,12 @@ import java.util.List;
 public class VisitorsDataManager {
 
     public static List<Visitor> visitorsList = null;
+    public static Context contextStatic;
 
-    public VisitorsDataManager() {
+
+    public VisitorsDataManager(Context context) {
         initVisitorsList();
+        contextStatic = context;
 
     }
 
@@ -32,16 +40,20 @@ public class VisitorsDataManager {
             visitorsList = new ArrayList<>();
     }
 
-    public static void addVisitorToList(Visitor visitor) {
+    public static void addVisitorToList(Context context, Visitor visitor) {
         initVisitorsList();
         getVisitorsList().add(visitor);
-        //adapter.notifyItemInserted(adapter.getItemCount()-1);
 
-
-    }
-    public void notifyItemInserted()
-    {
-
+        Intent intent = new Intent(NewVisitorReciver.ACTION_NEW_VISITOR);
+        intent.setType("*/*");
+       // intent.setAction(context.getResources().getString(R.string.new_visitor_action));
+        //put whatever data you want to send, if any
+        //intent.putExtra("message", message);
+        //send broadcast
+        if (context != null)
+            context.sendBroadcast(intent);
+        else if (contextStatic != null)
+            contextStatic.sendBroadcast(intent);
     }
 
   /*  public static void updateVisitorDetails(Visitor visitor) {

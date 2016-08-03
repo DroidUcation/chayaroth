@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.R;
 
 
@@ -20,6 +21,7 @@ public class DashboardFragment extends Fragment {
     private View RootView;
     AgentDataManager agentDataManager;
     TextView new_requests_count;
+    TextView online_visitors_count;
     int unread_conversation;
 
     public DashboardFragment() {
@@ -63,6 +65,8 @@ public class DashboardFragment extends Fragment {
         new_requests_count = (TextView) request_v.findViewById(R.id.count_new_requests);
         if (new_requests_count != null)
             new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
+        online_visitors_count=(TextView) online_v.findViewById(R.id.count_online_visitors);
+//        online_visitors_count.setText(String.valueOf(VisitorsDataManager.visitorsList.size()));
         TextView arrow = (TextView) RootView.findViewById(R.id.online_arrow_btn);
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         arrow.setTypeface(font);

@@ -110,7 +110,6 @@
     <!--mediaplayer errors-->
     <string name="short_record">short</string>
     <string name="account_not_allow">account not allow</string>
-
     <!--channel strings-->
     <string name="callback">callback</string>
     <string name="sms">sms</string>
@@ -119,7 +118,10 @@
     <string name="whatsup">whatsup</string>
 
 
-    <string name="SenderId">221697458560</string>
+  <string name="SenderId">547186625448</string>
+    <!--<string name="SenderId">687621046955</string>-->
+    <string name="gcm_token">gcm_token</string>
+    <string name="new_visitor_action">new_visitor</string>
 
 
 </resources>

@@ -45,7 +45,7 @@
     android:layout_below="@id/welcome_layout"
     android:layout_marginTop="30dp">
         <TextView
-        android:id="@+id/count_visitors"
+        android:id="@+id/count_online_visitors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5"
@@ -74,7 +74,7 @@
         android:textColor="@color/purple"
         android:textSize="@dimen/content_text_size_dashboard"
         android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/count_visitors"
+            android:layout_below="@+id/count_online_visitors"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
     <View
