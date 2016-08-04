@@ -3,7 +3,6 @@ package com.example.chaya.bontact.DataManagers;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.chaya.bontact.BroadCastRecivers.NewVisitorReciver;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 
@@ -17,6 +16,8 @@ public class VisitorsDataManager {
 
     public static List<Visitor> visitorsList = null;
     public static Context contextStatic;
+    public static final int ACTION_NEW_VISITOR = 0;
+    public static final int ACTION_REMOVE_VISITOR = 1;
 
 
     public VisitorsDataManager(Context context) {
@@ -40,27 +41,44 @@ public class VisitorsDataManager {
             visitorsList = new ArrayList<>();
     }
 
+    public static Visitor getVisitorByIdSurfer(int id_surfer) {
+        if (getVisitorsList().size() > 0)
+            for (Visitor visitor : getVisitorsList()) {
+                if (visitor.idSurfer == id_surfer)
+                    return visitor;
+            }
+        return null;
+    }
+
     public static void addVisitorToList(Context context, Visitor visitor) {
         initVisitorsList();
-        getVisitorsList().add(visitor);
+        if (visitor != null) {
+            getVisitorsList().add(visitor);
+            int position=getVisitorsList().indexOf(visitor);
+            notifyAdapter(context, ACTION_NEW_VISITOR, position);
+        }
 
-        Intent intent = new Intent(NewVisitorReciver.ACTION_NEW_VISITOR);
+    }
+
+    public static void removeVisitorFromList(Context context, Visitor visitor) {
+        initVisitorsList();
+        if (visitor != null) {
+            int position=getVisitorsList().indexOf(visitor);
+            getVisitorsList().remove(visitor);
+            notifyAdapter(context, ACTION_REMOVE_VISITOR, position);
+        }
+    }
+
+    private static void notifyAdapter(Context context, int action, int position) {
+        Intent intent = new Intent(context.getResources().getString(R.string.new_visitor_action));
         intent.setType("*/*");
-       // intent.setAction(context.getResources().getString(R.string.new_visitor_action));
-        //put whatever data you want to send, if any
-        //intent.putExtra("message", message);
-        //send broadcast
+        intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_action), action);
+            intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_item_postion), position);
+
         if (context != null)
             context.sendBroadcast(intent);
         else if (contextStatic != null)
             contextStatic.sendBroadcast(intent);
     }
 
-  /*  public static void updateVisitorDetails(Visitor visitor) {
-        initVisitorsList();
-        for (Visitor item : visitorsList) {
-            if (item.idSurfer == visitor.idSurfer)
-
-        }
-    }*/
 }

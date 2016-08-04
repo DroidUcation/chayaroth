@@ -51,7 +51,7 @@ public class Visitor {
     public String invitation;
     @SerializedName("id_Surfer")
     @Expose
-    public String idSurfer;
+    public int idSurfer;
     @SerializedName("live")
     @Expose
     public boolean live;

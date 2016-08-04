@@ -51,11 +51,11 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
         if (visitorsList == null)
             return;
         Visitor current_visitor = visitorsList.get(position);
-       // if(current_visitor!=null) {
-           // holder.time_connect.setText(current_visitor.timeVisit);
-           // holder.title.setText(current_visitor.title);
-           // holder.flag.setText(current_visitor.country);
-       // }
+        if(current_visitor!=null) {
+            holder.time_connect.setText(String.valueOf(current_visitor.timeVisit));
+           holder.title.setText(current_visitor.title);
+           holder.flag.setText(current_visitor.country);
+        }
 
 
     }

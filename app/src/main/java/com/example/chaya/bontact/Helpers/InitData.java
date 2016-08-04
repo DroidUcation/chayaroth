@@ -30,10 +30,10 @@ public class InitData {
             SocketManager.getInstance().initSocketManager(context);
         SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_token), context.MODE_PRIVATE);
         String token = preferences.getString(context.getResources().getString(R.string.token), null);
-      if (token == null) {
+        if (token == null) {
             Intent intentService = new Intent(context, RegisterGcmService.class);
             context.startService(intentService);
-       }
+        }
     }
 
 

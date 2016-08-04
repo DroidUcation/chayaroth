@@ -27,6 +27,8 @@
     <string name="sp_user_details">user_details</string>
     <string name="sp_count_numbers">sp_count_numbers</string>
     <string name="count_unread_conversation">count_unread_conversation</string>
+    <string name="notify_adapter_key_action">action</string>
+    <string name="notify_adapter_key_item_postion">id_surfer</string>
 
     <!--text view messegaes -->
     <string name="welcome_name_msg">Hi</string>
@@ -118,10 +120,12 @@
     <string name="whatsup">whatsup</string>
 
 
-  <string name="SenderId">547186625448</string>
+    <string name="SenderId">547186625448</string>
     <!--<string name="SenderId">687621046955</string>-->
+
+
     <string name="gcm_token">gcm_token</string>
-    <string name="new_visitor_action">new_visitor</string>
+    <string name="new_visitor_action">com.example.chaya.bontact.newVisitor</string>
 
 
 </resources>

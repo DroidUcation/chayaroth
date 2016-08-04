@@ -29,15 +29,15 @@ public class RegisterGcmService extends IntentService {
         try {
             String sender = getResources().getString(R.string.SenderId);
             String token = instanceID.getToken(sender, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            Toast.makeText(RegisterGcmService.this, "THE TOKEN IS= " + token, Toast.LENGTH_SHORT).show();
-            Log.d("TOKEN", token);
+           // Toast.makeText(RegisterGcmService.this, "THE TOKEN IS= " + token, Toast.LENGTH_SHORT).show();
+           // Log.d("TOKEN", token);
 
             SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.gcm_token), MODE_PRIVATE);
             SharedPreferences.Editor editor=preferences.edit();
             editor.putString(getResources().getString(R.string.token),token);
             editor.apply();
 
-            // SocketManager.getInstance().emitNotificationRegister(token);
+             SocketManager.getInstance().emitNotificationRegister(token);
         } catch (IOException e) {
             e.printStackTrace();
         }

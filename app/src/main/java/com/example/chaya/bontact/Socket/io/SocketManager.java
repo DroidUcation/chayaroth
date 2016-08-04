@@ -144,14 +144,16 @@ public class SocketManager {
     Emitter.Listener surferLeavedListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-//            JSONObject data=(JSONObject) args[0];
-          /*  try {
-                int idSurfer= data.getJSONObject("surfer").getInt("idSurfer");
-                ConversationDataManager converastionDataManager =new ConversationDataManager(context);
-                converastionDataManager.updateOnlineState(context,idSurfer,0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
+            if (args != null) {
+                int id_surfer = Integer.parseInt(args[0].toString());
+                Log.d("id", id_surfer + "");
+                ConversationDataManager converastionDataManager = new ConversationDataManager(context);
+                if (converastionDataManager.getConversationByIdSurfer(id_surfer) != null)
+                    converastionDataManager.updateOnlineState(context, id_surfer, 0);
+
+                VisitorsDataManager.removeVisitorFromList(context,VisitorsDataManager.getVisitorByIdSurfer(id_surfer));
+
+            }
         }
     };
 
@@ -243,7 +245,6 @@ public class SocketManager {
     }
 
     public void emitNotificationRegister(String token) {
-        String[] split = token.split(":");
 
         if (socket == null)
             return;
@@ -251,7 +252,7 @@ public class SocketManager {
         if (AgentDataManager.getAgentInstanse() != null && AgentDataManager.getAgentInstanse().getRep() != null)
             try {
                 jsonObject.put("idRepresentative", AgentDataManager.getAgentInstanse().getRep().idRepresentive);
-                jsonObject.put("registrationId", split[1].toString());
+                jsonObject.put("registrationId", token);
                 jsonObject.put("allow", true);
                 jsonObject.put("device", "android");
                 jsonObject.put("allServices", true);
@@ -276,8 +277,6 @@ public class SocketManager {
         }
 
     }
-
-
 
 
 }
