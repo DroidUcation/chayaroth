@@ -39,7 +39,7 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_menu);
-        getSupportFragmentManager().beginTransaction().add(R.id.content_fragment, DashboardFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
         agentDataManager = new AgentDataManager();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_layout);
@@ -112,7 +112,6 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             AlertComingSoon.show(this);
             return true;
-
         } else if (id == R.id.nav_exit) {
             AlertComingSoon.show(this);
             return true;

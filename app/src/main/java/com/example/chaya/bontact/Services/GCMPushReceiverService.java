@@ -26,11 +26,17 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by chaya on 8/3/2016.
  */
 public class GCMPushReceiverService extends GcmListenerService {
 
+    public static int notificationsCount = 0;
+    public static int id = 0;
+    public static List<String> strings = new ArrayList<>();
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -67,15 +73,22 @@ public class GCMPushReceiverService extends GcmListenerService {
         int requestCode = 0;
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationsCount++;
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.bontact_launcher)
+                .setContentTitle("u have " + notificationsCount + " new messages")
                 .setContentText(message)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent).
-                        setSound(sound);
+                .setContentIntent(pendingIntent)
+                .setSound(sound);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, noBuilder.build()); //0 = ID of notification
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        for (String s : strings)
+            inboxStyle.addLine(s);
+        noBuilder.setStyle(inboxStyle);
+        notificationManager.notify(id, noBuilder.build()); //0 = ID of notification
     }
 
 

@@ -109,6 +109,7 @@ public class SocketManager {
             String json = gson.toJson(args);
             try {
                 JSONObject jsonObject = new JSONObject(args[0].toString());
+
                 JSONArray visitors = jsonObject.getJSONArray("visitors");
 
                 VisitorsDataManager visitorsDataManager = new VisitorsDataManager(context);
@@ -180,7 +181,7 @@ public class SocketManager {
                 InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
                 final InnerConversation innerConversation = buildObjectFromJsonData(data, conversationDataManager);
                 if (innerConversationDataManager.saveData(innerConversation) == true) {
-                    updateConversationDeatails(conversationDataManager, id_surfer, innerConversation);
+                    updateConversationDetails(conversationDataManager, id_surfer, innerConversation);
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -232,7 +233,7 @@ public class SocketManager {
         return null;
     }
 
-    private void updateConversationDeatails(ConversationDataManager conversationDataManager, int id_surfer, InnerConversation innerConversation) {
+    private void updateConversationDetails(ConversationDataManager conversationDataManager, int id_surfer, InnerConversation innerConversation) {
         if (conversationDataManager == null)
             return;
 
