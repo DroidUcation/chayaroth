@@ -1,6 +1,9 @@
 package com.example.chaya.bontact.Ui.Activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.support.v4.app.LoaderManager;
@@ -31,6 +34,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AlertCallbackResponse;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
@@ -58,20 +62,35 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     int selected_reply_type;
     List<TextView> channel_icons;
     SendResponseHelper sendResponseHelper;
+    onlineStateChangesReciver broadcastReceiver;
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-    *//*    ImageView homeBtn = (ImageView) findViewById(android.R.id.home);
+    /* @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+         MenuInflater inflater = getMenuInflater();
+     *//*    ImageView homeBtn = (ImageView) findViewById(android.R.id.home);
         if (homeBtn != null)
             homeBtn.setBackgroundResource(R.drawable.avatar1);*//*
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }*/
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitor_online_state), "*/*");
+        broadcastReceiver = new onlineStateChangesReciver();
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inner_conversation);
@@ -83,7 +102,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             int current_unread_conversation_count = ConversationDataManager.getUnreadConversations(this);
             ConversationDataManager.setUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
-            setTitle(current_conversation.displayname);
+            //setTitle(current_conversation.displayname);
         }
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -101,16 +120,13 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         sendResponseHelper = new SendResponseHelper();
         initChannelIcons();
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
-        //initToolBar();
+        initToolBar();
     }
 
     public void initToolBar() {
 
-        setContentView(R.layout.activity_main);
 
         ActionBar mActionBar = getSupportActionBar();
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
 
         View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
@@ -129,9 +145,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         });*/
 
         mActionBar.setCustomView(mCustomView);
-        mActionBar.setDisplayShowCustomEnabled(true);
     }
-
 
 
     public void initChannelIcons() {
@@ -274,6 +288,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     private void addTextMsgToList(String textMsg) {
         InnerConversation innerConversation = new InnerConversation();
+        innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
         innerConversation.actionType = selected_reply_type;
         innerConversation.mess = textMsg;
         innerConversation.rep_request = true;
@@ -282,13 +297,13 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         innerConversation.name = innerConversation.agentName;
         if (current_conversation != null)
             innerConversation.idSurfer = current_conversation.idSurfer;
-        innerConversation.timeRequest = DateTimeHelper.convertDateToFullFormatString(new Date());
+        innerConversation.timeRequest = DateTimeHelper.getCurrentDateInGmtZero();
+        //innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
         if (selected_reply_type != ChanelsTypes.callback && selected_reply_type != ChanelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = false;
         InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this, current_conversation);
         //Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();
-
         innerConversationDataManager.saveData(innerConversation);
     }
 
@@ -320,6 +335,22 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public class onlineStateChangesReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            int state = intent.getIntExtra(getResources().getString(R.string.online_state), -1);
+            int id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), -1);
+            if (id_surfer == current_conversation.idSurfer) {
+                if (state == 0)
+                    current_conversation.isOnline = false;
+                else if (state == 1)
+                    current_conversation.isOnline = true;
+                setDisableChannelIcons();
+            }
+        }
     }
 
 

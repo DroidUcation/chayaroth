@@ -54,8 +54,9 @@ public class VisitorsDataManager {
         initVisitorsList();
         if (visitor != null) {
             getVisitorsList().add(visitor);
-            int position=getVisitorsList().indexOf(visitor);
+            int position = getVisitorsList().indexOf(visitor);
             notifyAdapter(context, ACTION_NEW_VISITOR, position);
+
         }
 
     }
@@ -63,17 +64,17 @@ public class VisitorsDataManager {
     public static void removeVisitorFromList(Context context, Visitor visitor) {
         initVisitorsList();
         if (visitor != null) {
-            int position=getVisitorsList().indexOf(visitor);
+            int position = getVisitorsList().indexOf(visitor);
             getVisitorsList().remove(visitor);
             notifyAdapter(context, ACTION_REMOVE_VISITOR, position);
         }
     }
 
     private static void notifyAdapter(Context context, int action, int position) {
-        Intent intent = new Intent(context.getResources().getString(R.string.new_visitor_action));
+        Intent intent = new Intent(context.getResources().getString(R.string.change_visitors_list_action));
         intent.setType("*/*");
         intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_action), action);
-            intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_item_postion), position);
+        intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_item_postion), position);
 
         if (context != null)
             context.sendBroadcast(intent);
@@ -81,4 +82,9 @@ public class VisitorsDataManager {
             contextStatic.sendBroadcast(intent);
     }
 
+   /* public static Date getVisitorTimeVisit(Visitor visitor) {
+        Date startDate = DateTimeHelper.convertStringToDate(visitor.timeConnect);
+        long diff = DateTimeHelper.getDiffBetweenDates(startDate, new Date());
+        return new Date(diff);
+    }*/
 }

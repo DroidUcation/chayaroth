@@ -2,6 +2,7 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -222,11 +223,20 @@ public class ConversationDataManager {
     }
 
     public void updateOnlineState(Context context, int idSurfer, int state) {
+        if (context == null)
+            return;
         ContentValues contentValues = new ContentValues();
         contentValues.put(Contract.Conversation.COLUMN_IS_ONLINE, state);
         String selectionStr = Contract.Conversation.COLUMN_ID_SURFER + "=?";
         String[] selectionArgs = {idSurfer + ""};
         context.getContentResolver().update(Contract.Conversation.INBOX_URI, contentValues, selectionStr, selectionArgs);
+
+        Intent intent = new Intent(context.getResources().getString(R.string.change_visitor_online_state));
+        intent.setType("*/*");
+        intent.putExtra(context.getResources().getString(R.string.online_state), state);
+        intent.putExtra(context.getResources().getString(R.string.id_surfer), idSurfer);
+        context.sendBroadcast(intent);
+
         Cursor cursor = context.getContentResolver().query(Contract.Conversation.INBOX_URI, null, selectionStr, selectionArgs, null);
         if (cursor.moveToFirst())
             insertOrUpdateConversationInList(convertCursorToConversation(cursor));

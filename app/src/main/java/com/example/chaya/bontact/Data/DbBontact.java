@@ -151,7 +151,7 @@ public class DbBontact extends SQLiteOpenHelper {
             return row_id;
         } catch (SQLiteConstraintException e) {
             if (columns == null)
-                return -1;
+                return 0;
             String whereColumnsStr = "";
             String[] whereColumnsArgs = new String[columns.length];
 

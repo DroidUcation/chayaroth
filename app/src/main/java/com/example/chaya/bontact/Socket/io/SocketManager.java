@@ -60,6 +60,7 @@ public class SocketManager {
         try {
             socket = IO.socket(context.getResources().getString(R.string.socket_url));
             socket.on(Socket.EVENT_CONNECT, connectListener)
+                    .on(Socket.EVENT_DISCONNECT, disconnectListener)
                     .on(Socket.EVENT_RECONNECT, reconnectListener)
                     .on("pushmessage", pushMessListener)
                     .on("surferUpdate", surferUpdatedListener)
@@ -70,6 +71,13 @@ public class SocketManager {
         }
 
     }
+
+    Emitter.Listener disconnectListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("DISCONNECT", args.toString());
+        }
+    };
 
     Emitter.Listener connectListener = new Emitter.Listener() {
         @Override
@@ -130,11 +138,8 @@ public class SocketManager {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)//surfer is in conversation
                     conversationDataManager.updateOnlineState(context, idSurfer, 1);
-
                 Visitor visitor = gson.fromJson(data.getJSONObject("surfer").toString(), Visitor.class);
                 VisitorsDataManager.addVisitorToList(context, visitor);
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -150,8 +155,7 @@ public class SocketManager {
                 ConversationDataManager converastionDataManager = new ConversationDataManager(context);
                 if (converastionDataManager.getConversationByIdSurfer(id_surfer) != null)
                     converastionDataManager.updateOnlineState(context, id_surfer, 0);
-
-                VisitorsDataManager.removeVisitorFromList(context,VisitorsDataManager.getVisitorByIdSurfer(id_surfer));
+                VisitorsDataManager.removeVisitorFromList(context, VisitorsDataManager.getVisitorByIdSurfer(id_surfer));
 
             }
         }
@@ -205,17 +209,18 @@ public class SocketManager {
     private InnerConversation buildObjectFromJsonData(JSONObject data, ConversationDataManager conversationDataManager) {
         InnerConversation innerConversation = new InnerConversation();
         try {
-
+            innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
             innerConversation.idSurfer = data.getInt("idSurfer");
-            innerConversation.mess = data.getString("message");
-            int type = ChanelsTypes.convertStringChannelToInt(data.getString("actionType"));
+            int type = ChanelsTypes.convertStringChannelToInt(data.optString("actionType",null));
             innerConversation.actionType = type;
+            innerConversation.mess = data.optString("message",ChanelsTypes.getDeafultMsgByChanelType(context,type));
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstanse() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
-            innerConversation.timeRequest = DateTimeHelper.dateFullFormatN.format(new Date());
-            innerConversation.datatype = data.getInt("datatype");
-            innerConversation.from_s = data.getString("from_s");
+           // innerConversation.timeRequest = DateTimeHelper.getCurrentDateInGmtZero();
+            innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+            innerConversation.datatype = data.optInt("datatype",1);
+            innerConversation.from_s = data.optString("from_s","visitor");
             Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
             innerConversation.name = conversation.getVisitor_name();
             //TODO:update in conversation new data and last type etc.

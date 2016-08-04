@@ -1,5 +1,9 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
@@ -23,6 +28,7 @@ public class DashboardFragment extends Fragment {
     TextView new_requests_count;
     TextView online_visitors_count;
     int unread_conversation;
+    OnlineCountNumberReciver broadcastReceiver;
 
     public DashboardFragment() {
     }
@@ -30,8 +36,20 @@ public class DashboardFragment extends Fragment {
     public static DashboardFragment newInstance() {//String param1, String param2) {
         DashboardFragment fragment = new DashboardFragment();
         return fragment;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
+        broadcastReceiver = new OnlineCountNumberReciver();
+        getContext().registerReceiver(broadcastReceiver, intentFilter);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getContext().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -66,7 +84,8 @@ public class DashboardFragment extends Fragment {
         if (new_requests_count != null)
             new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
         online_visitors_count=(TextView) online_v.findViewById(R.id.count_online_visitors);
-//        online_visitors_count.setText(String.valueOf(VisitorsDataManager.visitorsList.size()));
+        online_visitors_count.setText(String.valueOf(VisitorsDataManager.getVisitorsList().size()));
+
         TextView arrow = (TextView) RootView.findViewById(R.id.online_arrow_btn);
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         arrow.setTypeface(font);
@@ -78,6 +97,14 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public class OnlineCountNumberReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            online_visitors_count.setText(String.valueOf(VisitorsDataManager.getVisitorsList().size()));
+        }
     }
 
 

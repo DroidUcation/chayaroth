@@ -19,35 +19,29 @@ import java.util.TimeZone;
  * Created by chaya on 6/30/2016.
  */
 public class DateTimeHelper {
-    public static SimpleDateFormat dateFullFormatN = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    public static SimpleDateFormat dateFullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     public static SimpleDateFormat dateHoursMinutesFormat = new SimpleDateFormat("HH:mm");
 
-    public static SimpleDateFormat fullInitTimeZone() {
-        SimpleDateFormat dateFullFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        dateFullFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFullFormat;
-    }
-    public static SimpleDateFormat hoursMinitesInitTimeZone() {
-        SimpleDateFormat dateFullFormat = new SimpleDateFormat("HH:mm");
-        dateFullFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFullFormat;
-    }
 
-    public static String getDiffToNow(String dateString, Context context) {
-        dateString = convertDateStringToDbFormat(dateString);
+    public static String getDiffToNow(String dateString, Context context)
+    {
+        dateString= dateString.replace('T',' ');
+        dateString= dateString.replace('Z',' ');
+
+
         try {
-            Date createdTime = dateFullFormatN.parse(dateString);
-            Date currentTime = new Date();
+            Date createdTime=dateFullFormat.parse(dateString);
+            Date currentTime=new Date();
             long diff = currentTime.getTime() - createdTime.getTime();
 
-         /*   long diffMinutes = diff / (60 * 1000) % 60;
-            long diffHours = diff / (60 * 60 * 1000) % 24;*/
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffDays = diff / (24 * 60 * 60 * 1000);
 
-            if (diffDays > 1)
+            if(diffDays>1)
                 return getDateToDisplay(createdTime);
-            if (diffDays == 1)
-                return context.getResources().getString(R.string.yesterday);
+            if(diffDays==1)
+                return  context.getResources().getString(R.string.yesterday);
 
             return getTimeFromDateToDisplay(createdTime);
            /* if(diffHours>1&&diffHours<24)
@@ -56,48 +50,55 @@ public class DateTimeHelper {
                 return context.getResources().getString(R.string.hour);
             if(diffMinutes<60)
                 return diffMinutes+" "+context.getResources().getString(R.string.minutes);*/
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             e.printStackTrace();
         }
         return null;
 
     }
-
-    private static String getDateToDisplay(Date date) {
+    private static String getDateToDisplay(Date date)
+    {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-        return day + "/" + month + "/" + year;
+        int year= calendar.get(Calendar.YEAR);
+        int month= calendar.get(Calendar.MONTH)+1;
+        int day= calendar.get(Calendar.DAY_OF_MONTH)+1;
+        return  day+"/"+month+"/"+year;
     }
-
-    public static String getTimeFromDateToDisplay(String fullDateString) {
+    public static String getTimeFromDateToDisplay(String fullDateString)
+    {
         try {
-            fullDateString = fullDateString.replace('T', ' ').replace('Z', ' ');
-
-            Date date = fullInitTimeZone().parse(fullDateString);
-            return getTimeFromDateToDisplay(date);
+            fullDateString= fullDateString.replace('T',' ').replace('Z',' ');
+            Date date=dateFullFormat.parse(fullDateString);
+            return  getTimeFromDateToDisplay(date);
         } catch (ParseException e) {
             e.printStackTrace();
 
         }
         return null;
     }
-
-    public static String getTimeFromDateToDisplay(Date date) {
-        String strDate = hoursMinitesInitTimeZone().format(date);
+    public static String getTimeFromDateToDisplay(Date date)
+    {
+        String strDate=  dateHoursMinutesFormat.format(date);
         return strDate;
     }
-
-    public static String convertDateToFullFormatString(Date date) {
-        //dateFullFormat.setTimeZone( TimeZone.getTimeZone("GMT"));
-        return dateFullFormatN.format(date).replace('T', ' ').replace('Z', ' ');
+    public static String convertDateToFullFormatString(Date date)
+    {
+        return dateFullFormat.format(date);
     }
-
     public static String convertDateStringToDbFormat(String dateString) {
         if (dateString != null)
             return dateString.replace('T', ' ').replace('Z', ' ');
         return null;
+    }
+    public static String getCurrentDateInGmtZero() {
+        Date date = new Date();
+        final SimpleDateFormat sdf =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Log.d("GMT time: ", sdf.format(date));
+        return sdf.format(date);
     }
 }

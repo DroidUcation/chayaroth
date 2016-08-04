@@ -20,6 +20,7 @@ import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.RecyclerViews.OnlineVisitorsAdapter;
 
 public class OnlineVisitorsFragment extends Fragment {
+
     View rootView;
     RecyclerView recyclerView;
     OnlineVisitorsAdapter adapter;
@@ -28,8 +29,8 @@ public class OnlineVisitorsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.new_visitor_action), "*/*");
-        broadcastReceiver = new NewVisitorReciver();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
+        broadcastReceiver = new VisitorsListChangesReciver();
         getContext().registerReceiver(broadcastReceiver, intentFilter);
     }
 
@@ -42,7 +43,6 @@ public class OnlineVisitorsFragment extends Fragment {
 
     public OnlineVisitorsFragment() {
     }
-
 
     public static OnlineVisitorsFragment newInstance() {
         OnlineVisitorsFragment fragment = new OnlineVisitorsFragment();
@@ -68,15 +68,12 @@ public class OnlineVisitorsFragment extends Fragment {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             adapter = new OnlineVisitorsAdapter(getContext());
-            // adapter.setOnItemChangedListener()
             recyclerView.setAdapter(adapter);
-            //adapter.notifyItemInserted(adapter.getItemCount()-1);
         }
         return rootView;
     }
 
-
-    public class NewVisitorReciver extends BroadcastReceiver {
+    public class VisitorsListChangesReciver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -92,10 +89,7 @@ public class OnlineVisitorsFragment extends Fragment {
             } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
                 adapter.notifyItemRemoved(position);
             }
-
-
         }
-
     }
 
 }

@@ -34,6 +34,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
     private Context context;
     private Conversation current_conversation;
     private List<InnerConversation> innerConversationsList;
+    public static int idPlaceHolder = -1;
 
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
 
@@ -80,15 +81,10 @@ public class InnerConversationDataManager implements ServerCallResponse {
         }
     }
 
-    public boolean saveData(String data) {
+    public boolean saveServersData(String data) {
         try {
             JSONArray DataArray = new JSONArray(data);
             Gson gson = new Gson();
-            //delete this users data
-          /*  String selectionStr = Contract.InnerConversation.COLUMN_ID_SURFUR + "=?";
-            String[] selectionArgs = {current_conversation.idSurfer + ""};
-            context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, selectionArgs);*/
-
             InnerConversation innerConversation = null;
             for (int i = 0; i < DataArray.length(); i++) {
                 String strObj = null;
@@ -98,10 +94,14 @@ public class InnerConversationDataManager implements ServerCallResponse {
                     e.printStackTrace();
                 }
                 innerConversation = gson.fromJson(strObj, InnerConversation.class);
+                //delete all place holder
+                String selectionStr = Contract.InnerConversation.COLUMN_ID + "<0";
+                context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, null);
+
                 saveData(innerConversation);
             }
 
-           if (innerConversation != null && innerConversation.getMess() != null)//check type
+            if (innerConversation != null && innerConversation.getMess() != null)//check type
             {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 conversationDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
@@ -114,6 +114,12 @@ public class InnerConversationDataManager implements ServerCallResponse {
     }
 
     public boolean saveData(InnerConversation innerConversation) {
+
+        if(innerConversation==null)
+            return false;
+/*        if (innerConversation.id == 0)//inserted from send response agent
+            innerConversation.id = getIdAsPlaceHolder();*/
+
         ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(innerConversation, DbBontact.getAllInnerConversationFields());
         if (innerConversationsList == null)
             innerConversationsList = new ArrayList<>();
@@ -121,21 +127,27 @@ public class InnerConversationDataManager implements ServerCallResponse {
         if (context != null && contentValues != null) {
             contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,
                     DateTimeHelper.convertDateStringToDbFormat(innerConversation.timeRequest));
+
+            //insert
             context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI, contentValues);
             return true;
         }
         return false;
     }
 
+    public static int getIdAsPlaceHolder() {
+        return idPlaceHolder--;
+    }
+
     @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType,Object sender) {
+    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
         if (isSuccsed == true) {
             try {
                 JSONObject res = new JSONObject(response);
                 if (res.getString("status").equals("true")) {
                     String inner_data = res.getJSONArray("data").toString();
-                    Log.e("inner conversation",inner_data);
-                    boolean result = saveData(inner_data);
+                    Log.e("inner conversation", inner_data);
+                    boolean result = saveServersData(inner_data);
                     // sendResToUi();
                 }
             } catch (JSONException e) {

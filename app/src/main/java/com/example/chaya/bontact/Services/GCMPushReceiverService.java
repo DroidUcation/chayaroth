@@ -31,11 +31,11 @@ import org.json.JSONObject;
  */
 public class GCMPushReceiverService extends GcmListenerService {
 
-    //This method will be called on every new message received
+
     @Override
     public void onMessageReceived(String from, Bundle data) {
         Log.d("data", data.toString());
-        //Getting the message from the bundle
+
         String message = data.getString("message");
         String id_surfer = null;
         String bontactData = data.getString("bontactdata");
@@ -47,7 +47,6 @@ public class GCMPushReceiverService extends GcmListenerService {
         }
 
         sendNotification(message, Integer.parseInt(id_surfer));
-        //Displaying a notiffication with the message
     }
 
 

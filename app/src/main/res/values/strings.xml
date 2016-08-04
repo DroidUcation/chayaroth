@@ -125,7 +125,11 @@
 
 
     <string name="gcm_token">gcm_token</string>
-    <string name="new_visitor_action">com.example.chaya.bontact.newVisitor</string>
+    <string name="change_visitors_list_action">com.example.chaya.bontact.newVisitor</string>
+    <string name="count_number_action">count_number_action</string>
+    <string name="change_visitor_online_state">change_visitor_online_state</string>
+    <string name="online_state">online_state</string>
+    <string name="id_surfer">id_surfer</string>
 
 
 </resources>

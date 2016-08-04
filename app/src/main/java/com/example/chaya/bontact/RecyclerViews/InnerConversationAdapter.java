@@ -175,7 +175,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         msg = innerConversation.getMess();
         String date = getDateToDisplay(innerConversation);
         if (msg != null && date != null) {
-            msg = msg.concat("   " + date);
+            msg = msg.concat("   "+innerConversation.id+" " + date);
             int index = msg.indexOf(date);
             span = new SpannableString(msg);
             span.setSpan(new RelativeSizeSpan(0.7f), index, msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

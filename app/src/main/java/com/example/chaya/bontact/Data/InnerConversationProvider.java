@@ -49,17 +49,18 @@ public class InnerConversationProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         long rowID = dbBontact.insertOrUpdateById(Contract.InnerConversation.TABLE_NAME, values, new String[]{Contract.InnerConversation.COLUMN_ID, Contract.InnerConversation.COLUMN_ACTION_TYPE});
-        if (rowID > 0) {
-            // Uri _uri = ContentUris.withAppendedId(Contract.InnerConversation.INNER_CONVERSATION_URI, rowID);
+     /*   if (rowID > 0) {*/
             getContext().getContentResolver().notifyChange(uri, null);
             return uri;
-        }
-        return null;
+       /* }*/
+       // return null;
+
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         long result = dbBontact.delete(Contract.InnerConversation.TABLE_NAME, selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
         return (int) result;
     }
 

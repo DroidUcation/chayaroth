@@ -74,6 +74,8 @@ public class ChanelsTypes {
     }
 
     public static int convertStringChannelToInt(String chanelString) {
+        if(chanelString==null)
+            return chat;
         if (chanelString.toLowerCase().equals("whatsapp"))
             return whatsapp;
         if (chanelString.toLowerCase().equals("chat"))

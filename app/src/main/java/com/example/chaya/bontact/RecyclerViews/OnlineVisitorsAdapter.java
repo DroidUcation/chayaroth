@@ -52,9 +52,9 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             return;
         Visitor current_visitor = visitorsList.get(position);
         if(current_visitor!=null) {
-            holder.time_connect.setText(String.valueOf(current_visitor.timeVisit));
-           holder.title.setText(current_visitor.title);
-           holder.flag.setText(current_visitor.country);
+            holder.time_connect.setText(String.valueOf(current_visitor.timeConnect));
+            holder.title.setText(current_visitor.title);
+            holder.flag.setText(current_visitor.country);
         }
 
 
@@ -69,7 +69,6 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 /*
     public void setOnItemChangedListener(AdapterItemChangedListener onItemChangedListener)
     {
-
     }*/
 
     class OnlineVisitorsHolder extends RecyclerView.ViewHolder {
@@ -83,6 +82,3 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
         }
     }
 }
-
-
-

@@ -9,7 +9,7 @@ public class InnerConversation {
 
     @SerializedName("id")
     @Expose
-    public String id;
+    public int id;
     @SerializedName("conversationPage")
     @Expose
     public String conversationPage;
