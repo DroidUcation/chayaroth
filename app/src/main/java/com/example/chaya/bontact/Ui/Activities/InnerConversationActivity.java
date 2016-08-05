@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.icu.util.Calendar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -17,24 +16,19 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
-import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AlertCallbackResponse;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
@@ -47,7 +41,6 @@ import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, EditText.OnKeyListener {
@@ -297,7 +290,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         innerConversation.name = innerConversation.agentName;
         if (current_conversation != null)
             innerConversation.idSurfer = current_conversation.idSurfer;
-        innerConversation.timeRequest = DateTimeHelper.getCurrentDateInGmtZero();
+        innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
         //innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
         if (selected_reply_type != ChanelsTypes.callback && selected_reply_type != ChanelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg

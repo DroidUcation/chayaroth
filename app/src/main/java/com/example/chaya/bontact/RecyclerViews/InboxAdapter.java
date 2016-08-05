@@ -59,15 +59,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             if (icon != 0)
                 holder.chanelIcon.setText(icon);
 
-           if (conversation.lastMessage == null)
+            if (conversation.lastMessage == null)
                 holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, conversation.getLasttype()));
             else
-
-            holder.lastSentence.setText(conversation.lastMessage);
-            String dateStringToConvert = conversation.lastdate;
+                holder.lastSentence.setText(conversation.lastMessage);
+           String dateStringToConvert = conversation.lastdate;
             String timeAgo = null;
             if (dateStringToConvert != null && context != null) {
-                timeAgo = DateTimeHelper.getDiffToNow(dateStringToConvert, context);
+                timeAgo = DateTimeHelper.getDateToInbox(dateStringToConvert, context);
                 if (timeAgo != null)
                     holder.date.setText(timeAgo);
             }
@@ -78,44 +77,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.unread.setText(Integer.toString(conversation.unread));
                 holder.setUnRead(true);
             }
-        }/*
-        cursor.moveToPosition(position);
-
-        // init data to display
-        int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
-        int chanelIcon = ChanelsTypes.getIconByChanelType(lastType);
-        String avatarUrl = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
-        int isUnread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
-
-        if (lastSentences == null)
-
-        String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
-        String timeAgo = null;
-        if (dateStringToConvert != null && context != null) {
-            timeAgo = DateTimeHelper.getDiffToNow(dateStringToConvert, context);
         }
-        int isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE));
-
-        //set in item
-        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-
-        String avatarStr = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR));
-        holder.avatar.setImageResource(Integer.parseInt(avatarStr));
-        holder.chanelIcon.setText(chanelIcon);
-        if (lastType == ChanelsTypes.webCall || lastType == ChanelsTypes.sms || lastType == ChanelsTypes.callback)
-            holder.chanelIcon.setTextSize(14);
-        if (lastSentences != null)
-
-
-        if (timeAgo != null)
-            holder.date.setText(timeAgo);
-        if (isOnline == 1) {
-            holder.onlinePoint.setVisibility(View.VISIBLE);
-        }
-        if (isUnread >= 1) {
-            holder.unread.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)));
-            holder.setUnRead(true);
-        }*/
     }
 
     @Override
@@ -138,7 +100,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         }
         return oldCursor;
     }
-
 
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

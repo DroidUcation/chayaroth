@@ -130,6 +130,14 @@
     <string name="change_visitor_online_state">change_visitor_online_state</string>
     <string name="online_state">online_state</string>
     <string name="id_surfer">id_surfer</string>
+    <string name="dateFullFormat">yyyy-MM-dd HH:mm:ss.SSS</string>
+    <string name="dd_mm_yy_format">dd-mm-yy</string>
+    <string name="hh_mm_format">HH:mm</string>
+    <string name="hh_mm_ss">HH:mm:ss</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
 </resources>

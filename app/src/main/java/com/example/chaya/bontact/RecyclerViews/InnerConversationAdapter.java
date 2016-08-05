@@ -23,6 +23,8 @@ import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
 
+import java.util.Date;
+
 
 /**
  * Created by chaya on 6/26/2016.
@@ -135,8 +137,8 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private String getDateToDisplay(InnerConversation innerConversation) {
-        String date = DateTimeHelper.getTimeFromDateToDisplay(innerConversation.getTimeRequest());
-        return date;
+        Date date = DateTimeHelper.convertFullFormatStringToDate(innerConversation.getTimeRequest());
+        return DateTimeHelper.getDisplayDate(date, R.string.hh_mm_format);
     }
 
     private boolean setRecordPlayer(InnerConversationVisitorRecordHolder visitorRecordHolder, InnerConversation innerConversation) {
@@ -175,7 +177,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         msg = innerConversation.getMess();
         String date = getDateToDisplay(innerConversation);
         if (msg != null && date != null) {
-            msg = msg.concat("   "+innerConversation.id+" " + date);
+            msg = msg.concat("   " + date);
             int index = msg.indexOf(date);
             span = new SpannableString(msg);
             span.setSpan(new RelativeSizeSpan(0.7f), index, msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

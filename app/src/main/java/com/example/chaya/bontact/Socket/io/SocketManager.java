@@ -218,8 +218,7 @@ public class SocketManager {
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstanse() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
-           // innerConversation.timeRequest = DateTimeHelper.getCurrentDateInGmtZero();
-            innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+            innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
             innerConversation.datatype = data.optInt("datatype",1);
             innerConversation.from_s = data.optString("from_s","visitor");
             Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
@@ -262,7 +261,7 @@ public class SocketManager {
                 jsonObject.put("allow", true);
                 jsonObject.put("device", "android");
                 jsonObject.put("allServices", true);
-                jsonObject.put("lastconnect", DateTimeHelper.convertDateToFullFormatString(new Date()));
+                jsonObject.put("lastconnect", DateTimeHelper.getCurrentStringDateInGmtZero());
                 jsonObject.put("pushversion", 3);
                 Log.d("emit", jsonObject.toString());
                 socket.emit("registerDevice", jsonObject);
