@@ -27,7 +27,7 @@
         android:padding="5dp"
         android:visibility="gone" />
     <!--send messege box and button-->
-    <LinearLayout
+ <!--   <LinearLayout
         android:id="@+id/chanel_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="30sp" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/buttom_layout"

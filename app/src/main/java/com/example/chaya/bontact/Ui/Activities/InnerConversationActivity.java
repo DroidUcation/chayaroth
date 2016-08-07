@@ -16,12 +16,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -57,15 +60,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     SendResponseHelper sendResponseHelper;
     onlineStateChangesReciver broadcastReceiver;
 
-    /* @Override
-     public boolean onCreateOptionsMenu(Menu menu) {
-         MenuInflater inflater = getMenuInflater();
-     *//*    ImageView homeBtn = (ImageView) findViewById(android.R.id.home);
-        if (homeBtn != null)
-            homeBtn.setBackgroundResource(R.drawable.avatar1);*//*
-        inflater.inflate(R.menu.menu, menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.inner_conversation_menu, menu);
+
         return super.onCreateOptionsMenu(menu);
-    }*/
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -82,9 +84,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        // getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.avatar1);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inner_conversation);
         Bundle args = getIntent().getExtras();
@@ -93,6 +96,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             ConversationDataManager conversationDataManager = new ConversationDataManager(this);
             this.current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
             int current_unread_conversation_count = ConversationDataManager.getUnreadConversations(this);
+            // getSupportActionBar().setLogo(Integer.parseInt(current_conversation.avatar));
             ConversationDataManager.setUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
             //setTitle(current_conversation.displayname);
@@ -111,7 +115,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         setProgressBarState(View.VISIBLE);
         channel_icons = new ArrayList<>();
         sendResponseHelper = new SendResponseHelper();
-        initChannelIcons();
+        //initChannelIcons();
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
         initToolBar();
     }
@@ -121,23 +125,20 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         ActionBar mActionBar = getSupportActionBar();
         LayoutInflater mInflater = LayoutInflater.from(this);
-
+        mActionBar.setDisplayShowCustomEnabled(true);
         View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
-        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        mTitleTextView.setText("My Own Title");
-
-        /*ImageButton imageButton = (ImageButton) mCustomView
-                .findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Refresh Clicked!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });*/
-
+        ImageView avatar = (ImageView) mCustomView.findViewById(R.id.avatar);
+        avatar.setImageResource(Integer.parseInt(current_conversation.avatar));
+        TextView chat_icon = (TextView) mCustomView.findViewById(R.id.chanel_chat);
+        chat_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
+        TextView sms_icon = (TextView) mCustomView.findViewById(R.id.chanel_sms);
+        sms_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
+        TextView email_icon = (TextView) mCustomView.findViewById(R.id.chanel_email);
+        email_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
+        TextView phone_icon = (TextView) mCustomView.findViewById(R.id.chanel_phone_call);
+        phone_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
         mActionBar.setCustomView(mCustomView);
+        //mActionBar.setLogo(Integer.parseInt(current_conversation.avatar));
     }
 
 

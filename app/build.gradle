@@ -43,6 +43,7 @@ dependencies {
     compile 'com.devbrackets.android:exomedia:3.0.1'
     compile 'net.the4thdimension:audio-wife:1.0.3'
     compile 'com.mikepenz:iconics-core:2.6.7@aar'
+    compile 'joda-time:joda-time:2.9.4'
 }
 
 

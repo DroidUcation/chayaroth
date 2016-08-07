@@ -4,14 +4,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
@@ -39,6 +46,11 @@ public class OnlineVisitorsFragment extends Fragment {
         super.onPause();
         getContext().unregisterReceiver(broadcastReceiver);
 
+    }
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
     }
 
     public OnlineVisitorsFragment() {
@@ -69,9 +81,13 @@ public class OnlineVisitorsFragment extends Fragment {
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             adapter = new OnlineVisitorsAdapter(getContext());
             recyclerView.setAdapter(adapter);
+
         }
+
         return rootView;
     }
+
+
 
     public class VisitorsListChangesReciver extends BroadcastReceiver {
 
