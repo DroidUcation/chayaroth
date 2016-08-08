@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.chaya.bontact" >
+    package="com.example.chaya.bontact">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -17,14 +17,14 @@
 
     <uses-permission android:name="com.example.chaya.bontact.permission.C2D_MESSAGE" />
 
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/bontact_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".Ui.Activities.MainActivity"
             android:label="@string/login_title"
@@ -35,16 +35,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Ui.Activities.SplashActivity"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Ui.Activities.InnerConversationActivity"
-            android:label="@string/title_inner_conversation" >
+            android:label="@string/title_inner_conversation">
+
+
         </activity>
 
         <provider
@@ -56,14 +57,14 @@
 
         <service
             android:name=".Services.RegisterGcmService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
             android:name=".Services.GCMPushReceiverService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
@@ -72,7 +73,7 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 

@@ -78,10 +78,6 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             return visitorsList.size();
         return 0;
     }
-/*
-    public void setOnItemChangedListener(AdapterItemChangedListener onItemChangedListener)
-    {
-    }*/
 
     class OnlineVisitorsHolder extends RecyclerView.ViewHolder {
         TextView time_connect, flag, title;
@@ -94,6 +90,7 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             flag = (TextView) itemView.findViewById(R.id.flag);
             title = (TextView) itemView.findViewById(R.id.title_page);
             actionCheckBox = (CheckBox) itemView.findViewById(R.id.actions_checkbox);
+
             //  actionCheckBox.setOnClickListener( context);
         }
        /* View.OnClickListener actionsListener = new View.OnClickListener() {

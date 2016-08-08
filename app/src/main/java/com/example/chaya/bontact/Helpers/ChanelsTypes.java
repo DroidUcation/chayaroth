@@ -84,7 +84,7 @@ public class ChanelsTypes {
             return sms;
         if (chanelString.toLowerCase().equals("email"))
             return email;
-        if (chanelString.toLowerCase().equals("callme"))
+        if (chanelString.toLowerCase().equals("callme")||chanelString.toLowerCase().equals("callback"))
             return callback;
        /* if (chanelString.toLowerCase() == "webcall")
             return webCall;*/
@@ -131,6 +131,25 @@ public class ChanelsTypes {
        }
        return null;
    }
+    public  static int getMenuItemByChannelType(int channelType)
+    {
+        switch (channelType) {
+            case callback:
+                return R.id.phone_call_channel;
+            case sms:
+                return R.id.sms_channel;
+            case chat:
+                return R.id.chat_channel;
+            case email:
+                return R.id.email_channel;
+         /*  case whatsapp:
+               return "a whatsapp is waiting";
+           case webCall:
+               return context.getResources().getString(R.string.unread_webcall);*/
+            default:
+        }
+        return R.id.chat_channel;
+    }
 
 }
 
