@@ -1,14 +1,16 @@
 package com.example.chaya.bontact.DataManagers;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
+/*import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;*/
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.google.gson.Gson;
@@ -19,7 +21,7 @@ import org.json.JSONObject;
 /**
  * Created by chaya on 6/22/2016.
  */
-public class AgentDataManager implements ServerCallResponse {
+public class AgentDataManager {
 
     private static Agent agent = null;
     private Context context;
@@ -61,9 +63,11 @@ public class AgentDataManager implements ServerCallResponse {
       /*  String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.login_api);
         url += "?username=" + userName + "&pass=" + password;
 */
-        OkHttpRequests requests = new OkHttpRequests(url, this);
+        OkHttpRequests requests = new OkHttpRequests(url, context);
 
     }
+
+
 
     public boolean saveData(String response, Context context) {
         this.context = context;
@@ -133,7 +137,9 @@ public class AgentDataManager implements ServerCallResponse {
 
     }
 
-    @Override
+
+
+  /*  @Override
     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
         if (isSuccsed == false)
             sendResToUi(false, null, ErrorType.network_problems);
@@ -158,12 +164,21 @@ public class AgentDataManager implements ServerCallResponse {
             return;
         }
     }
-
     public void sendResToUi(boolean isSuccsed, String response, ErrorType errorType) {
+        Intent intent = new Intent(context.getResources().getString(R.string.response_server_call_to_ui_action));
+        intent.setType("**");
+        intent.putExtra(context.getResources().getString(R.string.is_successed_key), isSuccsed);
+        if (response != null)
+            intent.putExtra(context.getResources().getString(R.string.response_key), response);
+        if (errorType != null)
+            intent.putExtra(context.getResources().getString(R.string.error_type_key), errorType);
+
+        context.sendBroadcast(intent);
+
         if (context != null && context instanceof ServerCallResponseToUi)
             ((ServerCallResponseToUi) context).OnServerCallResponseToUi(isSuccsed, response, errorType, getClass());
 
-    }
+    }*/
 
 
 }

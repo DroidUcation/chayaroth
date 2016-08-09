@@ -154,7 +154,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             String token = agentDataManager.getAgentToken(v.getContext());
             if (token != null && conversation != null) {
                 InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(v.getContext(), conversation);
-                ((MenuActivity) v.getContext()).setProgressBarCenterState(View.VISIBLE);
+               // ((MenuActivity) v.getContext()).setProgressBarCenterState(View.VISIBLE);
                 innerConversationDataManager.getData(v.getContext(), token);
 
             }

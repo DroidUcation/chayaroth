@@ -16,7 +16,6 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.example.chaya.bontact.permission.C2D_MESSAGE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -38,15 +37,13 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Ui.Activities.InnerConversationActivity"
-            android:label="@string/title_inner_conversation">
-
-
-        </activity>
+            android:label="@string/title_inner_conversation"></activity>
 
         <provider
             android:name=".Data.InboxProvider"
@@ -81,7 +78,10 @@
             </intent-filter>
         </receiver>
 
-
+        <activity
+            android:name=".Ui.Activities.TabsActivity"
+            android:label="@string/title_activity_tabs"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

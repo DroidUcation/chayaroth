@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Ui.Activities;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +25,10 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,7 +154,19 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (sendResponseHelper != null &&
                 !sendResponseHelper.isAllowedCurrentChannelResponse(current_conversation, selected_reply_type)) {
             if (selected_reply_type != ChanelsTypes.chat) {//selected channel not allowed
-                AlertComingSoon.show(this);
+               /* View view = getLayoutInflater().inflate(R.layout.bottom_sheet_emp_cov, null);
+                Spinner spin1 = (Spinner) view.findViewById(R.id.spin1);
+                Spinner spin2 = (Spinner) view.findViewById(R.id.spin2);
+                ListView catList = (ListView) view.findViewById(R.id.listItems);
+                Button btnDone = (Button) view.findViewById(R.id.btnDone);*/
+                final Dialog mBottomSheetDialog = new Dialog(this,
+                        R.style.MaterialDialogSheet);
+                mBottomSheetDialog.setContentView(new TextView(this));
+                mBottomSheetDialog.setCancelable(true);
+                mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
+                mBottomSheetDialog.show();
             } else {//offline and last type chat
                 //addTextMsgToList(); problem id
             }

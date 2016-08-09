@@ -21,10 +21,7 @@ import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.RecyclerViews.OnlineVisitorsAdapter;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
-import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
-import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ServerCallResponseToUi {
@@ -49,23 +46,22 @@ public class MenuActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + agentDataManager.getAgentName(this));
+
         progressBarCenter = (ProgressBar) findViewById(R.id.loading_center);
 
+        //get data to inbox
         String token = agentDataManager.getAgentToken(this);
         if (token != null) {
             conversationDataManager = new ConversationDataManager(this);
             conversationDataManager.getConversationsUnreadCount(this);
             conversationDataManager.getFirstDataFromServer(this, token);
-
         }
-
     }
 
     public void setProgressBarCenterState(int state) {
@@ -103,14 +99,19 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.nav_dashboard) {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
-        } else if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).addToBackStack(null).commit();
+        } else if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout || id == R.id.nav_inbox || id == R.id.requests_dashboard_layout) {
+            Intent intent = new Intent(this, TabsActivity.class);
+            if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout)
+                intent.putExtra(getString(R.string.first_tab_title_key), R.string.onlinevisitors_title);
+            else
+                intent.putExtra(getString(R.string.first_tab_title_key), R.string.inbox_title);
+            startActivity(intent);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, OnlineVisitorsFragment.newInstance()).addToBackStack(null).commit();
             return true;
-        } else if (id == R.id.nav_inbox || id == R.id.requests_dashboard_layout) {
+       /* } else if (id == R.id.nav_inbox || id == R.id.requests_dashboard_layout) {
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).addToBackStack(null).commit();
-            return true;
+            return true;*/
         } else if (id == R.id.nav_settings) {
-            AlertComingSoon.show(this);
             return true;
         } else if (id == R.id.nav_exit) {
             AlertComingSoon.show(this);

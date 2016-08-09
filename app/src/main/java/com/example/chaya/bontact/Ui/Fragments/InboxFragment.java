@@ -11,10 +11,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -34,12 +36,12 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private View rootView;
     ProgressBar progressBarBottom;
     SwipeRefreshLayout refreshLayout;
-    private boolean isFirstLoadData;
     private LinearLayoutManager linearLayoutManager;
 
     int lastVisibleItem;
 
     public InboxFragment() {
+        Log.d("now","INBOX");
     }
 
     public static InboxFragment newInstance() {
@@ -50,7 +52,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        getActivity().setTitle(R.string.inbox_title);
+        //getActivity().setTitle(R.string.inbox_title);
         super.onCreate(savedInstanceState);
 
     }
@@ -60,7 +62,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
+       recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -82,12 +84,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     public void initLoader() {
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null, this);
-        isFirstLoadData = true;
     }
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        ((MenuActivity) getActivity()).setProgressBarCenterState(View.VISIBLE);
+        // ((MenuActivity) getActivity()).setProgressBarCenterState(View.VISIBLE);
         lastVisibleItem = 0;
         String sortOrder = Contract.Conversation.COLUMN_LAST_DATE + " DESC"; //Sort by modified date as default
         CursorLoader cursorLoader = new CursorLoader(getContext(), Contract.Conversation.INBOX_URI, null, null, null, sortOrder);
@@ -97,8 +98,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        if (getActivity() instanceof MenuActivity && getActivity() != null)
-            ((MenuActivity) getActivity()).setProgressBarCenterState(View.GONE);
+        //if (getActivity() instanceof MenuActivity && getActivity() != null)
+        //((MenuActivity) getActivity()).setProgressBarCenterState(View.GONE);
         if (refreshLayout == null)
             refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setRefreshing(false);

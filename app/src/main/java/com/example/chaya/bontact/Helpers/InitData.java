@@ -8,8 +8,8 @@ import android.util.Log;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
+/*import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;*/
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Services.RegisterGcmService;
 import com.example.chaya.bontact.Socket.io.SocketManager;

@@ -1,5 +1,7 @@
 package com.example.chaya.bontact.NetworkCalls;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.example.chaya.bontact.Helpers.ErrorType;
@@ -23,20 +25,19 @@ import okhttp3.OkHttpClient.Builder;
  * Created by chaya on 6/13/2016.
  */
 public class OkHttpRequests implements Callback {
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private final String url;
     private final OkHttpClient client;
-    private Object sender;
+    private Context context;
 
-    public OkHttpRequests(String url, Object sender) {
-        this(url, sender, null);
+    public OkHttpRequests(String url, Context context) {
+        this(url, context, null);
     }
 
-    public OkHttpRequests(String url, Object sender, String postData) {
+    public OkHttpRequests(String url, Context context, String postData) {
         client = new OkHttpClient();
         this.url = url;
-        this.sender = sender;
+        this.context = context;
         try {
             if (postData == null)
                 runGetRequest();
@@ -60,7 +61,7 @@ public class OkHttpRequests implements Callback {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "key=AIzaSyDk4Vgg0xNXMJasOiz3ofBvoDbdwpmGYDE")
-                .addHeader("Content-Type","application/json")
+                .addHeader("Content-Type", "application/json")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -78,6 +79,8 @@ public class OkHttpRequests implements Callback {
     public void onResponse(Call call, Response response) throws IOException {
         Log.e("on response", response.toString());
         if (!response.isSuccessful()) {
+           /* else if (contextStatic != null)
+                contextStatic.sendBroadcast(intent);*/
             sendRes(false, null, ErrorType.network_problems);
             return;
         }
@@ -86,8 +89,19 @@ public class OkHttpRequests implements Callback {
     }
 
     public void sendRes(boolean isSuccsed, String response, ErrorType errorType) {
-        if (sender != null && sender instanceof ServerCallResponse)
-            ((ServerCallResponse) sender).OnServerCallResponse(isSuccsed, response, errorType,sender);
+       /* if (sender != null && sender instanceof ServerCallResponse)
+            ((ServerCallResponse) sender).OnServerCallResponse(isSuccsed, response, errorType, sender);*/
+        if (context != null) {
+            Intent intent = new Intent(context.getResources().getString(R.string.response_server_call_action));
+            intent.setType("*/*");
+            intent.putExtra(context.getResources().getString(R.string.is_successed_key), isSuccsed);
+            if (response != null)
+                intent.putExtra(context.getResources().getString(R.string.response_key), response);
+            if (errorType != null)
+                intent.putExtra(context.getResources().getString(R.string.error_type_key), errorType);
+
+            context.sendBroadcast(intent);
+        }
     }
 
 }

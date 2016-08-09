@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Ui.Activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -25,10 +26,13 @@ import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.Helpers.NetworkCheckConnection;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
+/*import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;*/
 import com.example.chaya.bontact.Services.RegisterGcmService;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ServerCallResponseToUi, View.OnKeyListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
 
     private EditText usernameEditText;
     private EditText passEditText;
@@ -145,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 passwordInputLayout.setError(getResources().getString(R.string.invalid_deatails));
                 break;
             case network_problems:
-                if(!NetworkCheckConnection.isConnected(this))
-                        Toast.makeText(MainActivity.this, R.string.network_problem, Toast.LENGTH_SHORT).show();
+                if (!NetworkCheckConnection.isConnected(this))
+                    Toast.makeText(MainActivity.this, R.string.network_problem, Toast.LENGTH_SHORT).show();
                 /*userNameInputLayout.setError(getResources().getString(R.string.some_problem));
                 passwordInputLayout.setError(getResources().getString(R.string.some_problem));*/
                 break;
@@ -172,35 +176,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });*/
     }
 
-
-    @Override
-    public void OnServerCallResponseToUi(boolean isSuccsed, String response, ErrorType errorType, Class sender) {
-        if (sender == AgentDataManager.class) {
-            if (isSuccsed == true && response != null) {
-
-                if (agentDataManager.saveData(response, this) == true) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.GONE);
-                            InitData initData= new InitData();
-                            initData.start(MainActivity.this);
-                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
-                        }
-                    });
-                } else {
-
-                }
-            } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reEnterDetails(ErrorType.user_not_exists);
-                    }
-                });
-            }
-        }
-    }
 
     private void setupFloatingLabelError() {
 
@@ -230,6 +205,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userNameInputLayout.setError("");
         }
     };
+
+    public class LoginResponseReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isSuccsed = intent.getBooleanExtra(context.getResources().getString(R.string.is_successed_key), false);
+            String response = intent.getStringExtra(context.getResources().getString(R.string.response_key));
+            //String errorType = intent.getStringExtra(context.getResources().getString(R.string.error_type_key));
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                String msg = jsonObject.getString("message");//user exists
+                if (msg.equals("success"))
+                    isSuccsed = true;
+                else if (msg.equals("user not found"))
+                    isSuccsed = false;
+
+            } catch (JSONException e) {
+                isSuccsed = false;
+            }
+            if (isSuccsed == true && response != null) {
+
+                if (agentDataManager.saveData(response, MainActivity.this) == true) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.GONE);
+                            InitData initData = new InitData();
+                            initData.start(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                        }
+                    });
+                } else {
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reEnterDetails(ErrorType.user_not_exists);
+                    }
+                });
+            }
+        }
+    }
+
+    /*@Override
+    public void OnServerCallResponseToUi(boolean isSuccsed, String response, ErrorType errorType, Class sender) {
+        if (sender == AgentDataManager.class) {
+            if (isSuccsed == true && response != null) {
+
+                if (agentDataManager.saveData(response, this) == true) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.GONE);
+                            InitData initData = new InitData();
+                            initData.start(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                        }
+                    });
+                } else {
+
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reEnterDetails(ErrorType.user_not_exists);
+                    }
+                });
+            }
+        }
+    }*/
+
 
 }
 

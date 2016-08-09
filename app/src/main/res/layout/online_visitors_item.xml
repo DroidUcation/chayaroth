@@ -7,34 +7,34 @@
 
     <CheckBox
         android:id="@+id/actions_checkbox"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:checked="false"
-        />
+        android:layout_alignParentTop="true"
+        android:checked="false" />
+
     <TextView
-        android:id="@+id/time_connect"
+        android:id="@+id/time_visit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10:20:09"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
+        android:layout_toEndOf="@id/actions_checkbox"
 
-       android:layout_toEndOf="@id/actions_checkbox"
-        android:layout_toRightOf="@id/actions_checkbox" />
+        android:layout_toRightOf="@id/actions_checkbox"
+        android:text="10:20:09" />
 
-   <TextView
+    <TextView
         android:id="@+id/title_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:layout_alignLeft="@id/time_visit"
+        android:layout_below="@id/time_visit"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
         android:lines="1"
-       android:ellipsize="end"
-      android:text="pricing page"
-       android:layout_below="@id/time_connect"
-       android:layout_alignLeft="@id/time_connect"
-       android:layout_marginTop="5dp"/>
+        android:text="pricing page"
+        android:textSize="12sp" />
 
 
     <TextView
@@ -46,7 +46,10 @@
         android:text="israel"
         android:textSize="10sp" />
 
-
+    <TextView
+        android:id="@+id/time_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

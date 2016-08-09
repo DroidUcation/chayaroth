@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ public class OnlineVisitorsFragment extends Fragment {
     RecyclerView recyclerView;
     OnlineVisitorsAdapter adapter;
     BroadcastReceiver broadcastReceiver;
+
 
     @Override
     public void onResume() {
@@ -54,6 +56,9 @@ public class OnlineVisitorsFragment extends Fragment {
     }
 
     public OnlineVisitorsFragment() {
+        Log.d("now","ONLINE");
+
+
     }
 
     public static OnlineVisitorsFragment newInstance() {
@@ -94,7 +99,7 @@ public class OnlineVisitorsFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            int position = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_item_postion), -1);
+          /*  int position = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_item_postion), -1);
             int action = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_action), -1);
 
             if (position == -1 || action == -1)
@@ -104,7 +109,7 @@ public class OnlineVisitorsFragment extends Fragment {
                 adapter.notifyItemInserted(position);
             } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
                 adapter.notifyItemRemoved(position);
-            }
+            }*/
         }
     }
 
