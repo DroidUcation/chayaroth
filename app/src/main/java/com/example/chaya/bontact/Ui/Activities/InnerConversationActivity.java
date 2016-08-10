@@ -84,11 +84,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.bontact_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+       // getSupportActionBar().setHomeAsUpIndicator(R.drawable.avatar1);
 
         setContentView(R.layout.activity_inner_conversation);
-
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -184,7 +182,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 ((FloatingActionButton) findViewById(R.id.btn_send_message)).setBackgroundResource(R.drawable.ic_phone_iphone_black_18dp);
         }
     }
-
 
     @Override
     public void onPause() {

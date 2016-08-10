@@ -21,23 +21,14 @@ import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
+import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
-import com.example.chaya.bontact.Ui.Activities.MenuActivity;
-import com.mikepenz.iconics.typeface.ITypeface;
 
-import org.joda.time.Interval;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-
-import java.security.Timestamp;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,10 +58,13 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             return;
         final Visitor current_visitor = visitorsList.get(position);
         if (current_visitor != null) {
-            holder.time_visit.setText(DateTimeHelper.getDiffToOnlineVisitors(current_visitor.timeConnect));
-            holder.title.setText(current_visitor.title);
-            holder.flag.setText(current_visitor.country);
+            if (current_visitor.timeConnect != null)
+                holder.connect_time.setText(DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
+            holder.page_title.setText(current_visitor.title);
+            holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
+            holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
             holder.displayName.setText(String.valueOf(current_visitor.idSurfer));
+            holder.country_flag.setImageResource(R.drawable.country_ad);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,7 +74,7 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
                         if (visitor.idSurfer == current_visitor.idSurfer) {
                             int idSurfer = visitor.idSurfer;
                             Bundle b = new Bundle();
-                            b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR,idSurfer ); //Your id
+                            b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, idSurfer); //Your id
                             intent.putExtras(b);
                             break;
                         }
@@ -101,15 +95,18 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
     }
 
     class OnlineVisitorsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView time_visit, flag, title, displayName;
+        TextView connect_time, page_title, displayName;
+        ImageView avatar, browser_icon, country_flag;
 
         public OnlineVisitorsHolder(View itemView) {
             super(itemView);
-            time_visit = (TextView) itemView.findViewById(R.id.time_visit);
-            flag = (TextView) itemView.findViewById(R.id.flag);
-            title = (TextView) itemView.findViewById(R.id.title_page);
-            displayName = (TextView) itemView.findViewById(R.id.displayName);
 
+                    avatar = (ImageView) itemView.findViewById(R.id.avatar);
+            connect_time = (TextView) itemView.findViewById(R.id.connect_time);
+            browser_icon = (ImageView) itemView.findViewById(R.id.browser_icon);
+            page_title = (TextView) itemView.findViewById(R.id.page_title);
+            displayName = (TextView) itemView.findViewById(R.id.displayName);
+            country_flag = (ImageView) itemView.findViewById(R.id.country_flag);
         }
 
         @Override

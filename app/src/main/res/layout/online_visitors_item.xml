@@ -4,53 +4,75 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/padding_inbox_items">
-<!--
-    <CheckBox
-        android:id="@+id/actions_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:checked="false" />-->
 
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/avatar_jen" />
+
+    <ImageView
+        android:id="@+id/browser_icon"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:src="@drawable/chrome"
+       android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <ImageView
+        android:id="@+id/country_flag"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:src="@drawable/country_ad"
+        android:layout_alignTop="@+id/browser_icon"
+        android:layout_toRightOf="@+id/browser_icon"
+        android:layout_toEndOf="@+id/browser_icon"
+        android:layout_marginLeft="5dp"
+         />
     <TextView
         android:id="@+id/displayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-       android:layout_alignParentLeft="true"
-        android:text="visitor" />
-    <TextView
-        android:id="@+id/time_visit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-       android:layout_below="@id/displayName"
-        android:text="10:20:09" />
+        android:text="Jenny Li"
+        android:layout_below="@id/browser_icon"
+        android:layout_alignLeft="@+id/browser_icon"
+        android:layout_alignStart="@+id/browser_icon" />
 
     <TextView
-        android:id="@+id/title_page"
+        android:id="@+id/page_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/time_visit"
-        android:layout_below="@id/time_visit"
-        android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:lines="1"
-        android:text="pricing page"
-        android:textSize="12sp" />
-
+        android:text="bontact-home page"
+        android:textSize="12sp"
+     android:layout_below="@id/displayName"
+        android:layout_alignLeft="@+id/displayName"
+        android:layout_alignStart="@+id/displayName" />
 
     <TextView
-        android:id="@+id/flag"
+        android:id="@+id/connect_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+
         android:layout_alignParentTop="true"
-        android:text="israel"
+        android:text="error"
         android:textSize="10sp" />
+
+    <ImageView
+        android:id="@+id/invite_btn"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:src="@drawable/country_cl"
+       android:layout_alignParentRight="true"
+        android:layout_below="@id/connect_time"
+        />
+
 
 
 </RelativeLayout>

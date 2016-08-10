@@ -80,7 +80,7 @@
 
         <activity
             android:name=".Ui.Activities.TabsActivity"
-            android:label="@string/title_activity_tabs"
+
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

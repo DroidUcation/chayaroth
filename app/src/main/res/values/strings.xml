@@ -134,7 +134,8 @@
     <string name="dd_mm_yy_format">dd-mm-yy</string>
     <string name="hh_mm_format">HH:mm</string>
     <string name="hh_mm_ss">HH:mm:ss</string>
-    <string name="title_activity_tabs">TabsActivity</string>
+
+    <!--broadcast keys and actions-->
     <string name="response_server_call_action">response_server_call_action</string>
     <string name="response_key">response</string>
     <string name="is_successed_key">is_successed</string>
@@ -146,7 +147,15 @@
     <string name="change_unread_conversations_actiona">change_unread_conversations_actiona</string>
     <string name="change_unread_conversations_action">change_unread_conversations_action</string>
 
+    <!--settings strings-->
+    <string name="new_message_header">New message</string>
+    <string name="new_message_description">notify me every new message</string>
+    <string name="new_visitor_header">New visitor</string>
+    <string name="new_visitor_description">notify me every new visitor</string>
 
+    <string name="push_notification">push notifications</string>
+    <string name="push_notification_sound">sound</string>
+    <string name="push_notification_vibrate">vibrate</string>
 </resources>
 
 

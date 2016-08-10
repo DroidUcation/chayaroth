@@ -109,7 +109,6 @@ public class SocketManager {
             String json = gson.toJson(args);
             try {
                 JSONObject jsonObject = new JSONObject(args[0].toString());
-
                 JSONArray visitors = jsonObject.getJSONArray("visitors");
 
                 VisitorsDataManager visitorsDataManager = new VisitorsDataManager(context);
@@ -122,7 +121,6 @@ public class SocketManager {
                     if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)
                         conversationDataManager.updateOnlineState(context, idSurfer, 1);
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

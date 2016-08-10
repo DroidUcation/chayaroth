@@ -50,15 +50,17 @@ public class VisitorsDataManager {
         return null;
     }
 
-    public static void addVisitorToList(Context context, Visitor visitor) {
+    public static void addVisitorToList(Context context, Visitor newVisitor) {
         initVisitorsList();
-        if (visitor != null) {
-            getVisitorsList().add(visitor);
-            int position = getVisitorsList().indexOf(visitor);
+        if (newVisitor != null) {
+            for (Visitor item : getVisitorsList()) {
+                if (item.idSurfer == newVisitor.idSurfer)
+                    return;
+            }
+            getVisitorsList().add(newVisitor);
+            int position = getVisitorsList().indexOf(newVisitor);
             notifyAdapter(context, ACTION_NEW_VISITOR, position);
-
         }
-
     }
 
     public static void removeVisitorFromList(Context context, Visitor visitor) {
@@ -82,9 +84,28 @@ public class VisitorsDataManager {
             contextStatic.sendBroadcast(intent);
     }
 
-   /* public static Date getVisitorTimeVisit(Visitor visitor) {
-        Date startDate = DateTimeHelper.convertStringToDate(visitor.timeConnect);
-        long diff = DateTimeHelper.getDiffBetweenDates(startDate, new Date());
-        return new Date(diff);
-    }*/
+    public static int getBrowserIcon(String browser) {
+        switch (browser.toLowerCase()) {
+            case "firefox":
+                return R.drawable.firefox;
+            case "chrome":
+                return R.drawable.chrome;
+            case "ie":
+            case "internet explorer":
+                return R.drawable.msie;
+            case "yandex":
+                return R.drawable.yandex;
+            case "safari":
+            case "mobile safari":
+                return R.drawable.safari;
+            case "opera":
+                return R.drawable.opera;
+            case "edge":
+                return R.drawable.edge;
+            default:
+                return R.drawable.default_browser;
+        }
+    }
+
+
 }

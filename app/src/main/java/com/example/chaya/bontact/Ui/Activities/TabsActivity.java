@@ -32,6 +32,8 @@ public class TabsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FloatingActionButton inbox_fab;
+    private ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +48,44 @@ public class TabsActivity extends AppCompatActivity {
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager, resFirstTabTitle);
-
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
+        inbox_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
+            }
+        });
 
     }
 
     private void setupViewPager(ViewPager viewPager, int resFirstTabTitle) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new InboxFragment(), getResources().getString(R.string.inbox_title));
         adapter.addFragment(new OnlineVisitorsFragment(), getResources().getString(R.string.onlinevisitors_title));
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(adapter.getPosition(getString(resFirstTabTitle)), true);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                if (adapter.getPageTitle(position) == getResources().getString(R.string.inbox_title))
+                    inbox_fab.setVisibility(View.VISIBLE);
+                else
+                    inbox_fab.setVisibility(View.GONE);
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     @Override
@@ -76,6 +98,7 @@ public class TabsActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

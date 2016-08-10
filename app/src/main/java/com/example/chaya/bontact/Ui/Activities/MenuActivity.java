@@ -21,6 +21,7 @@ import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
+import com.example.chaya.bontact.Ui.Fragments.SettingsFragment;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -111,6 +112,7 @@ public class MenuActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).addToBackStack(null).commit();
             return true;*/
         } else if (id == R.id.nav_settings) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, SettingsFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_exit) {
             AlertComingSoon.show(this);

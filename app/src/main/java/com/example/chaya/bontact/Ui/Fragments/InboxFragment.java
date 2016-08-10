@@ -3,6 +3,7 @@ package com.example.chaya.bontact.Ui.Fragments;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -40,7 +41,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     int lastVisibleItem;
 
     public InboxFragment() {
-        Log.d("now","INBOX");
+        Log.d("now", "INBOX");
     }
 
     public static InboxFragment newInstance() {
@@ -61,7 +62,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
-       recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
