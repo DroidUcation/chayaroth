@@ -17,7 +17,6 @@ import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
 
@@ -52,6 +51,10 @@ public class ConversationDataManager {
 
     public static void setUnreadConversations(Context context, int unread) {
         unread_conversations = unread;
+        Intent intent = new Intent(context.getResources().getString(R.string.change_unread_conversations_action));
+        intent.setType("*/*");
+        context.sendBroadcast(intent);
+
     }
 
     public void getFirstDataFromServer(Context context, String token) {
@@ -82,7 +85,6 @@ public class ConversationDataManager {
 
             OkHttpRequests requests = new OkHttpRequests(url, getConversationOnResponse);
         }
-
     }
 
     public boolean saveData(String conversations) {
@@ -113,7 +115,7 @@ public class ConversationDataManager {
 
     ServerCallResponse getConversationOnResponse = new ServerCallResponse() {
         @Override
-        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
             if (isSuccsed == true && response != null) {
                 JSONObject resObj = null;
                 try {
@@ -124,7 +126,6 @@ public class ConversationDataManager {
                     boolean result = saveData(resObj.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
-
                 }
             }
         }
@@ -258,7 +259,7 @@ public class ConversationDataManager {
 
     ServerCallResponse getCountConversationOnResponse = new ServerCallResponse() {
         @Override
-        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
             if (isSuccsed == true && response != null) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -270,10 +271,12 @@ public class ConversationDataManager {
                         editor.clear();
                         editor.putInt(context.getResources().getString(R.string.count_unread_conversation), unread_conversations);
                         editor.apply();
+
                         setUnreadConversations(context, unread_conversations);
-                        if (context != null && context instanceof ServerCallResponseToUi) {
+
+                      /*  if (context != null && context instanceof ServerCallResponseToUi) {
                             ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, response, null, ConversationDataManager.class);
-                        }
+                        }*/
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

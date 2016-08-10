@@ -15,7 +15,6 @@ import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
 
@@ -29,7 +28,7 @@ import java.util.List;
 /**
  * Created by chaya on 6/26/2016.
  */
-public class InnerConversationDataManager implements ServerCallResponse {
+public class InnerConversationDataManager {
 
     private Context context;
     private Conversation current_conversation;
@@ -51,13 +50,9 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
 
     public void getData(Context context, String token) {
+
         this.context = context;
-        sendResToUi();
-       /* String selectionStr=Contract.InnerConversation.COLUMN_ID_SURFUR+"=?";
-        String[]  selectionArgs={current_conversation.idSurfer+""};
-        if(context.getContentResolver().query(Contract.InnerConversation.INNER_CONVERSATION_URI,null,selectionStr,selectionArgs,null)!=null)//there ara culomns for this user
-       */
-        // sendResToUi();
+        //sendResToUi();
         getDataFromServer(context, token);
     }
 
@@ -76,7 +71,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
                 String url = builder.build().toString();
 
-                OkHttpRequests requests = new OkHttpRequests(url, this);
+                OkHttpRequests requests = new OkHttpRequests(url, getDataOnResponse);
             }
         }
     }
@@ -115,7 +110,7 @@ public class InnerConversationDataManager implements ServerCallResponse {
 
     public boolean saveData(InnerConversation innerConversation) {
 
-        if(innerConversation==null)
+        if (innerConversation == null)
             return false;
 /*        if (innerConversation.id == 0)//inserted from send response agent
             innerConversation.id = getIdAsPlaceHolder();*/
@@ -139,32 +134,14 @@ public class InnerConversationDataManager implements ServerCallResponse {
         return idPlaceHolder--;
     }
 
-    @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
-        if (isSuccsed == true) {
-            try {
-                JSONObject res = new JSONObject(response);
-                if (res.getString("status").equals("true")) {
-                    String inner_data = res.getJSONArray("data").toString();
-                    Log.e("inner conversation", inner_data);
-                    boolean result = saveServersData(inner_data);
-                    // sendResToUi();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public Conversation getCurrent_conversation() {
         return current_conversation;
     }
 
     public void sendResToUi() {
-        if (context != null && context instanceof ServerCallResponseToUi) {
+      /*  if (context != null && context instanceof ServerCallResponseToUi) {
             ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, current_conversation.idSurfer + "", null, getClass());
-        }
-
+        }*/
     }
 
     public InnerConversation convertCursorToInnerConversation(Cursor cursor) {
@@ -176,5 +153,23 @@ public class InnerConversationDataManager implements ServerCallResponse {
         }
         return null;
     }
+    ServerCallResponse getDataOnResponse = new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+            if (isSuccsed == true) {
+                try {
+                    JSONObject res = new JSONObject(response);
+                    if (res.getString("status").equals("true")) {
+                        String inner_data = res.getJSONArray("data").toString();
+                        Log.e("inner conversation", inner_data);
+                        boolean result = saveServersData(inner_data);
+                        // sendResToUi();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
 }

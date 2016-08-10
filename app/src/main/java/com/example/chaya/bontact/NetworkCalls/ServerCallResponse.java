@@ -5,8 +5,8 @@ import com.example.chaya.bontact.Helpers.ErrorType;
 /**
  * Created by chaya on 6/26/2016.
  */
-/*
+
 public interface ServerCallResponse {
-    void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType,Object sender);
+    void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType);
 }
-*/
+

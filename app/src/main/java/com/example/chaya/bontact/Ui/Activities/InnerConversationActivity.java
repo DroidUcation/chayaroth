@@ -56,22 +56,15 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     ProgressBar loading;
     Conversation current_conversation;
     int selected_reply_type;
-    // List<TextView> channel_icons;
     SendResponseHelper sendResponseHelper;
     onlineStateChangesReciver broadcastReceiver;
     android.view.Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.bontact_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-
-        setContentView(R.layout.activity_inner_conversation);
         Bundle args = getIntent().getExtras();
         if (args != null) {
             int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
@@ -82,6 +75,20 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
             setTitle(current_conversation.displayname);
         }
+        AgentDataManager agentDataManager = new AgentDataManager();
+        String token = agentDataManager.getAgentToken(this);
+        if (token != null && current_conversation != null) {
+            InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this,current_conversation);
+            innerConversationDataManager.getData(this, token);
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.bontact_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        setContentView(R.layout.activity_inner_conversation);
+
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -99,7 +99,7 @@ public class OnlineVisitorsFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-          /*  int position = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_item_postion), -1);
+            int position = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_item_postion), -1);
             int action = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_action), -1);
 
             if (position == -1 || action == -1)
@@ -109,7 +109,7 @@ public class OnlineVisitorsFragment extends Fragment {
                 adapter.notifyItemInserted(position);
             } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
                 adapter.notifyItemRemoved(position);
-            }*/
+            }
         }
     }
 

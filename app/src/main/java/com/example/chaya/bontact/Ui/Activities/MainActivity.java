@@ -62,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         passwordInputLayout = (TextInputLayout) findViewById(R.id.password_text_input_layout);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 
     @Override
     public void onClick(View v) {
@@ -210,44 +215,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             boolean isSuccsed = intent.getBooleanExtra(context.getResources().getString(R.string.is_successed_key), false);
             String response = intent.getStringExtra(context.getResources().getString(R.string.response_key));
-            //String errorType = intent.getStringExtra(context.getResources().getString(R.string.error_type_key));
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                String msg = jsonObject.getString("message");//user exists
-                if (msg.equals("success"))
-                    isSuccsed = true;
-                else if (msg.equals("user not found"))
-                    isSuccsed = false;
-
-            } catch (JSONException e) {
-                isSuccsed = false;
-            }
-            if (isSuccsed == true && response != null) {
-
-                if (agentDataManager.saveData(response, MainActivity.this) == true) {
+                if (isSuccsed == true && response != null) {
+                    if (agentDataManager.saveData(response, MainActivity.this) == true) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                InitData initData= new InitData();
+                                initData.start(MainActivity.this);
+                                startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                            }
+                        });
+                    } else {}
+                } else {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setVisibility(View.GONE);
-                            InitData initData = new InitData();
-                            initData.start(MainActivity.this);
-                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                            reEnterDetails(ErrorType.user_not_exists);
                         }
                     });
-                } else {
                 }
-            } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reEnterDetails(ErrorType.user_not_exists);
-                    }
-                });
             }
-        }
     }
+
 
     /*@Override
     public void OnServerCallResponseToUi(boolean isSuccsed, String response, ErrorType errorType, Class sender) {

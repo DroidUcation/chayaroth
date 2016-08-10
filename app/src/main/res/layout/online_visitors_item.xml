@@ -4,24 +4,30 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/padding_inbox_items">
-
+<!--
     <CheckBox
         android:id="@+id/actions_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:checked="false" />
+        android:checked="false" />-->
 
+    <TextView
+        android:id="@+id/displayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+       android:layout_alignParentLeft="true"
+        android:text="visitor" />
     <TextView
         android:id="@+id/time_visit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:layout_toEndOf="@id/actions_checkbox"
-
-        android:layout_toRightOf="@id/actions_checkbox"
+       android:layout_below="@id/displayName"
         android:text="10:20:09" />
 
     <TextView
@@ -45,11 +51,6 @@
         android:layout_alignParentTop="true"
         android:text="israel"
         android:textSize="10sp" />
-
-    <TextView
-        android:id="@+id/time_connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

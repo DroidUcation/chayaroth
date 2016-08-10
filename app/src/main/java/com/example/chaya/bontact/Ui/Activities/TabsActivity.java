@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -17,8 +18,11 @@ import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RecursiveTask;
 
 
+import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
@@ -31,29 +35,46 @@ public class TabsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
 
-
+        int resFirstTabTitle = R.string.inbox_title;
+        Bundle args = getIntent().getExtras();
+        if (args != null) {
+            resFirstTabTitle = args.getInt(getString(R.string.first_tab_title_key));
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+        setupViewPager(viewPager, resFirstTabTitle);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(ViewPager viewPager, int resFirstTabTitle) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new InboxFragment(),getResources().getString(R.string.inbox_title));
-        adapter.addFragment(new OnlineVisitorsFragment(),getResources().getString(R.string.onlinevisitors_title));
+        adapter.addFragment(new InboxFragment(), getResources().getString(R.string.inbox_title));
+        adapter.addFragment(new OnlineVisitorsFragment(), getResources().getString(R.string.onlinevisitors_title));
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(adapter.getPosition(getString(resFirstTabTitle)), true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return true;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -77,6 +98,10 @@ public class TabsActivity extends AppCompatActivity {
         public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
+        }
+
+        public int getPosition(String pageTitle) {
+            return mFragmentTitleList.indexOf(pageTitle);
         }
 
         @Override

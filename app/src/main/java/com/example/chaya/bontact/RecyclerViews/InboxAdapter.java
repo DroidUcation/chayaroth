@@ -3,8 +3,10 @@
 package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
+import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
 import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 
 
@@ -63,7 +66,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, conversation.getLasttype()));
             else
                 holder.lastSentence.setText(conversation.lastMessage);
-           String dateStringToConvert = conversation.lastdate;
+            String dateStringToConvert = conversation.lastdate;
             String timeAgo = null;
             if (dateStringToConvert != null && context != null) {
                 timeAgo = DateTimeHelper.getDateToInbox(dateStringToConvert, context);
@@ -150,12 +153,20 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
             conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
 
-            AgentDataManager agentDataManager = new AgentDataManager();
+           /* AgentDataManager agentDataManager = new AgentDataManager();
             String token = agentDataManager.getAgentToken(v.getContext());
-            if (token != null && conversation != null) {
-                InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(v.getContext(), conversation);
-               // ((MenuActivity) v.getContext()).setProgressBarCenterState(View.VISIBLE);
-                innerConversationDataManager.getData(v.getContext(), token);
+            if (token != null && conversation != null) {*/
+              /*  InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(v.getContext(), conversation);
+                // ((MenuActivity) v.getContext()).setProgressBarCenterState(View.VISIBLE);
+                innerConversationDataManager.getData(v.getContext(), token);*/
+
+            if (conversation != null) {
+                Intent intent = new Intent(v.getContext(), InnerConversationActivity.class);
+                Bundle b = new Bundle();
+                b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
+                intent.putExtras(b); //Put your id to your next Intent
+                //setProgressBarCenterState(View.GONE);
+                v.getContext().startActivity(intent);
 
             }
         }

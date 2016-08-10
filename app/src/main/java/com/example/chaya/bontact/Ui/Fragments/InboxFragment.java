@@ -37,7 +37,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     ProgressBar progressBarBottom;
     SwipeRefreshLayout refreshLayout;
     private LinearLayoutManager linearLayoutManager;
-
     int lastVisibleItem;
 
     public InboxFragment() {

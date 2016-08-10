@@ -19,12 +19,11 @@ import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ServerCallResponseToUi {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     AgentDataManager agentDataManager;
     ConversationDataManager conversationDataManager;
@@ -56,12 +55,12 @@ public class MenuActivity extends AppCompatActivity
         progressBarCenter = (ProgressBar) findViewById(R.id.loading_center);
 
         //get data to inbox
-        String token = agentDataManager.getAgentToken(this);
+      /*  String token = agentDataManager.getAgentToken(this);
         if (token != null) {
             conversationDataManager = new ConversationDataManager(this);
             conversationDataManager.getConversationsUnreadCount(this);
             conversationDataManager.getFirstDataFromServer(this, token);
-        }
+        }*/
     }
 
     public void setProgressBarCenterState(int state) {
@@ -126,7 +125,7 @@ public class MenuActivity extends AppCompatActivity
         ReplaceFragments(v.getId());
     }
 
-    @Override
+/*    @Override
     public void OnServerCallResponseToUi(boolean isSuccsed, final String response, ErrorType errorType, Class sender) {
 
         if (sender == InnerConversationDataManager.class) {
@@ -157,7 +156,7 @@ public class MenuActivity extends AppCompatActivity
                 });
             }
         }
-    }
+    }*/
 
 
 }

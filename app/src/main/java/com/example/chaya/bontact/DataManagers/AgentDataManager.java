@@ -1,6 +1,5 @@
 package com.example.chaya.bontact.DataManagers;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +8,7 @@ import android.net.Uri;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Helpers.ErrorType;
-/*import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
-import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;*/
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.google.gson.Gson;
@@ -63,11 +61,9 @@ public class AgentDataManager {
       /*  String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.login_api);
         url += "?username=" + userName + "&pass=" + password;
 */
-        OkHttpRequests requests = new OkHttpRequests(url, context);
+        OkHttpRequests requests = new OkHttpRequests(url,loginCallback);
 
     }
-
-
 
     public boolean saveData(String response, Context context) {
         this.context = context;
@@ -137,48 +133,50 @@ public class AgentDataManager {
 
     }
 
+    ServerCallResponse loginCallback= new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+            if (isSuccsed == false)
+                sendResToUi(false, null, ErrorType.network_problems);
 
-
-  /*  @Override
-    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType, Object sender) {
-        if (isSuccsed == false)
-            sendResToUi(false, null, ErrorType.network_problems);
-
-        try {
-            if (response == null) {
+            try {
+                if (response == null) {
+                    sendResToUi(false, null, ErrorType.network_problems);
+                    return;
+                }
+                JSONObject jsonObject = new JSONObject(response);
+                String msg = jsonObject.getString("message");//user exists
+                if (msg.equals("success")) {
+                    sendResToUi(true, response, null);
+                    return;
+                }
+                if (msg.equals("user not found")) {
+                    sendResToUi(false, null, ErrorType.user_not_exists);
+                    return;
+                }
+            } catch (JSONException e) {
                 sendResToUi(false, null, ErrorType.network_problems);
                 return;
             }
-            JSONObject jsonObject = new JSONObject(response);
-            String msg = jsonObject.getString("message");//user exists
-            if (msg.equals("success")) {
-                sendResToUi(true, response, null);
-                return;
-            }
-            if (msg.equals("user not found")) {
-                sendResToUi(false, null, ErrorType.user_not_exists);
-                return;
-            }
-        } catch (JSONException e) {
-            sendResToUi(false, null, ErrorType.network_problems);
-            return;
         }
-    }
+    };
+
+
     public void sendResToUi(boolean isSuccsed, String response, ErrorType errorType) {
-        Intent intent = new Intent(context.getResources().getString(R.string.response_server_call_to_ui_action));
-        intent.setType("**");
+
+        Intent intent = new Intent(context.getResources().getString(R.string.action_login_completed));
+        intent.setType("*/*");
         intent.putExtra(context.getResources().getString(R.string.is_successed_key), isSuccsed);
         if (response != null)
             intent.putExtra(context.getResources().getString(R.string.response_key), response);
         if (errorType != null)
             intent.putExtra(context.getResources().getString(R.string.error_type_key), errorType);
-
         context.sendBroadcast(intent);
 
-        if (context != null && context instanceof ServerCallResponseToUi)
-            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(isSuccsed, response, errorType, getClass());
+      /*  if (context != null && context instanceof ServerCallResponseToUi)
+            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(isSuccsed, response, errorType, getClass());*/
 
-    }*/
+    }
 
 
 }

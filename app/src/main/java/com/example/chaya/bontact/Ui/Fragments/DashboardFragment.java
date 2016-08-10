@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
@@ -28,7 +27,8 @@ public class DashboardFragment extends Fragment {
     TextView new_requests_count;
     TextView online_visitors_count;
     int unread_conversation;
-    OnlineCountNumberReciver broadcastReceiver;
+    OnlineVisitorsCountReciver onlineVisitorsCountReciver;
+    NewRequestsCountReciver newRequestsCountReciver;
 
     public DashboardFragment() {
     }
@@ -41,15 +41,21 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        newRequestsCountReciver = new NewRequestsCountReciver();
+        onlineVisitorsCountReciver = new OnlineVisitorsCountReciver();
         IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
-        broadcastReceiver = new OnlineCountNumberReciver();
-        getContext().registerReceiver(broadcastReceiver, intentFilter);
+        getContext().registerReceiver(onlineVisitorsCountReciver, intentFilter);
+        intentFilter = IntentFilter.create(getResources().getString(R.string.change_unread_conversations_action), "*/*");
+        getContext().registerReceiver(newRequestsCountReciver, intentFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getContext().unregisterReceiver(broadcastReceiver);
+        getContext().unregisterReceiver(onlineVisitorsCountReciver);
+        getContext().unregisterReceiver(newRequestsCountReciver);
+
     }
 
     @Override
@@ -83,7 +89,7 @@ public class DashboardFragment extends Fragment {
         new_requests_count = (TextView) request_v.findViewById(R.id.count_new_requests);
         if (new_requests_count != null)
             new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
-        online_visitors_count=(TextView) online_v.findViewById(R.id.count_online_visitors);
+        online_visitors_count = (TextView) online_v.findViewById(R.id.count_online_visitors);
         online_visitors_count.setText(String.valueOf(VisitorsDataManager.getVisitorsList().size()));
 
         TextView arrow = (TextView) RootView.findViewById(R.id.online_arrow_btn);
@@ -94,16 +100,17 @@ public class DashboardFragment extends Fragment {
         return RootView;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    public class OnlineCountNumberReciver extends BroadcastReceiver {
-
+    public class OnlineVisitorsCountReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             online_visitors_count.setText(String.valueOf(VisitorsDataManager.getVisitorsList().size()));
+        }
+    }
+
+    public class NewRequestsCountReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
         }
     }
 

@@ -36,7 +36,7 @@ public class SendResponseHelper {
                 "&name=" + agent.getName() +
                 "&telephone=" + telephone;
 
-        OkHttpRequests okHttpRequests = new OkHttpRequests(url, this);
+       // OkHttpRequests okHttpRequests = new OkHttpRequests(url, this);
 
 //todo:handel a case that a call back don't succsess
 
@@ -84,7 +84,7 @@ public class SendResponseHelper {
             e.printStackTrace();
             return;
         }
-        OkHttpRequests okHttpRequests = new OkHttpRequests(url, this, postDataObject.toString());
+        //OkHttpRequests okHttpRequests = new OkHttpRequests(url, this, postDataObject.toString());
     }
 
 

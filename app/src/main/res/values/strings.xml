@@ -141,6 +141,10 @@
     <string name="error_type_key">error_type</string>
     <string name="first_tab_title_key">first_tab</string>
     <string name="response_server_call_to_ui_action">response_server_call_to_ui_action</string>
+    <string name="request_name_key">request_name</string>
+    <string name="action_login_completed">action_login_completed</string>
+    <string name="change_unread_conversations_actiona">change_unread_conversations_actiona</string>
+    <string name="change_unread_conversations_action">change_unread_conversations_action</string>
 
 
 </resources>

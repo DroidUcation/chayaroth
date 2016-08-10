@@ -53,6 +53,8 @@ public class DateTimeHelper {
     }
 
     public static String getDiffToOnlineVisitors(String stringDateFullFormat) {
+        if (stringDateFullFormat == null)
+            return null;
         Date date1 = convertFullFormatStringToDate(stringDateFullFormat);
         Date date2 = convertFullFormatStringToDate(DateTimeHelper.getCurrentStringDateInGmtZero());
         Interval interval = new Interval(date1.getTime(), date2.getTime());
@@ -64,7 +66,7 @@ public class DateTimeHelper {
                 .appendSeparator(":")
                 .appendSeconds()
                 .toFormatter();
-     return minutesAndSeconds.print(interval.toPeriod());
+        return minutesAndSeconds.print(interval.toPeriod());
     }
 
 
@@ -107,7 +109,9 @@ public class DateTimeHelper {
 
     public static Date convertFullFormatStringToDate(String dateString) {
         try {
-            dateString=convertDateStringToDbFormat(dateString);
+            if (dateString == null)
+                return null;
+            dateString = convertDateStringToDbFormat(dateString);
             return dateFullFormat.parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();

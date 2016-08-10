@@ -1,10 +1,12 @@
 package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
 import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 import com.mikepenz.iconics.typeface.ITypeface;
 
@@ -62,11 +65,29 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
     public void onBindViewHolder(OnlineVisitorsHolder holder, int position) {
         if (visitorsList == null)
             return;
-        Visitor current_visitor = visitorsList.get(position);
+        final Visitor current_visitor = visitorsList.get(position);
         if (current_visitor != null) {
-            holder.time_connect.setText(DateTimeHelper.getDiffToOnlineVisitors(current_visitor.timeConnect));
+            holder.time_visit.setText(DateTimeHelper.getDiffToOnlineVisitors(current_visitor.timeConnect));
             holder.title.setText(current_visitor.title);
             holder.flag.setText(current_visitor.country);
+            holder.displayName.setText(String.valueOf(current_visitor.idSurfer));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), InnerConversationActivity.class);
+
+                    for (Visitor visitor : VisitorsDataManager.getVisitorsList()) {
+                        if (visitor.idSurfer == current_visitor.idSurfer) {
+                            int idSurfer = visitor.idSurfer;
+                            Bundle b = new Bundle();
+                            b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR,idSurfer ); //Your id
+                            intent.putExtras(b);
+                            break;
+                        }
+                    }
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
 
 
@@ -79,27 +100,22 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
         return 0;
     }
 
-    class OnlineVisitorsHolder extends RecyclerView.ViewHolder {
-        TextView time_connect, flag, title;
-        CheckBox actionCheckBox;
-
+    class OnlineVisitorsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView time_visit, flag, title, displayName;
 
         public OnlineVisitorsHolder(View itemView) {
             super(itemView);
-            time_connect = (TextView) itemView.findViewById(R.id.time_connect);
+            time_visit = (TextView) itemView.findViewById(R.id.time_visit);
             flag = (TextView) itemView.findViewById(R.id.flag);
             title = (TextView) itemView.findViewById(R.id.title_page);
-            actionCheckBox = (CheckBox) itemView.findViewById(R.id.actions_checkbox);
+            displayName = (TextView) itemView.findViewById(R.id.displayName);
 
-            //  actionCheckBox.setOnClickListener( context);
         }
-       /* View.OnClickListener actionsListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                android.app.ActionBar actionBar = getActivity().getActionBar();
-                actionBar.setBackgroundDrawable(new ColorDrawable(Color.GRAY));
 
-            }
-        };*/
+        @Override
+        public void onClick(View v) {
+
+
+        }
     }
 }
