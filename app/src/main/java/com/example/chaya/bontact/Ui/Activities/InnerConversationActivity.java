@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -167,10 +166,21 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         no_chat_message.setVisibility(View.VISIBLE);
         invite_btn = (Button) findViewById(R.id.invite_btn);
         invite_btn.setVisibility(View.VISIBLE);
-        LinearLayout buttom_layout = (LinearLayout) findViewById(R.id.buttom_layout);
-        buttom_layout.setVisibility(View.GONE);
+        LinearLayout bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
+        bottom_layout.setVisibility(View.GONE);
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        this.menu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.inner_conversation_menu, menu);
+        if (isNew)
+            menu.setGroupVisible(R.id.inner_conversation_menu, false);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
@@ -194,6 +204,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             isNew = false;
             if (menu != null)
                 menu.setGroupVisible(R.id.inner_conversation_menu, true);
+            if(current_conversation==null)//conversation is not in list
+            {
+                //todo: get the current conversation
+            }
         } else {
             setProgressBarState(View.VISIBLE);
         }
@@ -233,31 +247,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
-    public void sendChatResponse(String msg) {
-        if (current_conversation != null && current_conversation.isOnline) {
-            addTextMsgToList(ChanelsTypes.chat, msg, false);
-            sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitor_online_state), "*/*");
-        onlineStatebroadcastReceiver = new onlineStateChangesReciver();
-        registerReceiver(onlineStatebroadcastReceiver, intentFilter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(android.view.Menu menu) {
-        this.menu = menu;
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.inner_conversation_menu, menu);
-        if (isNew)
-            menu.setGroupVisible(R.id.inner_conversation_menu, false);
-        return super.onCreateOptionsMenu(menu);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -277,12 +266,26 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         return true;
     }
 
+    public void sendChatResponse(String msg) {
+        if (current_conversation != null && current_conversation.isOnline) {
+            addTextMsgToList(ChanelsTypes.chat, msg, false);
+            sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitor_online_state), "*/*");
+        onlineStatebroadcastReceiver = new onlineStateChangesReciver();
+        registerReceiver(onlineStatebroadcastReceiver, intentFilter);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
         unregisterReceiver(onlineStatebroadcastReceiver);
     }
-
 
     private void addTextMsgToList(int channelType, String textMsg, boolean systemMsg) {
         InnerConversation innerConversation = new InnerConversation();
@@ -317,19 +320,19 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         loading.setVisibility(state);
     }
 
-    public void setDisableFooter() {
-        if (invite_btn != null && isNew)
-            invite_btn.setVisibility(View.GONE);
-        else
-            if(chat_response_edittext!=null) {
-            chat_response_edittext.setEnabled(false);
-            chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.gray_very_light));
-        }
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void setDisableFooter() {
+        if (invite_btn != null && isNew)
+            invite_btn.setVisibility(View.GONE);
+        else if (chat_response_edittext != null) {
+            chat_response_edittext.setEnabled(false);
+            chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.gray_very_light));
+            chat_response_edittext.setHint("the visitor is offline right now :(");
+        }
     }
 
     public class onlineStateChangesReciver extends BroadcastReceiver {

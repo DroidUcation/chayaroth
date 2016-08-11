@@ -39,6 +39,7 @@ public class VisitorsDataManager {
     public static void initVisitorsList() {
         if (visitorsList == null)
             visitorsList = new ArrayList<>();
+
     }
 
     public static Visitor getVisitorByIdSurfer(int id_surfer) {

@@ -5,7 +5,9 @@ package com.example.chaya.bontact.RecyclerViews;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,12 +23,14 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
@@ -57,9 +61,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         if (conversation != null) {
             holder.displayName.setText(conversation.displayname);
-            setAvatar(conversation, holder);
-
-            // holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
+            setAvatar(conversation, holder.avatar);
+            //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
             int icon = ChanelsTypes.getIconByChanelType(conversation.lasttype);
             if (icon != 0)
                 holder.chanelIcon.setText(icon);
@@ -85,24 +88,24 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         }
     }
 
-    public void setAvatar(Conversation conversation, InboxHolder holder) {
-        String letter = null;
-        if (conversation.avatar != null) {//has picture
-            Picasso.with(context)
-                    .load(conversation.avatar)
-                    .into(holder.avatar);
-            return;
-        } else {
-            if (conversation.email != null)
-                letter = conversation.email.substring(0, 1);
-            else if (conversation.visitor_name != null)
-                letter = conversation.visitor_name.substring(0, 1);
-
-            if (letter != null)
-                holder.avatar.setImageDrawable(TextDrawable.builder()
-                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
-
-            return;
+    public void setAvatar(Conversation conversation, ImageView avatarView) {
+        //set default
+        avatarView.setBackground(context.getResources().getDrawable(R.drawable.avatar_bg));
+        avatarView.setImageResource(R.drawable.default_avatar);
+        if (conversation != null) {
+            if (conversation.avatar != null) {//has picture
+                Picasso.with(context)
+                        .load(conversation.avatar)
+                        .transform(new CircleTransform())
+                        .into(avatarView);
+            } else {//maybe letters
+                String letter = null;
+                letter = conversation.visitor_name != null ? conversation.visitor_name.substring(0, 1) :
+                        conversation.email != null ? conversation.email.substring(0, 1) : null;
+                if (letter != null)
+                    avatarView.setImageDrawable(TextDrawable.builder()
+                            .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
+            }
         }
     }
 

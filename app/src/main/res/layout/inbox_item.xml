@@ -15,13 +15,12 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/default_avatar"
         />-->
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
-        android:src="@drawable/default_avatar"
-        app:civ_fill_color="@color/gray_light"/>
+        />
 
     <ImageView
         android:id="@+id/online_point"

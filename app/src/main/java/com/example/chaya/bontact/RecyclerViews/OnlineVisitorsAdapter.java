@@ -16,6 +16,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
@@ -23,11 +25,13 @@ import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -61,10 +65,11 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             if (current_visitor.timeConnect != null)
                 holder.connect_time.setText(DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
             holder.page_title.setText(current_visitor.title);
-            holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
+            setAvatar(current_visitor, holder.avatar);
+            //holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
             holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
             holder.displayName.setText(current_visitor.displayName);
-            holder.country_flag.setImageResource(R.drawable.chrome);
+            holder.country_flag.setImageResource(context.getResources().getIdentifier("country_" + current_visitor.country.toLowerCase(), "drawable", context.getPackageName()));
             if (current_visitor.isNew)
                 holder.invite_btn.setVisibility(View.VISIBLE);
             else
@@ -87,9 +92,27 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
                 }
             });
         }
-
-
     }
+
+    public void setAvatar(Visitor visitor, ImageView avatarView) {
+        //set default
+        avatarView.setBackground(context.getResources().getDrawable(R.drawable.avatar_bg));
+        avatarView.setImageResource(R.drawable.default_avatar);
+        if (visitor != null) {
+         /*   if (conversation.avatar != null) {//has picture
+                Picasso.with(context)
+                        .load(conversation.avatar)
+                        .transform(new CircleTransform())
+                        .into(avatarView);
+            } else {//maybe letters*/
+            String letter = null;
+            letter = visitor.displayName != null && !visitor.displayName.startsWith("#") ? visitor.displayName.substring(0, 1) : null;
+            if (letter != null)
+                avatarView.setImageDrawable(TextDrawable.builder()
+                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
+        }
+    }
+
 
     @Override
     public int getItemCount() {
