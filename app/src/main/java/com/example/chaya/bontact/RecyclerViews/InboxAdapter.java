@@ -16,17 +16,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
-import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
-import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
-import com.example.chaya.bontact.Ui.Activities.MenuActivity;
+import com.squareup.picasso.Picasso;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
@@ -57,7 +57,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
         if (conversation != null) {
             holder.displayName.setText(conversation.displayname);
-            holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
+            setAvatar(conversation, holder);
+
+            // holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
             int icon = ChanelsTypes.getIconByChanelType(conversation.lasttype);
             if (icon != 0)
                 holder.chanelIcon.setText(icon);
@@ -80,6 +82,27 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.unread.setText(Integer.toString(conversation.unread));
                 holder.setUnRead(true);
             }
+        }
+    }
+
+    public void setAvatar(Conversation conversation, InboxHolder holder) {
+        String letter = null;
+        if (conversation.avatar != null) {//has picture
+            Picasso.with(context)
+                    .load(conversation.avatar)
+                    .into(holder.avatar);
+            return;
+        } else {
+            if (conversation.email != null)
+                letter = conversation.email.substring(0, 1);
+            else if (conversation.visitor_name != null)
+                letter = conversation.visitor_name.substring(0, 1);
+
+            if (letter != null)
+                holder.avatar.setImageDrawable(TextDrawable.builder()
+                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
+
+            return;
         }
     }
 

@@ -115,11 +115,17 @@ public class SocketManager {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 for (int i = 0; i < visitors.length(); i++) {
                     Visitor visitor = gson.fromJson(visitors.getJSONObject(i).toString(), Visitor.class);
-                    visitorsDataManager.addVisitorToList(context, visitor);
-
-                    int idSurfer = visitors.getJSONObject(i).getInt("id_Surfer");
-                    if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)
+                    int idSurfer = visitor.idSurfer;
+                    Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
+                    if (conversation != null) {//surfer is in conversation
                         conversationDataManager.updateOnlineState(context, idSurfer, 1);
+                        visitor.isNew = false;
+                        visitor.displayName = conversation.displayname;
+                    } else {//new visitor
+                        visitor.isNew = true;
+                        visitor.displayName = "#" + idSurfer;
+                    }
+                    visitorsDataManager.addVisitorToList(context, visitor);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -134,15 +140,21 @@ public class SocketManager {
             JSONObject data = (JSONObject) args[0];
             try {
                 int idSurfer = data.getJSONObject("surfer").getInt("idSurfer");
-                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                if (conversationDataManager.getConversationByIdSurfer(idSurfer) != null)//surfer is in conversation
-                    conversationDataManager.updateOnlineState(context, idSurfer, 1);
                 Visitor visitor = gson.fromJson(data.getJSONObject("surfer").toString(), Visitor.class);
+                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+                Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
+                if (conversation != null){//surfer is in conversation
+                    conversationDataManager.updateOnlineState(context, idSurfer, 1);
+                    visitor.isNew = false;
+                    visitor.displayName = conversation.displayname;
+                } else {//new visitor
+                    visitor.isNew = true;
+                    visitor.displayName = "#" + idSurfer;
+                }
                 VisitorsDataManager.addVisitorToList(context, visitor);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     };
     Emitter.Listener surferLeavedListener = new Emitter.Listener() {
@@ -210,15 +222,15 @@ public class SocketManager {
         try {
             innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
             innerConversation.idSurfer = data.getInt("idSurfer");
-            int type = ChanelsTypes.convertStringChannelToInt(data.optString("actionType",null));
+            int type = ChanelsTypes.convertStringChannelToInt(data.optString("actionType", null));
             innerConversation.actionType = type;
-            innerConversation.mess = data.optString("message",ChanelsTypes.getDeafultMsgByChanelType(context,type));
+            innerConversation.mess = data.optString("message", ChanelsTypes.getDeafultMsgByChanelType(context, type));
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstanse() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
             innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
-            innerConversation.datatype = data.optInt("datatype",1);
-            innerConversation.from_s = data.optString("from_s","visitor");
+            innerConversation.datatype = data.optInt("datatype", 1);
+            innerConversation.from_s = data.optString("from_s", "visitor");
             Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
             innerConversation.name = conversation.getVisitor_name();
             //TODO:update in conversation new data and last type etc.

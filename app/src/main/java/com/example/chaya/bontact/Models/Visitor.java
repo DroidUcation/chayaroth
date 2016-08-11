@@ -13,6 +13,13 @@ import java.util.List;
  */
 @Generated("org.jsonschema2pojo")
 public class Visitor {
+
+    @SerializedName("isNew")
+    @Expose
+    public boolean isNew;
+    @SerializedName("displayName")
+    @Expose
+    public String displayName;
     @SerializedName("isChatting")
     @Expose
     public boolean isChatting;

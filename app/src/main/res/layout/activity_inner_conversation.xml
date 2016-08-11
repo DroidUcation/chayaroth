@@ -9,6 +9,16 @@
     tools:context=".Ui.Activities.InnerConversationActivity"
     tools:menu="inner_conversation_menu">
 
+    <TextView
+        android:id="@+id/no_chats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
+        android:layout_centerVertical="true"
+        android:text="NO CHATS YET"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/inner_conversation_recyclerView"
         android:layout_width="match_parent"
@@ -25,55 +35,14 @@
         android:foregroundGravity="fill"
         android:padding="5dp"
         android:visibility="gone" />
-    <!--send messege box and button-->
-    <!--   <LinearLayout
-           android:id="@+id/chanel_layout"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_above="@+id/buttom_layout"
-           android:background="@color/orange_dark"
-           android:orientation="horizontal"
-           android:paddingBottom="10dp"
-           android:paddingRight="30dp"
-           android:paddingLeft="30dp"
-           android:paddingTop="10dp">
 
-           <TextView
-               android:id="@+id/chanel_sms"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textAlignment="center"
-               android:textColor="@color/white"
-               android:textSize="30sp" />
-
-           <TextView
-               android:id="@+id/chanel_chat"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textAlignment="center"
-               android:textColor="@color/white"
-               android:textSize="30sp" />
-
-           <TextView
-               android:id="@+id/chanel_email"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textAlignment="center"
-               android:textColor="@color/white"
-               android:textSize="30sp" />
-
-           <TextView
-               android:id="@+id/chanel_phone_call"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textAlignment="center"
-               android:textColor="@color/white"
-               android:textSize="30sp" />
-       </LinearLayout>-->
+    <Button
+        android:id="@+id/invite_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Join chat"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/buttom_layout"
@@ -85,7 +54,7 @@
         android:weightSum="7">
 
         <EditText
-            android:id="@+id/response_message"
+            android:id="@+id/chat_response_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -97,9 +66,8 @@
             android:paddingLeft="10dp"
             android:textColorHint="@color/gray_light" />
 
-        <android.support.design.widget.FloatingActionButton
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/btn_send_message"
+        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/btn_send_chat_response"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_send_24dp"
@@ -107,22 +75,7 @@
             app:borderWidth="0dp"
             app:elevation="6dp"
             app:fabSize="normal" />
-        <!--<Button
-            android:id="@+id/btn_send_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/ic_send_24dp" />-->
 
     </LinearLayout>
 
-</RelativeLayout><!--    <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            app:fabSize="mini"
-            android:src="@drawable/ic_chat_black_18dp"
-            app:backgroundTint="@color/orange_dark"
-
-            />-->
+</RelativeLayout>

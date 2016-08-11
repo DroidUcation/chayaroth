@@ -2,6 +2,7 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -32,53 +33,60 @@ public class InnerConversationDataManager {
 
     private Context context;
     private Conversation current_conversation;
+    private int idSurfer;
     private List<InnerConversation> innerConversationsList;
     public static int idPlaceHolder = -1;
+    public ServerCallResponse callback;
 
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
 
         this.current_conversation = current_conversation;
         this.context = context;
         innerConversationsList = new ArrayList<>();
+        if (current_conversation != null)
+            this.idSurfer = current_conversation.idSurfer;
     }
 
     public InnerConversationDataManager(Context context, int currentIdSurfer) {
         this(context, null);
         ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-        current_conversation = conversationDataManager.getConversationByIdSurfer(currentIdSurfer);
+        this.current_conversation = conversationDataManager.getConversationByIdSurfer(currentIdSurfer);
+        idSurfer = currentIdSurfer;
     }
 
 
-    public void getData(Context context, String token) {
+    public void getData(Context context, String token, ServerCallResponse callback) {
 
         this.context = context;
+        this.callback = callback;
         //sendResToUi();
         getDataFromServer(context, token);
     }
 
     public void getDataFromServer(Context context, String token) {
-        if (current_conversation != null) {
-            String id_surfer_string = current_conversation.idSurfer + "";
-            if (token != null && id_surfer_string != null) {
-                this.context = context;
-                Uri.Builder builder = new Uri.Builder();
-                builder.scheme("https")
-                        .authority(context.getResources().getString(R.string.base_api))
-                        .appendPath(context.getResources().getString(R.string.rout_api))
-                        .appendPath(context.getResources().getString(R.string.inner_conversation_api))
-                        .appendPath(token)
-                        .appendPath(id_surfer_string);
+        String id_surfer_string = String.valueOf(idSurfer);
+        if (token != null && id_surfer_string != null) {
+            this.context = context;
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("https")
+                    .authority(context.getResources().getString(R.string.base_api))
+                    .appendPath(context.getResources().getString(R.string.rout_api))
+                    .appendPath(context.getResources().getString(R.string.inner_conversation_api))
+                    .appendPath(token)
+                    .appendPath(id_surfer_string);
 
-                String url = builder.build().toString();
+            String url = builder.build().toString();
 
-                OkHttpRequests requests = new OkHttpRequests(url, getDataOnResponse);
-            }
+            OkHttpRequests requests = new OkHttpRequests(url, getDataOnResponse);
         }
     }
 
     public boolean saveServersData(String data) {
         try {
             JSONArray DataArray = new JSONArray(data);
+            if (DataArray.length() == 0)
+                notifyEmptyInnerData();
+
             Gson gson = new Gson();
             InnerConversation innerConversation = null;
             for (int i = 0; i < DataArray.length(); i++) {
@@ -92,12 +100,10 @@ public class InnerConversationDataManager {
                 //delete all place holder
                 String selectionStr = Contract.InnerConversation.COLUMN_ID + "<0";
                 context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, null);
-
                 saveData(innerConversation);
             }
 
-            if (innerConversation != null && innerConversation.getMess() != null)//check type
-            {
+            if (innerConversation != null && innerConversation.getMess() != null) {//check type
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 conversationDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
             }
@@ -122,7 +128,6 @@ public class InnerConversationDataManager {
         if (context != null && contentValues != null) {
             contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,
                     DateTimeHelper.convertDateStringToDbFormat(innerConversation.timeRequest));
-
             //insert
             context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI, contentValues);
             return true;
@@ -132,10 +137,6 @@ public class InnerConversationDataManager {
 
     public static int getIdAsPlaceHolder() {
         return idPlaceHolder--;
-    }
-
-    public Conversation getCurrent_conversation() {
-        return current_conversation;
     }
 
     public void sendResToUi() {
@@ -153,6 +154,11 @@ public class InnerConversationDataManager {
         }
         return null;
     }
+
+    public void notifyEmptyInnerData() {
+      callback.OnServerCallResponse(true,"[]",null);
+    }
+
     ServerCallResponse getDataOnResponse = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
@@ -162,7 +168,7 @@ public class InnerConversationDataManager {
                     if (res.getString("status").equals("true")) {
                         String inner_data = res.getJSONArray("data").toString();
                         Log.e("inner conversation", inner_data);
-                        boolean result = saveServersData(inner_data);
+                        saveServersData(inner_data);
                         // sendResToUi();
                     }
                 } catch (JSONException e) {

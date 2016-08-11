@@ -63,8 +63,12 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             holder.page_title.setText(current_visitor.title);
             holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
             holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
-            holder.displayName.setText(String.valueOf(current_visitor.idSurfer));
-            holder.country_flag.setImageResource(R.drawable.country_ad);
+            holder.displayName.setText(current_visitor.displayName);
+            holder.country_flag.setImageResource(R.drawable.chrome);
+            if (current_visitor.isNew)
+                holder.invite_btn.setVisibility(View.VISIBLE);
+            else
+                holder.invite_btn.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,17 +100,19 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     class OnlineVisitorsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView connect_time, page_title, displayName;
-        ImageView avatar, browser_icon, country_flag;
+        ImageView avatar, browser_icon, country_flag, invite_btn;
 
         public OnlineVisitorsHolder(View itemView) {
             super(itemView);
 
-                    avatar = (ImageView) itemView.findViewById(R.id.avatar);
+            avatar = (ImageView) itemView.findViewById(R.id.avatar);
             connect_time = (TextView) itemView.findViewById(R.id.connect_time);
             browser_icon = (ImageView) itemView.findViewById(R.id.browser_icon);
             page_title = (TextView) itemView.findViewById(R.id.page_title);
             displayName = (TextView) itemView.findViewById(R.id.displayName);
             country_flag = (ImageView) itemView.findViewById(R.id.country_flag);
+            invite_btn = (ImageView) itemView.findViewById(R.id.invite_btn);
+
         }
 
         @Override

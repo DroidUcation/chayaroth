@@ -97,7 +97,7 @@ public class ConversationDataManager {
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
-                conversation.avatar = AvatarHelper.getNextAvatar() + "";
+               // conversation.avatar = AvatarHelper.getNextAvatar() + "";
                 conversationList.add(conversation);
                 ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(conversation, DbBontact.getAllConversationFields());
                 if (contentValues != null && context != null) {

@@ -156,6 +156,7 @@
     <string name="push_notification">push notifications</string>
     <string name="push_notification_sound">sound</string>
     <string name="push_notification_vibrate">vibrate</string>
+    <string name="empty_inner_data_action">empty_inner_data_action</string>
 </resources>
 
 

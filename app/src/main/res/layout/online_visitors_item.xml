@@ -27,7 +27,7 @@
         android:id="@+id/country_flag"
         android:layout_width="13dp"
         android:layout_height="13dp"
-        android:src="@drawable/country_ad"
+        android:src="@drawable/chrome"
         android:layout_alignTop="@+id/browser_icon"
         android:layout_toRightOf="@+id/browser_icon"
         android:layout_toEndOf="@+id/browser_icon"
@@ -37,7 +37,7 @@
         android:id="@+id/displayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Jenny Li"
+        android:text="Visitor"
         android:layout_below="@id/browser_icon"
         android:layout_alignLeft="@+id/browser_icon"
         android:layout_alignStart="@+id/browser_icon" />
@@ -68,9 +68,10 @@
         android:id="@+id/invite_btn"
         android:layout_width="13dp"
         android:layout_height="13dp"
-        android:src="@drawable/country_cl"
+        android:src="@drawable/chrome"
        android:layout_alignParentRight="true"
         android:layout_below="@id/connect_time"
+        android:visibility="gone"
         />
 
 

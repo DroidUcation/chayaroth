@@ -1,13 +1,11 @@
 package com.example.chaya.bontact.Ui.Activities;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,7 +14,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,9 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,156 +32,144 @@ import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertCallbackResponse;
-import com.example.chaya.bontact.Helpers.AlertComingSoon;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
-import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, EditText.OnKeyListener {
 
     private static final int INNER_CONVERSATION_LOADER = 1;
     private RecyclerView recyclerView;
     private InnerConversationAdapter adapter;
-    EditText response_mess;
-    ProgressBar loading;
-    Conversation current_conversation;
-    int selected_reply_type;
-    SendResponseHelper sendResponseHelper;
-    onlineStateChangesReciver broadcastReceiver;
+    private EditText chat_response_edittext;
+    private ProgressBar loading;
+    private Conversation current_conversation;
+    private SendResponseHelper sendResponseHelper;
+    private onlineStateChangesReciver onlineStatebroadcastReceiver;
+    private boolean isNew;
+    int id_surfer;
     android.view.Menu menu;
+    TextView no_chat_message;
+    Button invite_btn;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        id_surfer = 0;
         Bundle args = getIntent().getExtras();
-        if (args != null) {
-            int id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
-            ConversationDataManager conversationDataManager = new ConversationDataManager(this);
+        if (args != null)
+            id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+        initData();
+        initHeader();
+        initContent();
+        initFooter();
+    }
+
+    private void initData() {
+        ConversationDataManager conversationDataManager = new ConversationDataManager(this);
+        current_conversation = null;
+        if (id_surfer != 0) {//init current conversation if possible
             this.current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
+        }
+        if (current_conversation != null) {//THIS ID HAS CONVERSATIONS
+            isNew = false;
+            //update unread  numbers
             int current_unread_conversation_count = ConversationDataManager.getUnreadConversations(this);
             ConversationDataManager.setUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
-            setTitle(current_conversation.displayname);
+        } else { //surfer is new
+            isNew = true;
         }
+
         AgentDataManager agentDataManager = new AgentDataManager();
         String token = agentDataManager.getAgentToken(this);
-        if (token != null && current_conversation != null) {
-            InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this,current_conversation);
-            innerConversationDataManager.getData(this, token);
+        if (token != null && id_surfer != 0) {
+            InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this, id_surfer);
+            innerConversationDataManager.getData(this, token, callResponse);
         }
+    }
+
+    ServerCallResponse callResponse = new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+            if (response != null && response.equals("[]"))//empty data
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setProgressBarState(View.GONE);
+                        setEmptyDetails();
+                        isNew = true;
+                    }
+                });
+            }
+        }
+    };
+
+    private void initHeader() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-       // getSupportActionBar().setHomeAsUpIndicator(R.drawable.avatar1);
 
+        if (current_conversation != null && current_conversation.displayname != null)
+            setTitle(current_conversation.displayname);
+        if (isNew) {
+            setTitle("#" + id_surfer);
+        }
+
+    }
+
+    private void initContent() {
         setContentView(R.layout.activity_inner_conversation);
+
         recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             adapter = new InnerConversationAdapter(this, null);
             recyclerView.setAdapter(adapter);
         }
-        response_mess = (EditText) findViewById(R.id.response_message);
-        response_mess.setOnKeyListener(this);
-        FloatingActionButton btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_message);
-        btn_send_mess.setOnClickListener(this);
         setProgressBarState(View.VISIBLE);
-        sendResponseHelper = new SendResponseHelper();
         getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
-
-        //this.getActionBar().setDisplayShowCustomEnabled(true);
-        //this.getActionBar().setDisplayShowTitleEnabled(false);
-
-        //  initToolBar();
-        //channel_icons = new ArrayList<>();
-        // initChannelIcons();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitor_online_state), "*/*");
-        broadcastReceiver = new onlineStateChangesReciver();
-        registerReceiver(broadcastReceiver, intentFilter);
-    }
+    private void initFooter() {
 
-    @Override
-    public boolean onCreateOptionsMenu(android.view.Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.inner_conversation_menu, menu);
-        this.menu = menu;
-        setSelectedChannelType(current_conversation.lasttype);
-        return super.onCreateOptionsMenu(menu);
-       /* TextView icon = new TextView(this);
-        icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        MenuItem item;
-
-        for (int i = 0; i < menu.size(); i++) {
-            item = menu.getItem(i);
-            int current_channel = ChanelsTypes.convertStringChannelToInt(item.getTitle().toString());
-            icon.setText(ChanelsTypes.getIconByChanelType(current_channel));*/
-        // if (current_channel == selected_reply_type) {
-
-        //}
-        // item.setActionView(icon);
-        //}
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        if (id == R.id.chat_channel || id == R.id.sms_channel || id == R.id.email_channel || id == R.id.phone_call_channel) {
-            setSelectedChannelType(ChanelsTypes.convertStringChannelToInt(item.getTitle().toString()));
-        }
-        return true;
-    }
-
-    public void setSelectedChannelType(int selected_reply_type) {
-
-        if (sendResponseHelper != null &&
-                !sendResponseHelper.isAllowedCurrentChannelResponse(current_conversation, selected_reply_type)) {
-            if (selected_reply_type != ChanelsTypes.chat) {//selected channel not allowed
-               /* View view = getLayoutInflater().inflate(R.layout.bottom_sheet_emp_cov, null);
-                Spinner spin1 = (Spinner) view.findViewById(R.id.spin1);
-                Spinner spin2 = (Spinner) view.findViewById(R.id.spin2);
-                ListView catList = (ListView) view.findViewById(R.id.listItems);
-                Button btnDone = (Button) view.findViewById(R.id.btnDone);*/
-                final Dialog mBottomSheetDialog = new Dialog(this,
-                        R.style.MaterialDialogSheet);
-                mBottomSheetDialog.setContentView(new TextView(this));
-                mBottomSheetDialog.setCancelable(true);
-                mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
-                mBottomSheetDialog.show();
-            } else {//offline and last type chat
-                //addTextMsgToList(); problem id
+        if (!isNew) {
+            chat_response_edittext = (EditText) findViewById(R.id.chat_response_edittext);
+            if (current_conversation != null) {
+                if (!current_conversation.isOnline) {
+                    setDisableFooter();
+                } else {
+                    chat_response_edittext.setEnabled(true);
+                    chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.white));
+                }
             }
-        } else {//allowed
-            this.selected_reply_type = selected_reply_type;
-            response_mess.setHint(ChanelsTypes.getPlaceHolderByChannelIcon(this, selected_reply_type));
-            if (selected_reply_type == ChanelsTypes.callback)
-                ((FloatingActionButton) findViewById(R.id.btn_send_message)).setBackgroundResource(R.drawable.ic_phone_iphone_black_18dp);
+            chat_response_edittext.setOnKeyListener(this);
+            FloatingActionButton btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_chat_response);
+            btn_send_mess.setOnClickListener(this);
+            sendResponseHelper = new SendResponseHelper();
+        } else {
+
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
+    private void setEmptyDetails() {
+        no_chat_message = (TextView) findViewById(R.id.no_chats);
+        no_chat_message.setVisibility(View.VISIBLE);
+        invite_btn = (Button) findViewById(R.id.invite_btn);
+        invite_btn.setVisibility(View.VISIBLE);
+        LinearLayout buttom_layout = (LinearLayout) findViewById(R.id.buttom_layout);
+        buttom_layout.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -194,19 +177,23 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         String sortOrder = Contract.InnerConversation.COLUMN_TIME_REQUEST;
         String selectionCoulmns = Contract.InnerConversation.COLUMN_ID_SURFUR;
-        String[] selectionArgs = {current_conversation.idSurfer + ""};
+        String[] selectionArgs = {id_surfer + ""};
         CursorLoader cursorLoader = new CursorLoader(this, Contract.InnerConversation.INNER_CONVERSATION_URI, null, selectionCoulmns + "=?", selectionArgs, sortOrder);
         return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
         if (cursor != null && cursor.moveToFirst()) {
             if (cursor.getCount() > 0)
                 adapter.swapCursor(cursor);
             recyclerView.smoothScrollToPosition(cursor.getCount());
             setProgressBarState(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            isNew = false;
+            if (menu != null)
+                menu.setGroupVisible(R.id.inner_conversation_menu, true);
         } else {
             setProgressBarState(View.VISIBLE);
         }
@@ -216,14 +203,13 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void onLoaderReset(Loader loader) {
     }
 
-
     public boolean onKey(View view, int keyCode, KeyEvent event) {
         if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             switch (view.getId()) {
-                case R.id.response_message:
+                case R.id.chat_response_edittext:
                     Log.d("enter pressed", "enter pressed");
-                    SendResponseMessage(response_mess.getText().toString());
-                    response_mess.setText("");
+                    sendChatResponse(chat_response_edittext.getText().toString());
+                    chat_response_edittext.setText("");
                     break;
             }
             return true;
@@ -233,12 +219,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(InnerConversationActivity.this, "ACTION", Toast.LENGTH_SHORT).show();
         switch (v.getId()) {
-            case R.id.btn_send_message:
-                if (response_mess != null && !response_mess.equals("")) {
-                    SendResponseMessage(response_mess.getText().toString());
-                    response_mess.setText("");
+            case R.id.btn_send_chat_response:
+                if (chat_response_edittext != null && !chat_response_edittext.equals("")) {
+                    sendChatResponse(chat_response_edittext.getText().toString());
+                    chat_response_edittext.setText("");
                 }
                 View view = getCurrentFocus();
                 if (view != null) {
@@ -248,30 +233,61 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
-    public void SendResponseMessage(String textMsg) {
-        if (current_conversation == null)
-            return;
-
-        sendResponseHelper = new SendResponseHelper();
-        if (!sendResponseHelper.isAllowedCurrentChannelResponse(current_conversation, selected_reply_type)) {
-            return;
-        }
-        if (selected_reply_type == ChanelsTypes.callback) {
-            sendCallBack();
-            return;
-        }
-        addTextMsgToList(textMsg, false);
-        if (selected_reply_type == ChanelsTypes.chat) {
-            sendResponseHelper.sendChat(this, textMsg, current_conversation.idSurfer);
-        } else {
-            sendResponseHelper.sendSmsOrEmail(this, selected_reply_type, textMsg, current_conversation.idSurfer);
+    public void sendChatResponse(String msg) {
+        if (current_conversation != null && current_conversation.isOnline) {
+            addTextMsgToList(ChanelsTypes.chat, msg, false);
+            sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);
         }
     }
 
-    private void addTextMsgToList(String textMsg, boolean systemMsg) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitor_online_state), "*/*");
+        onlineStatebroadcastReceiver = new onlineStateChangesReciver();
+        registerReceiver(onlineStatebroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        this.menu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.inner_conversation_menu, menu);
+        if (isNew)
+            menu.setGroupVisible(R.id.inner_conversation_menu, false);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                EditText editText = new EditText(this);
+                SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
+                dialog.setTitleText("Sweet!")
+                        .setContentText("Here's a custom image.")
+                        .setCustomImage(R.mipmap.bontact_launcher)
+                        .setContentView(editText);
+                dialog.show();
+        }
+        return true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(onlineStatebroadcastReceiver);
+    }
+
+
+    private void addTextMsgToList(int channelType, String textMsg, boolean systemMsg) {
         InnerConversation innerConversation = new InnerConversation();
         innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
-        innerConversation.actionType = selected_reply_type;
+        innerConversation.actionType = channelType;
         innerConversation.mess = textMsg;
         innerConversation.rep_request = true;
         if (AgentDataManager.getAgentInstanse() != null)
@@ -281,7 +297,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             innerConversation.idSurfer = current_conversation.idSurfer;
         innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
         //innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
-        if (selected_reply_type != ChanelsTypes.callback && selected_reply_type != ChanelsTypes.webCall)
+        if (channelType != ChanelsTypes.callback && channelType != ChanelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = systemMsg;
         InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this, current_conversation);
@@ -301,6 +317,16 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         loading.setVisibility(state);
     }
 
+    public void setDisableFooter() {
+        if (invite_btn != null && isNew)
+            invite_btn.setVisibility(View.GONE);
+        else
+            if(chat_response_edittext!=null) {
+            chat_response_edittext.setEnabled(false);
+            chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.gray_very_light));
+        }
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -312,87 +338,18 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
             int state = intent.getIntExtra(getResources().getString(R.string.online_state), -1);
             int id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), -1);
-            if (id_surfer == current_conversation.idSurfer) {
+            if (id_surfer == id_surfer) {
+                if (current_conversation != null) {
+                    if (state == 0)
+                        current_conversation.isOnline = false;
+                    else if (state == 1)
+                        current_conversation.isOnline = true;
+                }
                 if (state == 0)
-                    current_conversation.isOnline = false;
-                else if (state == 1)
-                    current_conversation.isOnline = true;
-                // setDisableChannelIcons();
+                    setDisableFooter();
             }
         }
+
     }
 
-
-/* public void initToolBar() {
-
-        ActionBar mActionBar = getSupportActionBar();
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        mActionBar.setDisplayShowCustomEnabled(true);
-        View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
-        ImageView avatar = (ImageView) mCustomView.findViewById(R.id.avatar);
-        avatar.setImageResource(Integer.parseInt(current_conversation.avatar));
-        TextView chat_icon = (TextView) mCustomView.findViewById(R.id.chanel_chat);
-        chat_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        TextView sms_icon = (TextView) mCustomView.findViewById(R.id.chanel_sms);
-        sms_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        TextView email_icon = (TextView) mCustomView.findViewById(R.id.chanel_email);
-        email_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        TextView phone_icon = (TextView) mCustomView.findViewById(R.id.chanel_phone_call);
-        phone_icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        mActionBar.setCustomView(mCustomView);
-        //mActionBar.setLogo(Integer.parseInt(current_conversation.avatar));
-    }
-  public void initChannelIcons() {
-        channel_icons.add(InitEveryChannelIcon(R.id.chanel_chat, R.string.chat_icon));
-        channel_icons.add(InitEveryChannelIcon(R.id.chanel_sms, R.string.sms_icon));
-        channel_icons.add(InitEveryChannelIcon(R.id.chanel_email, R.string.email_icon));
-        channel_icons.add(InitEveryChannelIcon(R.id.chanel_phone_call, R.string.phone_calling_icon));
-    }
-
-    private TextView InitEveryChannelIcon(int elementId, int textRes) {
-        TextView btn = null;
-        btn = (TextView) findViewById(elementId);
-        Log.d("btn", btn.getText().toString());
-        btn.setText(textRes);
-        btn.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        btn.setTag(ChanelsTypes.getChanelTypeByIcon(textRes));
-        btn.setOnClickListener(channelListener);
-        btn.setTextSize(20);
-        if (current_conversation != null && current_conversation.lasttype == (int) btn.getTag()) {
-            setAsSelectedChannel(btn);
-        }
-        setDisableChannelIcons();
-        return btn;
-    }
-    View.OnClickListener channelListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            for (TextView btn : channel_icons)
-                if (view.getId() == btn.getId()) {
-                    setAsSelectedChannel(btn);
-                    if (selected_reply_type == ChanelsTypes.callback)
-                        sendCallBack();
-                } else {
-                    btn.setTextColor(getResources().getColor(R.color.white));
-                    setDisableChannelIcons();
-                }
-        }
-    };
-
-    public void setDisableChannelIcons() {
-        if (channel_icons != null)
-            for (TextView btn : channel_icons)
-                if (!sendResponseHelper.isAllowedCurrentChannelResponse(current_conversation, (Integer) btn.getTag())) {
-                    btn.setEnabled(false);
-                    btn.setTextColor(getResources().getColor(R.color.gray_dark));
-                }
-    }
-
-    public void setAsSelectedChannel(TextView btn) {
-        btn.setTextColor(getResources().getColor(R.color.purple));
-        selected_reply_type = (int) btn.getTag();
-        response_mess.setHint(ChanelsTypes.getPlaceHolderByChannelIcon(this, selected_reply_type));
-        // if(selected_reply_type == ChanelsTypes.callback)
-        //((Button) findViewById(R.id.btn_send_message)).setBackgroundResource(R.id.chanel_phone_call);
-    }*/
 }

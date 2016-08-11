@@ -3,6 +3,7 @@ package com.example.chaya.bontact.Ui.Activities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputLayout userNameInputLayout;
     TextInputLayout passwordInputLayout;
 
+    LoginResponseReceiver broadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,6 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.action_login_completed), "*/*");
+        broadcastReceiver = new LoginResponseReceiver();
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
 
     }
 

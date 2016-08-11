@@ -131,7 +131,7 @@ public class ChanelsTypes {
        }
        return null;
    }
-    public  static int getMenuItemByChannelType(int channelType)
+   /* public  static int getMenuItemByChannelType(int channelType)
     {
         switch (channelType) {
             case callback:
@@ -142,14 +142,14 @@ public class ChanelsTypes {
                 return R.id.chat_channel;
             case email:
                 return R.id.email_channel;
-         /*  case whatsapp:
+         *//*  case whatsapp:
                return "a whatsapp is waiting";
            case webCall:
-               return context.getResources().getString(R.string.unread_webcall);*/
+               return context.getResources().getString(R.string.unread_webcall);*//*
             default:
         }
         return R.id.chat_channel;
-    }
+    }*/
 
 }
 

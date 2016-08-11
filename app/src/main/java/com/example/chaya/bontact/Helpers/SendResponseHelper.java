@@ -88,7 +88,7 @@ public class SendResponseHelper {
     }
 
 
-    public boolean isAllowedCurrentChannelResponse(Conversation conversation, int current_channel) {
+    public boolean isAllowedChannelToResponse(Conversation conversation, int current_channel) {
 
         if (conversation == null)
             return false;

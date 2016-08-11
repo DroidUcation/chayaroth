@@ -58,14 +58,8 @@ public class GCMPushReceiverService extends GcmListenerService {
 
     private void sendNotification(String message, int id_surfer) {
 
-       /* ConversationDataManager conversationDataManager = new ConversationDataManager(this);
-        InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(this,
-                conversationDataManager.getConversationByIdSurfer(id_surfer));
 
-        if (AgentDataManager.getAgentInstanse() != null)
-            innerConversationDataManager.getData(this, AgentDataManager.getAgentInstanse().getToken());*/
-
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, InnerConversationActivity.class);
         Bundle b = new Bundle();
         b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
         intent.putExtras(b); //Put your id to your next Intent

@@ -1,33 +1,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/inner_conversation_menu">
+        <item
+            android:id="@+id/send_email"
+            android:title="send email" />
 
-    <item
-        android:id="@+id/send_email"
-        android:title="send email" />
+        <item
+            android:id="@+id/open_ticket"
+            android:title="open ticket" />
 
-    <item
-        android:id="@+id/open_ticket"
-        android:title="open ticket" />
+        <!--<item
+            android:id="@+id/chat_channel"
+            android:icon="@drawable/ic_chat_bubble_black_18dp"
+            android:title="@string/chat"
+            app:showAsAction="always" />-->
+        <item
+            android:id="@+id/email_channel"
+            android:icon="@drawable/ic_mail_black_18dp"
+            android:title="@string/email"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/chat_channel"
-        android:icon="@drawable/ic_chat_bubble_black_18dp"
-        android:title="@string/chat"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/email_channel"
-        android:icon="@drawable/ic_mail_black_18dp"
-        android:title="@string/email"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/sms_channel"
-        android:icon="@drawable/ic_phone_iphone_black_18dp"
-        android:title="@string/sms"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/phone_call_channel"
-        android:icon="@drawable/ic_headset_mic_black_18dp"
-        android:title="@string/callback"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/sms_channel"
+            android:icon="@drawable/ic_phone_iphone_black_18dp"
+            android:title="@string/sms"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/phone_call_channel"
+            android:icon="@drawable/ic_headset_mic_black_18dp"
+            android:title="@string/callback"
+            app:showAsAction="always" />
+    </group>
 </menu>
