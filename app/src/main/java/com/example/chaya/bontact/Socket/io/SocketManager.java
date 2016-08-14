@@ -12,6 +12,7 @@ import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Models.Visitor;
@@ -43,6 +44,9 @@ public class SocketManager {
         if (socketManager == null)
             socketManager = new SocketManager();
         return socketManager;
+    }
+
+    private SocketManager() {
     }
 
     public Socket getSocket() {
@@ -143,7 +147,7 @@ public class SocketManager {
                 Visitor visitor = gson.fromJson(data.getJSONObject("surfer").toString(), Visitor.class);
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
-                if (conversation != null){//surfer is in conversation
+                if (conversation != null) {//surfer is in conversation
                     conversationDataManager.updateOnlineState(context, idSurfer, 1);
                     visitor.isNew = false;
                     visitor.displayName = conversation.displayname;
@@ -290,6 +294,59 @@ public class SocketManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void inviteToChat(int id_surfer) {
+      /*  var msgRow = {
+                "rep_Sur": true,
+            "systemMsg": false,
+            "id_Representive": agent.Rep().id_Representive,
+            "name": agent.Rep().name,
+            "txt": agent.settings().Opening_statement,
+            agentReply: true,
+            id_Surfer: visitor.idSurfer,
+            id_Call: 0,
+            id_Customer: agent.Rep().id_Customer
+        };*/
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject();
+            Agent agent = AgentDataManager.getAgentInstanse();
+            if (agent != null && agent.getRep() != null)
+                jsonObject.put("rep_Sur", true)
+                        .put("systemMsg", false)
+                        .put("id_Representive", agent.getRep().idRepresentive)
+                        .put("name", agent.getRep().name)
+                        .put("txt", agent.getSettings().openingStatement)
+                        .put("agentReply", true)
+                        .put("id_Surfer", id_surfer)
+                        .put("id_Call", 0)
+                        .put("id_Customer", agent.getRep().idCustomer);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+      /*  surfer: visitor,
+                preChat: {},
+        messageObj: msgRow*/
+        JSONObject data=new JSONObject();
+        try {
+            data.put("surfer",new JSONObject(gson.toJson(VisitorsDataManager.getVisitorByIdSurfer(id_surfer))))
+                    .put("preChat",new JSONObject())
+                    .put("messageObj",jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+        socket.emit("inviteStartChat", data,new Ack() {
+                    @Override
+                    public void call(Object... args) {
+                        String json = gson.toJson(args);
+                        Log.d("emit chat", json);
+                    }
+                }
+         );
+        //whats now ?? result???
 
     }
 

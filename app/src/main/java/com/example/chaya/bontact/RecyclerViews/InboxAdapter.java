@@ -1,5 +1,3 @@
-
-
 package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
@@ -32,7 +30,6 @@ import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
-
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 

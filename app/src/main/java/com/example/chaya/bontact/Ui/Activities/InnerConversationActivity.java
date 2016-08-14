@@ -40,6 +40,7 @@ import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
+import com.example.chaya.bontact.Socket.io.SocketManager;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -166,6 +167,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         no_chat_message.setVisibility(View.VISIBLE);
         invite_btn = (Button) findViewById(R.id.invite_btn);
         invite_btn.setVisibility(View.VISIBLE);
+        invite_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SocketManager.getInstance().inviteToChat(id_surfer);
+            }
+        });
         LinearLayout bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
         bottom_layout.setVisibility(View.GONE);
 

@@ -200,10 +200,6 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             return innerConversation.from_s;
     }
 
-    public AudioPlayerInnerHelper getPlayer(InnerConversationVisitorRecordHolder visitorRecordHolder) {
-        return visitorRecordHolder.player;
-    }
-
     @Override
     public int getItemViewType(int position) {
 
