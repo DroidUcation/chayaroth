@@ -13,12 +13,9 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
-import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AlertComingSoon;
-import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.SettingsFragment;
@@ -112,7 +109,7 @@ public class MenuActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, InboxFragment.newInstance()).addToBackStack(null).commit();
             return true;*/
         } else if (id == R.id.nav_settings) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, SettingsFragment.newInstance()).addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, new SettingsFragment()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_exit) {
             AlertComingSoon.show(this);

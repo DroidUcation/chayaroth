@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -104,7 +105,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                         conversation.email != null ? conversation.email.substring(0, 1) : null;
                 if (letter != null)
                     avatarView.setImageDrawable(TextDrawable.builder()
-                            .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
+                            .buildRound(letter,context.getResources().getColor(R.color.orange_dark)));
             }
         }
     }

@@ -1,37 +1,13 @@
-<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.chaya.bontact.Ui.Fragments.SettingsFragment">-->
-
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:columnCount="2"
-    android:orientation="vertical"
-    android:rowCount="3"
     tools:context="com.example.chaya.bontact.Ui.Fragments.SettingsFragment">
 
-    <TextView android:text="@string/new_message_header"  />
-
-    <!--<android.support.v7.widget.SwitchCompat android:checked="true" />-->
-
-    <TextView android:text="@string/push_notification" />
-
+    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment" />
 
-        android:text="@string/push_notification_sound"
-
-        />
-
-    <TextView
-
-        android:text="@string/push_notification_vibrate"
-
-        />
-
-
-</GridLayout>
-
-    <!--</ScrollView>-->
+</FrameLayout>

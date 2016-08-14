@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory
+        android:layout="@layout/settings_title"
+        android:title="@string/new_message_header">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="@string/new_message_push_key"
+            android:summary="@string/new_message_description"
+            android:title="@string/push_notification"
+            />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="@string/new_message_sound_key"
+            android:title="@string/push_notification_sound" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="@string/new_message_vibrate_key"
+            android:title="@string/push_notification_vibrate" />
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:layout="@layout/settings_title"
+        android:title="@string/new_visitor_header">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="@string/new_visitor_push_key"
+            android:summary="@string/new_visitor_description"
+            android:title="@string/push_notification" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="@string/new_visitor_sound_key"
+            android:title="@string/push_notification_sound" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="@string/new_visitor_vibrate_key"
+            android:title="@string/push_notification_vibrate" />
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:layout="@layout/settings_title"
+        android:title="@string/general_header">
+        <Preference android:title="@string/about_us_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://www.bontact.com" />
+        </Preference>
+       <!-- <RingtonePreference
+            android:key="ringtone"
+            android:title="Ringtone Preference"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:summary="Pick a tone, any tone"
+            />-->
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

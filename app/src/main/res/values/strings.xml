@@ -152,11 +152,20 @@
     <string name="new_message_description">notify me every new message</string>
     <string name="new_visitor_header">New visitor</string>
     <string name="new_visitor_description">notify me every new visitor</string>
+    <string name="general_header">general</string>
 
     <string name="push_notification">push notifications</string>
     <string name="push_notification_sound">sound</string>
     <string name="push_notification_vibrate">vibrate</string>
+    <string name="new_message_vibrate_key">new_message_vibrate_key</string>
+    <string name="new_visitor_vibrate_key">new_visitor_vibrate_key</string>
+    <string name="new_message_sound_key">new_message_sound_key</string>
+    <string name="new_visitor_sound_key">new_visitor_sound_key</string>
+    <string name="new_visitor_push_key">new_visitor_push_key</string>
+    <string name="new_message_push_key">new_message_push_key</string>
+  <string name="about_us_title">about us</string>
     <string name="empty_inner_data_action">empty_inner_data_action</string>
+
 </resources>
 
 

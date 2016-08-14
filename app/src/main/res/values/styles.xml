@@ -12,7 +12,9 @@
         <item name="colorSwitchThumbNormal">@color/orange_dark</item>
         <item name="actionButtonStyle">@style/CustomActionBar</item>
         <item name="android:actionButtonStyle">@style/CustomActionBar</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
+
 
     <style name="CustomActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:padding">8dp</item>

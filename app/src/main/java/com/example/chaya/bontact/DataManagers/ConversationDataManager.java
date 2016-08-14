@@ -175,6 +175,7 @@ public class ConversationDataManager {
             Conversation conversation = convertCursorToConversation(cursor);
             insertOrUpdateConversationInList(conversation);
         }
+        cursor.close();
     }
 
     public boolean setLastSentence(Context context, Conversation conversation, String sentence) {
