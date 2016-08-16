@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f2a71c</color>
+   <!-- <color name="colorPrimary">@color/purple</color>
+    <color name="colorPrimaryDark">@color/purple_dark</color>
+    <color name="colorAccent">@color/orange_dark</color>
+    <color name="colorRequierd">#ee1010</color>-->
+   <color name="colorPrimary">#f2a71c</color>
     <color name="colorPrimaryDark">#f2a71c</color>
     <color name="colorAccent">#462445</color>
     <color name="colorRequierd">#ee1010</color>
@@ -21,6 +25,7 @@
 
 
     <!--************* new colors ******************* -->
+    <color name="purple_light">#b472b1</color>
     <color name="purple_meduim">#7a4478</color>
     <color name="purple_dark">#241323 </color>
     <color name="purple">#462445</color>

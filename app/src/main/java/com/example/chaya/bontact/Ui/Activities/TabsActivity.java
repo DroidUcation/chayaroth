@@ -2,27 +2,20 @@ package com.example.chaya.bontact.Ui.Activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.RecursiveTask;
 
 
-import com.example.chaya.bontact.Data.Contract;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
@@ -55,6 +48,7 @@ public class TabsActivity extends AppCompatActivity {
         setupViewPager(viewPager, resFirstTabTitle);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.purple));
         inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
         inbox_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +89,7 @@ public class TabsActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
         }
         return true;
     }

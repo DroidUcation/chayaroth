@@ -48,13 +48,7 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://www.bontact.com" />
         </Preference>
-       <!-- <RingtonePreference
-            android:key="ringtone"
-            android:title="Ringtone Preference"
-            android:showDefault="true"
-            android:showSilent="true"
-            android:summary="Pick a tone, any tone"
-            />-->
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

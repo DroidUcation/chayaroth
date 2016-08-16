@@ -73,6 +73,13 @@ public class Agent {
         @SerializedName("online")
         @Expose
         public boolean online;
+        @SerializedName("msgPushNotification")
+        @Expose
+        public boolean msgPushNotification;
+        @SerializedName("visitorPushNotification")
+        @Expose
+        public boolean visitorPushNotification;
+
 
     }
 

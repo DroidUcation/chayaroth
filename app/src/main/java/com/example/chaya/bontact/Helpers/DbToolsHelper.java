@@ -77,7 +77,7 @@ public class DbToolsHelper {
     }*/
 
     public static JSONObject convertCursorToJsonObject(Object obj, Cursor cursor) {
-        if (cursor == null||obj==null)
+        if (cursor == null || obj == null)
             return null;
 
         String resStr;
@@ -98,8 +98,9 @@ public class DbToolsHelper {
                                 if (resStr == null) {
                                     resInt = cursor.getInt(cursor.getColumnIndex(column));
                                     jsonObject.put(column, resInt);
-                                } else
+                                } else {
                                     jsonObject.put(column, resStr);
+                                }
                                 break;
                             }
                         }
@@ -113,5 +114,16 @@ public class DbToolsHelper {
             }
         }
         return jsonObject;
+    }
+
+    public static String removeHtmlTags(String msg) {
+        if(msg==null)
+            return null;
+        msg = msg.replaceAll("<(.*?)\\>", "");//Removes all items in brackets
+        msg = msg.replaceAll("<(.*?)\\\n", "");//Must be undeneath
+        msg = msg.replaceFirst("(.*?)\\>", "");//Removes any connected item to the last bracket
+        msg = msg.replaceAll("&nbsp;", "");
+        msg = msg.replaceAll("&amp;", "");
+        return msg;
     }
 }

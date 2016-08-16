@@ -71,7 +71,7 @@
     <string name="count_conversation_api">getmainConversations</string>
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
-
+    <string name="update_settings_api">updatePushNotification</string>
     <string name="socket_url">https://dev-socket01-eus.azurewebsites.net/</string>
 
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
@@ -163,8 +163,10 @@
     <string name="new_visitor_sound_key">new_visitor_sound_key</string>
     <string name="new_visitor_push_key">new_visitor_push_key</string>
     <string name="new_message_push_key">new_message_push_key</string>
-  <string name="about_us_title">about us</string>
+    <string name="about_us_title">about us</string>
     <string name="empty_inner_data_action">empty_inner_data_action</string>
+    <string name="invite_complete_action">invite_complete_action</string>
+    <string name="change_conversation_list_action">change_conversation_list_action</string>
 
 </resources>
 

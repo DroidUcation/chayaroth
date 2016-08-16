@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
@@ -34,7 +35,7 @@ public class InnerConversationDataManager {
     private Context context;
     private Conversation current_conversation;
     private int idSurfer;
-    private List<InnerConversation> innerConversationsList;
+    //private List<InnerConversation> innerConversationsList;
     public static int idPlaceHolder = -1;
     public ServerCallResponse callback;
 
@@ -42,7 +43,7 @@ public class InnerConversationDataManager {
 
         this.current_conversation = current_conversation;
         this.context = context;
-        innerConversationsList = new ArrayList<>();
+        // innerConversationsList = new ArrayList<>();
         if (current_conversation != null)
             this.idSurfer = current_conversation.idSurfer;
     }
@@ -84,8 +85,10 @@ public class InnerConversationDataManager {
     public boolean saveServersData(String data) {
         try {
             JSONArray DataArray = new JSONArray(data);
-            if (DataArray.length() == 0)
+            if (DataArray.length() == 0) {
                 notifyEmptyInnerData();
+                return false;
+            }
 
             Gson gson = new Gson();
             InnerConversation innerConversation = null;
@@ -122,12 +125,20 @@ public class InnerConversationDataManager {
             innerConversation.id = getIdAsPlaceHolder();*/
 
         ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(innerConversation, DbBontact.getAllInnerConversationFields());
-        if (innerConversationsList == null)
-            innerConversationsList = new ArrayList<>();
-        innerConversationsList.add(innerConversation);
+        if (current_conversation == null) {
+            ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+            current_conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
+        }
+        if (current_conversation != null) {
+            if (current_conversation.innerConversationData == null)
+                current_conversation.innerConversationData = new ArrayList<>();
+            current_conversation.innerConversationData.add(innerConversation);
+        }
         if (context != null && contentValues != null) {
             contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,
                     DateTimeHelper.convertDateStringToDbFormat(innerConversation.timeRequest));
+            contentValues.put(Contract.InnerConversation.COLUMN_MESS,
+                    DbToolsHelper.removeHtmlTags(contentValues.getAsString(Contract.InnerConversation.COLUMN_MESS)));
             //insert
             context.getContentResolver().insert(Contract.InnerConversation.INNER_CONVERSATION_URI, contentValues);
             return true;
@@ -156,7 +167,7 @@ public class InnerConversationDataManager {
     }
 
     public void notifyEmptyInnerData() {
-      callback.OnServerCallResponse(true,"[]",null);
+        callback.OnServerCallResponse(true, "[]", null);
     }
 
     ServerCallResponse getDataOnResponse = new ServerCallResponse() {
@@ -177,5 +188,25 @@ public class InnerConversationDataManager {
             }
         }
     };
+
+    public void addTextMsgToList(int channelType, String textMsg, boolean systemMsg) {
+        InnerConversation innerConversation = new InnerConversation();
+        innerConversation.id = getIdAsPlaceHolder();
+        innerConversation.actionType = channelType;
+        innerConversation.mess = textMsg;
+        innerConversation.rep_request = true;
+        if (AgentDataManager.getAgentInstanse() != null)
+            innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
+        innerConversation.name = innerConversation.agentName;
+        if (current_conversation != null)
+            innerConversation.idSurfer = current_conversation.idSurfer;
+        innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
+        //innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+        if (channelType != ChanelsTypes.callback && channelType != ChanelsTypes.webCall)
+            innerConversation.datatype = 1;//txt msg
+        innerConversation.systemMsg = systemMsg;
+        //Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();
+        saveData(innerConversation);
+    }
 
 }

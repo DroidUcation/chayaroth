@@ -64,7 +64,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             int icon = ChanelsTypes.getIconByChanelType(conversation.lasttype);
             if (icon != 0)
                 holder.chanelIcon.setText(icon);
-
             if (conversation.lastMessage == null)
                 holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, conversation.getLasttype()));
             else

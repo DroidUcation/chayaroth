@@ -2,6 +2,8 @@
 package com.example.chaya.bontact.Models;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Generated;
 
@@ -75,6 +77,8 @@ public class Conversation {
     @SerializedName("isOnline")
     @Expose
     public boolean isOnline;
+
+    public List<InnerConversation> innerConversationData;
 
 
     public int getIdSurfer() {

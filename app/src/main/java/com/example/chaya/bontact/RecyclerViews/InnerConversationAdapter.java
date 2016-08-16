@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -96,6 +97,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             InnerConversationVisitorRecordHolder visitorRecordHolder;
 
             switch (getItemViewType(position)) {
+
                 case SYSTEM_MSG_VH:
                     innerConversationMsgHolder = (InnerConversationMsgHolder) holder;
                     if (innerConversation.actionType == ChanelsTypes.webCall)
@@ -175,6 +177,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         String msg = null;
         Spannable span = null;
         msg = innerConversation.getMess();
+
         String date = getDateToDisplay(innerConversation);
         if (msg != null && date != null) {
             msg = msg.concat("   " + date);

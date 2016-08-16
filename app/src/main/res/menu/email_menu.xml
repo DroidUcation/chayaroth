@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/email_menu">
+        <item
+            android:id="@+id/exit_action"
+            android:title="close" />
+
+        <item
+            android:id="@+id/send_action"
+            android:icon="@drawable/send_icon_white"
+            android:title="send"
+            app:showAsAction="always" />
+
+
+    </group>
+</menu>

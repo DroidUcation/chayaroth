@@ -1,6 +1,7 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.preference.Preference;
@@ -9,6 +10,10 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.Helpers.ErrorType;
+import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -46,16 +51,41 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        boolean x = sharedPreferences.getBoolean(s, false);
-        Toast.makeText(getContext(), "CHANGE " + s + " to " + x, Toast.LENGTH_SHORT).show();
-        updateSettings(s, sharedPreferences);
+
+        if (s.equals(getResources().getString(R.string.new_visitor_push_key)) || s.equals(getResources().getString(R.string.new_message_push_key)))
+            updateSettings(s, sharedPreferences);
     }
 
     public void updateSettings(String key, SharedPreferences preferences) {
-        boolean x = preferences.getBoolean(key, false);
-        //Toast.makeText(getContext(), preferences.getAll().toString(), Toast.LENGTH_LONG).show();
-        Log.d("pref",preferences.getAll().toString());
-        preferences.getAll().toString();
+        AgentDataManager.getAgentInstanse().getSettings().visitorPushNotification = preferences.
+                getBoolean(getResources().getString(R.string.new_visitor_push_key), false);
+        AgentDataManager.getAgentInstanse().getSettings().msgPushNotification = preferences.
+                getBoolean(getResources().getString(R.string.new_message_push_key), true);
+
+        /*var url = bontactServers.api + 'updatePushNotification/' + agent.TokenAgent()+
+                '?visitorpush='+this.settings.push_notification.visitor+'&messagepush='+this.settings.push_notification.message;*/
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(getResources().getString(R.string.base_api))
+                .appendPath(getResources().getString(R.string.rout_api))
+                .appendPath(getResources().getString(R.string.update_settings_api))
+                .appendPath(AgentDataManager.getAgentInstanse().getToken())
+                .appendQueryParameter("visitorpush",AgentDataManager.getAgentInstanse().getSettings().visitorPushNotification+"")
+                .appendQueryParameter("messagepush",AgentDataManager.getAgentInstanse().getSettings().msgPushNotification+"");
+
+        String url = builder.build().toString();
+        OkHttpRequests okHttpRequests= new OkHttpRequests(url, new ServerCallResponse() {
+            @Override
+            public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+               getActivity().runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                       Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
+                   }
+               });
+            }
+        });
 
     }
 

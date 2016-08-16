@@ -61,7 +61,7 @@ public class AgentDataManager {
       /*  String url = context.getResources().getString(R.string.domain_api) + context.getResources().getString(R.string.login_api);
         url += "?username=" + userName + "&pass=" + password;
 */
-        OkHttpRequests requests = new OkHttpRequests(url,loginCallback);
+        OkHttpRequests requests = new OkHttpRequests(url, loginCallback);
 
     }
 
@@ -72,6 +72,8 @@ public class AgentDataManager {
         agent.rep = agentFromJson.rep;
         agent.token = agentFromJson.token;
         agent.settings = agentFromJson.settings;
+        agent.settings.msgPushNotification = true;
+        agent.settings.visitorPushNotification = false;
         if (agent != null && context != null) {
             // String agent_str= gson.toJson(getAgentInstanse());
             SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
@@ -133,7 +135,7 @@ public class AgentDataManager {
 
     }
 
-    ServerCallResponse loginCallback= new ServerCallResponse() {
+    ServerCallResponse loginCallback = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
             if (isSuccsed == false)

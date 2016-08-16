@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
@@ -18,10 +19,10 @@ import org.json.JSONObject;
  */
 public class SendResponseHelper {
     Agent agent;
+    InnerConversationDataManager innerConversationDataManager;
 
     public SendResponseHelper() {
         agent = AgentDataManager.getAgentInstanse();
-
     }
 
     public void sendCallBack(Context context, int idSurfer, String telephone) {
@@ -36,16 +37,20 @@ public class SendResponseHelper {
                 "&name=" + agent.getName() +
                 "&telephone=" + telephone;
 
-       // OkHttpRequests okHttpRequests = new OkHttpRequests(url, this);
+        OkHttpRequests okHttpRequests = new OkHttpRequests(url, null);
 
 //todo:handel a case that a call back don't succsess
 
     }
 
-    public void sendChat(Context context, String txt, int id_surfer) {
+    public void sendChat(Context context, String msg, int id_surfer) {
         if (agent == null) {
             agent = AgentDataManager.getAgentInstanse();
         }
+
+        innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
+        innerConversationDataManager.addTextMsgToList(ChanelsTypes.chat, msg, false);
+
         if (agent.getRep() != null) {
             JSONObject postData = new JSONObject();
             try {
@@ -53,7 +58,7 @@ public class SendResponseHelper {
                         .put("systemMsg", false)
                         .put("id_Representive", agent.getRep().idRepresentive)
                         .put("name", agent.getName())
-                        .put("txt", txt)
+                        .put("txt", msg)
                         .put("agentReply", true)
                         .put("id_Surfer", id_surfer)
                         .put("id_Call", 0)
@@ -67,7 +72,20 @@ public class SendResponseHelper {
         }
     }
 
-    public void sendSmsOrEmail(Context context, int ChannelType, String contentMsg, int idSurfer) {
+    public void sendSms(Context context, String msg, int id_surfer) {
+        innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
+        innerConversationDataManager.addTextMsgToList(ChanelsTypes.sms, msg, false);
+        sendSmsOrEmail(context, ChanelsTypes.sms, msg, id_surfer);
+    }
+
+    public void sendEmail(Context context, String msg, int id_surfer) {
+        innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
+        innerConversationDataManager.addTextMsgToList(ChanelsTypes.email, msg, false);
+       sendSmsOrEmail(context, ChanelsTypes.email, msg, id_surfer);
+    }
+
+    private void sendSmsOrEmail(Context context, int ChannelType, String contentMsg, int idSurfer) {
+
         String url = null;
         if (agent == null) {
             agent = AgentDataManager.getAgentInstanse();
@@ -84,9 +102,8 @@ public class SendResponseHelper {
             e.printStackTrace();
             return;
         }
-        //OkHttpRequests okHttpRequests = new OkHttpRequests(url, this, postDataObject.toString());
+      OkHttpRequests okHttpRequests = new OkHttpRequests(url, null, postDataObject.toString());
     }
-
 
     public boolean isAllowedChannelToResponse(Conversation conversation, int current_channel) {
 

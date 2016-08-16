@@ -2,6 +2,7 @@ package com.example.chaya.bontact.Socket.io;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -189,7 +190,7 @@ public class SocketManager {
                 e.printStackTrace();
             }
             ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-            Conversation current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
+            final Conversation current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
 
             if (current_conversation != null) {
                 InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
@@ -199,7 +200,7 @@ public class SocketManager {
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, " you have a new message from " + innerConversation.getName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, " you have a new message from " + current_conversation.displayname, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -296,18 +297,7 @@ public class SocketManager {
         }
     }
 
-    public void inviteToChat(int id_surfer) {
-      /*  var msgRow = {
-                "rep_Sur": true,
-            "systemMsg": false,
-            "id_Representive": agent.Rep().id_Representive,
-            "name": agent.Rep().name,
-            "txt": agent.settings().Opening_statement,
-            agentReply: true,
-            id_Surfer: visitor.idSurfer,
-            id_Call: 0,
-            id_Customer: agent.Rep().id_Customer
-        };*/
+    public void inviteToChat(final int id_surfer) {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject();
@@ -326,28 +316,33 @@ public class SocketManager {
             e.printStackTrace();
             return;
         }
-      /*  surfer: visitor,
-                preChat: {},
-        messageObj: msgRow*/
-        JSONObject data=new JSONObject();
+        JSONObject data = new JSONObject();
         try {
-            data.put("surfer",new JSONObject(gson.toJson(VisitorsDataManager.getVisitorByIdSurfer(id_surfer))))
-                    .put("preChat",new JSONObject())
-                    .put("messageObj",jsonObject);
+            data.put("surfer", new JSONObject(gson.toJson(VisitorsDataManager.getVisitorByIdSurfer(id_surfer))))
+                    .put("preChat", new JSONObject())
+                    .put("messageObj", jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
             return;
         }
-        socket.emit("inviteStartChat", data,new Ack() {
+        socket.emit("inviteStartChat", data, new Ack() {
                     @Override
                     public void call(Object... args) {
-                        String json = gson.toJson(args);
-                        Log.d("emit chat", json);
+                        JSONObject json = null;
+                        try {
+                            json = new JSONObject(args[0].toString());
+                            Intent intent = new Intent(context.getResources().getString(R.string.invite_complete_action));
+                            intent.setType("*/*");
+                            intent.putExtra(context.getResources().getString(R.string.is_successed_key), json.getBoolean("status"));
+                            intent.putExtra(context.getResources().getString(R.string.id_surfer), id_surfer);
+                            context.sendBroadcast(intent);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-         );
-        //whats now ?? result???
-
+        );
     }
 
 

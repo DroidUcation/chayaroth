@@ -87,6 +87,8 @@ public class ConversationDataManager {
         }
     }
 
+
+
     public boolean saveData(String conversations) {
 
         Gson gson = new Gson();
@@ -97,12 +99,14 @@ public class ConversationDataManager {
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
-               // conversation.avatar = AvatarHelper.getNextAvatar() + "";
-                conversationList.add(conversation);
+                // conversation.avatar = AvatarHelper.getNextAvatar() + "";
+                insertOrUpdateConversationInList(conversation);
                 ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(conversation, DbBontact.getAllConversationFields());
                 if (contentValues != null && context != null) {
                     contentValues.put(Contract.Conversation.COLUMN_LAST_DATE,
                             DateTimeHelper.convertDateStringToDbFormat(conversation.lastdate));
+                    contentValues.put(Contract.Conversation.COLUMN_LAST_MESSAGE,
+                            DbToolsHelper.removeHtmlTags(contentValues.getAsString(Contract.Conversation.COLUMN_LAST_MESSAGE)));
                     context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
                 }
             }
@@ -161,11 +165,15 @@ public class ConversationDataManager {
         int index = conversationList.indexOf(getConversationByIdSurfer(conversation.idSurfer));
         if (index != -1) {
             conversationList.set(index, conversation);
-            return true;
         } else {
             conversationList.add(conversation);
-            return true;
         }
+        Intent intent = new Intent(context.getResources().getString(R.string.change_conversation_list_action));
+        intent.setType("*/*");
+        intent.putExtra(context.getResources().getString(R.string.id_surfer), conversation.idSurfer);
+        if (context != null)
+            context.sendBroadcast(intent);
+        return true;
 
     }
 

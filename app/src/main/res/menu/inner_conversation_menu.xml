@@ -15,20 +15,21 @@
             android:title="@string/chat"
             app:showAsAction="always" />-->
         <item
+            android:id="@+id/phone_call_channel"
+            android:icon="@drawable/phone_channel"
+            android:title="@string/callback"
+            app:showAsAction="always" />
+        <item
             android:id="@+id/email_channel"
-            android:icon="@drawable/ic_mail_black_18dp"
+            android:icon="@drawable/email_channel"
             android:title="@string/email"
             app:showAsAction="always" />
 
         <item
             android:id="@+id/sms_channel"
-            android:icon="@drawable/ic_phone_iphone_black_18dp"
+            android:icon="@drawable/sms_channel"
             android:title="@string/sms"
             app:showAsAction="always" />
-        <item
-            android:id="@+id/phone_call_channel"
-            android:icon="@drawable/ic_headset_mic_black_18dp"
-            android:title="@string/callback"
-            app:showAsAction="always" />
+
     </group>
 </menu>
