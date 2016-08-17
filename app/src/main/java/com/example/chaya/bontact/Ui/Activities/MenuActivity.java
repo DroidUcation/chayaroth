@@ -25,9 +25,6 @@ public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     AgentDataManager agentDataManager;
-    ConversationDataManager conversationDataManager;
-    ProgressBar progressBarCenter = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +32,7 @@ public class MenuActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_menu);
         getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
+
         agentDataManager = new AgentDataManager();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_layout);
@@ -50,7 +48,6 @@ public class MenuActivity extends AppCompatActivity
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + agentDataManager.getAgentName(this));
-        progressBarCenter = (ProgressBar) findViewById(R.id.loading_center);
         //get data to inbox
       /*  String token = agentDataManager.getAgentToken(this);
         if (token != null) {
@@ -58,12 +55,6 @@ public class MenuActivity extends AppCompatActivity
             conversationDataManager.getConversationsUnreadCount(this);
             conversationDataManager.getFirstDataFromServer(this, token);
         }*/
-    }
-
-   public void setProgressBarCenterState(int state) {
-        if (progressBarCenter == null)
-            progressBarCenter = (ProgressBar) findViewById(R.id.loading_center);
-        progressBarCenter.setVisibility(state);
     }
 
     @Override
@@ -93,7 +84,7 @@ public class MenuActivity extends AppCompatActivity
 
     public boolean ReplaceFragments(int id) {
         if (id == R.id.nav_dashboard) {
-            setProgressBarCenterState(View.GONE);
+            //setProgressBarCenterState(View.GONE);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout || id == R.id.nav_inbox || id == R.id.requests_dashboard_layout) {
@@ -102,11 +93,9 @@ public class MenuActivity extends AppCompatActivity
                 intent.putExtra(getString(R.string.first_tab_title_key), R.string.onlinevisitors_title);
             else
                 intent.putExtra(getString(R.string.first_tab_title_key), R.string.inbox_title);
-            setProgressBarCenterState(View.GONE);
             startActivity(intent);
             return true;
         } else if (id == R.id.nav_settings) {
-            setProgressBarCenterState(View.GONE);
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, new SettingsFragment()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_exit) {
@@ -119,7 +108,6 @@ public class MenuActivity extends AppCompatActivity
     public void onClick(View v) {
 
         ReplaceFragments(v.getId());
-        setProgressBarCenterState(View.VISIBLE);
 
     }
 

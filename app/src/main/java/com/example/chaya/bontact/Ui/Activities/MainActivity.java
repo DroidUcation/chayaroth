@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputLayout passwordInputLayout;
 
     LoginResponseReceiver broadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         broadcastReceiver = new LoginResponseReceiver();
         registerReceiver(broadcastReceiver, intentFilter);
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -228,27 +230,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             boolean isSuccsed = intent.getBooleanExtra(context.getResources().getString(R.string.is_successed_key), false);
             String response = intent.getStringExtra(context.getResources().getString(R.string.response_key));
-                if (isSuccsed == true && response != null) {
-                    if (agentDataManager.saveData(response, MainActivity.this) == true) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setVisibility(View.GONE);
-                                InitData initData= new InitData();
-                                initData.start(MainActivity.this);
-                                startActivity(new Intent(MainActivity.this, MenuActivity.class));
-                            }
-                        });
-                    } else {}
-                } else {
+            if (isSuccsed == true && response != null) {
+                if (agentDataManager.saveData(response, MainActivity.this) == true) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            reEnterDetails(ErrorType.user_not_exists);
+                            progressBar.setVisibility(View.GONE);
+                            InitData initData = new InitData();
+                            initData.start(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
                         }
                     });
+                } else {
                 }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reEnterDetails(ErrorType.user_not_exists);
+                    }
+                });
             }
+        }
     }
 
 

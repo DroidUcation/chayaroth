@@ -49,12 +49,12 @@ public class OnlineVisitorsFragment extends Fragment {
         getContext().unregisterReceiver(broadcastReceiver);
 
     }
-    @Override
+  /*  @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
     }
-
+*/
     public OnlineVisitorsFragment() {
         Log.d("now","ONLINE");
 
@@ -69,7 +69,7 @@ public class OnlineVisitorsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.onlinevisitors_title);
+      //  getActivity().setTitle(R.string.onlinevisitors_title);
         super.onCreate(savedInstanceState);
 
     }

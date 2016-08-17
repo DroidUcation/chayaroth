@@ -20,15 +20,16 @@
         android:layout_height="match_parent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-    <!-- <ProgressBar
-          android:id="@+id/loading_first_inbox_data"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:foregroundGravity="fill"
-          />-->
+    <!--<ProgressBar
+        android:id="@+id/progress_bar_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"/>-->
+
     <ProgressBar
-        android:id="@+id/loading_next_inbox_data"
+        android:id="@+id/progress_bar_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

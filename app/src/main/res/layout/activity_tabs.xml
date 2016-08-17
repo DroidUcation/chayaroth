@@ -1,5 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,10 +19,12 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
+            style="@style/MyCustomTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
-            app:tabMode="fixed" />
+            app:tabMode="fixed"
+            />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
@@ -36,12 +37,18 @@
         android:id="@+id/inbox_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:tint="@android:color/white"
-        android:src="@android:drawable/ic_input_add"
+        android:layout_gravity="end|bottom"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
-        android:layout_gravity="end|bottom"
-        android:visibility="visible"
-        />
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white"
+        android:visibility="visible" />
+    <ProgressBar
+        android:id="@+id/progress_bar_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

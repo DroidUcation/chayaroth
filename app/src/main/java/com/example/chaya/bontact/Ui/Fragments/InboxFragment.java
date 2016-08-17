@@ -3,7 +3,6 @@ package com.example.chaya.bontact.Ui.Fragments;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -25,7 +23,6 @@ import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 
 
 public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -36,9 +33,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private InboxAdapter adapter;
     private View rootView;
     ProgressBar progressBarBottom;
+    ProgressBar progressBarCenter;
     SwipeRefreshLayout refreshLayout;
     private LinearLayoutManager linearLayoutManager;
     int lastVisibleItem;
+    ViewGroup container;
 
     public InboxFragment() {
         Log.d("now", "INBOX");
@@ -51,17 +50,25 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         //getActivity().setTitle(R.string.inbox_title);
         super.onCreate(savedInstanceState);
 
     }
 
+    public void setProgressBarCenterState(int state) {
+        if (rootView == null)
+            return;
+        if (progressBarCenter == null)
+            progressBarCenter = (ProgressBar) getActivity().findViewById(R.id.progress_bar_center);
+        progressBarCenter.setVisibility(state);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        this.container = container;
+        setProgressBarCenterState(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         if (recyclerView != null) {
@@ -73,7 +80,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             recyclerView.setAdapter(adapter);
         }
 
-        progressBarBottom = (ProgressBar) rootView.findViewById(R.id.loading_next_inbox_data);
+        progressBarBottom = (ProgressBar) rootView.findViewById(R.id.progress_bar_bottom);
         refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setOnRefreshListener(refreshListener);
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.orange_dark));
@@ -98,17 +105,17 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        //if (getActivity() instanceof MenuActivity && getActivity() != null)
-        //((MenuActivity) getActivity()).setProgressBarCenterState(View.GONE);
         if (refreshLayout == null)
             refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setRefreshing(false);
-        progressBarBottom.setVisibility(View.GONE);
         adapter.swapCursor(cursor);
-        recyclerView.setVisibility(View.VISIBLE);
-        //if(cursor==null)
-        //no columns message
+        if (cursor != null) {
+            progressBarBottom.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            setProgressBarCenterState(View.GONE);
 
+        } else
+            setProgressBarCenterState(View.VISIBLE);
     }
 
     @Override

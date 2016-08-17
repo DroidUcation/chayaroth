@@ -52,11 +52,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     @Override
     public void onBindViewHolder(InboxHolder holder, int position) {
 
-        if (!cursor.moveToPosition(position))
+       if (!cursor.moveToPosition(position))
             return;
-        ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+       ConversationDataManager conversationDataManager = new ConversationDataManager(context);
         Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
-
+      //  Conversation conversation= new Conversation();
         if (conversation != null) {
             holder.displayName.setText(conversation.displayname);
             setAvatar(conversation, holder.avatar);
@@ -89,7 +89,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         //set default
         avatarView.setBackground(context.getResources().getDrawable(R.drawable.avatar_bg));
         avatarView.setImageResource(R.drawable.default_avatar);
-        if (conversation != null) {
+      /*  if (conversation != null) {
             if (conversation.avatar != null) {//has picture
                 Picasso.with(context)
                         .load(conversation.avatar)
@@ -101,9 +101,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                         conversation.email != null ? conversation.email.substring(0, 1) : null;
                 if (letter != null)
                     avatarView.setImageDrawable(TextDrawable.builder()
-                            .buildRound(letter,context.getResources().getColor(R.color.orange_dark)));
+                            .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
             }
-        }
+        }*/
     }
 
     @Override
@@ -143,14 +143,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             lastSentence = (TextView) itemView.findViewById(R.id.last_sentence);
             date = (TextView) itemView.findViewById(R.id.date);
             unread = (TextView) itemView.findViewById(R.id.unread);
-
             chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
             onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
-            ;
             itemView.setOnClickListener(this);
-            avatar.setOnClickListener(imagesClickListener);
 
         }
 
@@ -167,14 +164,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         @Override
         public void onClick(View v) {
             Log.d("on click", "inbox adapter");
-
-            Conversation conversation = null;
             int position = this.getAdapterPosition();
             cursor.moveToPosition(position);
-            ConversationDataManager conversationDataManager = new ConversationDataManager(v.getContext());
-
             int id_surfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
-            conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
+            // Conversation conversation = null;
+            //ConversationDataManager conversationDataManager = new ConversationDataManager(v.getContext());
+         /*   conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);*/
 
            /* AgentDataManager agentDataManager = new AgentDataManager();
             String token = agentDataManager.getAgentToken(v.getContext());
@@ -183,23 +178,17 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 // ((MenuActivity) v.getContext()).setProgressBarCenterState(View.VISIBLE);
                 innerConversationDataManager.getData(v.getContext(), token);*/
 
-            if (conversation != null) {
-                Intent intent = new Intent(v.getContext(), InnerConversationActivity.class);
-                Bundle b = new Bundle();
-                b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
-                intent.putExtras(b); //Put your id to your next Intent
-                //setProgressBarCenterState(View.GONE);
-                v.getContext().startActivity(intent);
+          /*  if (conversation != null) {*/
+            Intent intent = new Intent(v.getContext(), InnerConversationActivity.class);
+            Bundle b = new Bundle();
+            b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
+            intent.putExtras(b); //Put your id to your next Intent
+            //setProgressBarCenterState(View.GONE);
+            v.getContext().startActivity(intent);
 
-            }
+            /*}*/
         }
 
-        View.OnClickListener imagesClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        };
 
     }
 }

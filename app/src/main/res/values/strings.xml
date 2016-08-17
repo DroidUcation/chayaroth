@@ -167,6 +167,7 @@
     <string name="empty_inner_data_action">empty_inner_data_action</string>
     <string name="invite_complete_action">invite_complete_action</string>
     <string name="change_conversation_list_action">change_conversation_list_action</string>
+    <string name="first_fragment">first_fragment</string>
 
 </resources>
 

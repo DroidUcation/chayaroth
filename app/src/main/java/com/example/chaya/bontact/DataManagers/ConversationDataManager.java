@@ -88,7 +88,6 @@ public class ConversationDataManager {
     }
 
 
-
     public boolean saveData(String conversations) {
 
         Gson gson = new Gson();
@@ -263,6 +262,7 @@ public class ConversationDataManager {
                 .appendPath(context.getResources().getString(R.string.count_conversation_api))
                 .appendPath(AgentDataManager.getAgentInstanse().getToken());
         String url = builder.build().toString();
+        // url+="/"+AgentDataManager.getAgentInstanse().getToken();
         OkHttpRequests okHttpRequests = new OkHttpRequests(url, getCountConversationOnResponse);
     }
 

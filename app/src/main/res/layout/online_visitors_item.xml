@@ -17,42 +17,42 @@
         android:id="@+id/browser_icon"
         android:layout_width="13dp"
         android:layout_height="13dp"
-        android:src="@drawable/chrome"
-       android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/avatar"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginStart="16dp"
+        android:layout_toRightOf="@id/avatar"
+        android:src="@drawable/chrome" />
 
     <ImageView
         android:id="@+id/country_flag"
         android:layout_width="13dp"
         android:layout_height="13dp"
-        android:src="@drawable/chrome"
         android:layout_alignTop="@+id/browser_icon"
-        android:layout_toRightOf="@+id/browser_icon"
-        android:layout_toEndOf="@+id/browser_icon"
         android:layout_marginLeft="5dp"
-         />
+        android:layout_toEndOf="@+id/browser_icon"
+        android:layout_toRightOf="@+id/browser_icon"
+        android:src="@drawable/chrome" />
+
     <TextView
         android:id="@+id/displayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Visitor"
-        android:layout_below="@id/browser_icon"
         android:layout_alignLeft="@+id/browser_icon"
-        android:layout_alignStart="@+id/browser_icon" />
+        android:layout_alignStart="@+id/browser_icon"
+        android:layout_below="@id/browser_icon"
+        android:text="Visitor" />
 
     <TextView
         android:id="@+id/page_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/displayName"
+        android:layout_alignStart="@+id/displayName"
+        android:layout_below="@id/displayName"
         android:ellipsize="end"
         android:lines="1"
         android:text="bontact-home page"
-        android:textSize="12sp"
-     android:layout_below="@id/displayName"
-        android:layout_alignLeft="@+id/displayName"
-        android:layout_alignStart="@+id/displayName" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/connect_time"
@@ -66,14 +66,12 @@
 
     <ImageView
         android:id="@+id/invite_btn"
-        android:layout_width="13dp"
-        android:layout_height="13dp"
-        android:src="@drawable/chrome"
-       android:layout_alignParentRight="true"
-        android:layout_below="@id/connect_time"
-        android:visibility="gone"
-        />
-
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/new_visitor"
+        android:layout_alignTop="@+id/displayName"
+        android:layout_alignRight="@+id/connect_time"
+        android:layout_alignEnd="@+id/connect_time" />
 
 
 </RelativeLayout>

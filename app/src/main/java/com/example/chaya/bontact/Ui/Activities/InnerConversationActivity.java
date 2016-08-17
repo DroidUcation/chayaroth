@@ -1,6 +1,5 @@
 package com.example.chaya.bontact.Ui.Activities;
 
-import android.animation.Animator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,7 +58,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     private boolean isNew;
     int id_surfer;
     android.view.Menu menu;
-    TextView no_chat_message;
+    TextView no_msg_title;
+    TextView no_msg_text;
+    ImageView no_msg_image;
     Button invite_btn;
     ConversationDataManager conversationDataManager;
     InnerConversationDataManager innerConversationDataManager;
@@ -172,8 +174,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     }
 
     private void setEmptyDetails() {
-        no_chat_message = (TextView) findViewById(R.id.no_chats);
-        no_chat_message.setVisibility(View.VISIBLE);
+        no_msg_title = (TextView) findViewById(R.id.no_msg_title);
+        no_msg_text = (TextView) findViewById(R.id.no_msg_txt);
+        no_msg_image = (ImageView) findViewById(R.id.no_msg_img);
+        no_msg_image.setVisibility(View.VISIBLE);
+        no_msg_title.setVisibility(View.VISIBLE);
+        no_msg_text.setVisibility(View.VISIBLE);
         invite_btn = (Button) findViewById(R.id.invite_btn);
         invite_btn.setVisibility(View.VISIBLE);
         invite_btn.setOnClickListener(new View.OnClickListener() {
@@ -474,6 +480,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
                 }
                 isNew = false;
+                setProgressBarState(View.VISIBLE);
                 init();
             } else {
                 setProgressBarState(View.GONE);

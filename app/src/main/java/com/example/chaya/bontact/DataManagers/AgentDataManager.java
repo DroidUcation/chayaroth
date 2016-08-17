@@ -69,6 +69,7 @@ public class AgentDataManager {
         this.context = context;
         Gson gson = new Gson();
         Agent agentFromJson = gson.fromJson(response, Agent.class);
+        agentFromJson.token = agentFromJson.token.replace('/', '+');
         agent.rep = agentFromJson.rep;
         agent.token = agentFromJson.token;
         agent.settings = agentFromJson.settings;

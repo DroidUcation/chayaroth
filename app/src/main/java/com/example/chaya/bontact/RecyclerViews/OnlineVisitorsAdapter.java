@@ -109,7 +109,8 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             letter = visitor.displayName != null && !visitor.displayName.startsWith("#") ? visitor.displayName.substring(0, 1) : null;
             if (letter != null)
                 avatarView.setImageDrawable(TextDrawable.builder()
-                        .buildRound(letter,context.getResources().getColor(R.color.orange_light)));
+                        .buildRound(letter,ColorGenerator.MATERIAL.getRandomColor()));
+            //context.getResources().getColor(R.color.orange_light)));
         }
     }
 
