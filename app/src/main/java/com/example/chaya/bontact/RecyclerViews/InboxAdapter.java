@@ -52,58 +52,62 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     @Override
     public void onBindViewHolder(InboxHolder holder, int position) {
 
-       if (!cursor.moveToPosition(position))
+        if (!cursor.moveToPosition(position))
             return;
-       ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-        Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
-      //  Conversation conversation= new Conversation();
-        if (conversation != null) {
-            holder.displayName.setText(conversation.displayname);
-            setAvatar(conversation, holder.avatar);
-            //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
-            int icon = ChanelsTypes.getIconByChanelType(conversation.lasttype);
-            if (icon != 0)
-                holder.chanelIcon.setText(icon);
-            if (conversation.lastMessage == null)
-                holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, conversation.getLasttype()));
-            else
-                holder.lastSentence.setText(conversation.lastMessage);
-            String dateStringToConvert = conversation.lastdate;
-            String timeAgo = null;
-            if (dateStringToConvert != null && context != null) {
-                timeAgo = DateTimeHelper.getDateToInbox(dateStringToConvert, context);
-                if (timeAgo != null)
-                    holder.date.setText(timeAgo);
-            }
-            if (conversation.isOnline == true) {
-                holder.onlinePoint.setVisibility(View.VISIBLE);
-            }
-            if (conversation.unread > 0) {
-                holder.unread.setText(Integer.toString(conversation.unread));
-                holder.setUnRead(true);
-            }
+        //   ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+        // Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
+        //  Conversation conversation= new Conversation();
+        // if (conversation != null) {
+        holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
+        setAvatar(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
+                cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
+                , holder.avatar);
+        //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
+        int icon = ChanelsTypes.getIconByChanelType(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE)));
+        if (icon != 0)
+            holder.chanelIcon.setText(icon);
+        if (cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)) == null)
+            holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
+        else
+            holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
+        String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
+        String timeAgo = null;
+        if (dateStringToConvert != null && context != null) {
+            timeAgo = DateTimeHelper.getDateToInbox(dateStringToConvert, context);
+            if (timeAgo != null)
+                holder.date.setText(timeAgo);
+        }
+        if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
+            holder.onlinePoint.setVisibility(View.VISIBLE);
+        }
+        if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)) > 0) {
+            holder.unread.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))));
+            holder.setUnRead(true);
         }
     }
+    //}
 
-    public void setAvatar(Conversation conversation, ImageView avatarView) {
+    public void setAvatar(String avatar, String displayName, ImageView avatarView) {
         //set default
         avatarView.setBackground(context.getResources().getDrawable(R.drawable.avatar_bg));
         avatarView.setImageResource(R.drawable.default_avatar);
-      /*  if (conversation != null) {
-            if (conversation.avatar != null) {//has picture
-                Picasso.with(context)
-                        .load(conversation.avatar)
-                        .transform(new CircleTransform())
-                        .into(avatarView);
-            } else {//maybe letters
-                String letter = null;
-                letter = conversation.visitor_name != null ? conversation.visitor_name.substring(0, 1) :
-                        conversation.email != null ? conversation.email.substring(0, 1) : null;
-                if (letter != null)
-                    avatarView.setImageDrawable(TextDrawable.builder()
-                            .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
-            }
-        }*/
+      /*  if (conversation != null) {*/
+        if (avatar != null) {//has picture
+            Picasso.with(context)
+                    .load(avatar)
+                    .transform(new CircleTransform())
+                    .into(avatarView);
+        } else {//maybe letters
+            String letter = null;
+              /*  letter = conversation.visitor_name != null ? conversation.visitor_name.substring(0, 1) :
+                        conversation.email != null ? conversation.email.substring(0, 1) : null;*/
+            if (displayName != null && !displayName.startsWith("#"))
+                letter = displayName.substring(0, 1);
+            if (letter != null)
+                avatarView.setImageDrawable(TextDrawable.builder()
+                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
+           /* }*/
+        }
     }
 
     @Override

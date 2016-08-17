@@ -51,15 +51,15 @@ public class DialogInput {
                 phone_number = agent.getRep().telephone;
             }
             input.setText(phone_number);
-            alertBuilder.setMessage("please enter a valid  number")
+            alertBuilder.setTitle("Enter your phone number").setMessage("include your country code")
                     .setView(input)
-                    .setPositiveButton("Yes", callbackOnClickListener)
-                    .setNegativeButton("No", callbackOnClickListener);
+                    .setPositiveButton("Call", callbackOnClickListener)
+                    .setNegativeButton("Cancel", callbackOnClickListener);
         } else if (channel == ChanelsTypes.sms) {
-            alertBuilder.setMessage("please enter your msg")
+            alertBuilder.setTitle("please enter your msg")
                     .setView(input)
-                    .setPositiveButton("Yes", smsOnClickListener)
-                    .setNegativeButton("No", smsOnClickListener);
+                    .setPositiveButton("Send", smsOnClickListener)
+                    .setNegativeButton("Cancel", smsOnClickListener);
         } /*else if (channel == ChanelsTypes.email) {
             alertBuilder.setMessage("please enter your msg")
                     .setView(input)
@@ -90,10 +90,10 @@ public class DialogInput {
         if (alertBuilder == null)
             return;
 
-            alert = alertBuilder.create();
-            alert.show();
+        alert = alertBuilder.create();
+        alert.show();
 
-       // alert.setIcon(R.mipmap.bontact_launcher);
+        // alert.setIcon(R.mipmap.bontact_launcher);
         Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
         nbutton.setTextColor(context.getResources().getColor(R.color.purple));
         Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
@@ -126,7 +126,7 @@ public class DialogInput {
                 case DialogInterface.BUTTON_POSITIVE:
                     if (!input.getText().toString().equals("") && input.getText().toString() != null) {
                         sendResponseHelper.sendSms(context, input.getText().toString(), id_surfer);
-                      //  innerConversationDataManager.addTextMsgToList(ChanelsTypes.sms, input.getText().toString(), false);
+                        //  innerConversationDataManager.addTextMsgToList(ChanelsTypes.sms, input.getText().toString(), false);
                     } else
                         dialog.dismiss();
                     break;

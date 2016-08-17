@@ -15,26 +15,27 @@
         android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:src="@drawable/chats_icon"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/no_msg_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No messages yet"
         android:layout_alignBottom="@+id/no_msg_img"
         android:layout_centerHorizontal="true"
+        android:text="No messages yet"
         android:textColor="@color/gray_very_dark"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/no_msg_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Join this chat to initiate a conversation"
         android:layout_below="@id/no_msg_title"
         android:layout_centerHorizontal="true"
+        android:text="Join this chat to initiate a conversation"
         android:textColor="@color/gray_dark"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/inner_conversation_recyclerView"
@@ -59,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="JOIN CHATS"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/bottom_layout"
@@ -77,11 +78,11 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="40dp"
             android:layout_weight="6"
-
             android:hint="Enter message"
             android:lines="1"
             android:paddingLeft="10dp"
-            android:textColorHint="@color/gray_light" />
+            android:textColorHint="@color/gray_light"
+            android:textSize="14sp" />
 
         <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/btn_send_chat_response"

@@ -51,7 +51,7 @@
     </style>
 
     <style name="CustomActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:padding">5dp</item>
+        <item name="android:padding">7dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

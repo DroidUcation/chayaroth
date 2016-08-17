@@ -88,97 +88,100 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (cursor.moveToPosition(position)) {
 
-            int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
-            InnerConversationDataManager dataManager = new InnerConversationDataManager(context, idSurfer);
-            InnerConversation innerConversation = dataManager.convertCursorToInnerConversation(cursor);
+            // int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
+            //  InnerConversationDataManager dataManager = new InnerConversationDataManager(context, idSurfer);
+            //InnerConversation innerConversation = dataManager.convertCursorToInnerConversation(cursor);
 
             InnerConversationHolder innerConversationHolder;
             InnerConversationMsgHolder innerConversationMsgHolder;
             InnerConversationVisitorRecordHolder visitorRecordHolder;
-
+            int actionType = cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE));
+            String msg = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
+            String date = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_TIME_REQUEST));
             switch (getItemViewType(position)) {
 
                 case SYSTEM_MSG_VH:
                     innerConversationMsgHolder = (InnerConversationMsgHolder) holder;
-                    if (innerConversation.actionType == ChanelsTypes.webCall)
+                    if (actionType == ChanelsTypes.webCall)
                         innerConversationMsgHolder.msg.setText(R.string.webcall_cancled);
                     else
-                        innerConversationMsgHolder.msg.setText(getMsgConcatWithDate(innerConversation));
+                        innerConversationMsgHolder.msg.setText(getMsgConcatWithDate(msg, date));
                     innerConversationMsgHolder.msg.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
                     break;
                 case AGENT_TEXT_VH:
                     innerConversationHolder = (InnerConversationHolder) holder;
-                    innerConversationHolder.msg.setText(getMsgConcatWithDate(innerConversation));
-                    innerConversationHolder.name.setText(getNameForAgent(innerConversation));
-                    innerConversationHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
+                    innerConversationHolder.msg.setText(getMsgConcatWithDate(msg, date));
+                    innerConversationHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
+                    innerConversationHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(actionType));
                     break;
                 case VISITOR_TEXT_VH:
                     innerConversationHolder = (InnerConversationHolder) holder;
-                    innerConversationHolder.msg.setText(getMsgConcatWithDate(innerConversation));
-                    innerConversationHolder.name.setText(getNameForVisitor(innerConversation));
-                    int icon = ChanelsTypes.getIconByChanelType(innerConversation.actionType);
+                    innerConversationHolder.msg.setText(getMsgConcatWithDate(msg, date));
+                    innerConversationHolder.name.setText(getNameForVisitor(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
+                    int icon = ChanelsTypes.getIconByChanelType(actionType);
                     if (icon != 0)
                         innerConversationHolder.chanelIcon.setText(icon);
                     break;
                 case VISITOR_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
-                    visitorRecordHolder.name.setText(getNameForVisitor(innerConversation));
-                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
-                    visitorRecordHolder.date.setText(getDateToDisplay(innerConversation));
-                    setRecordPlayer(visitorRecordHolder, innerConversation);
+                    visitorRecordHolder.name.setText(getNameForVisitor(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
+                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(actionType));
+                    visitorRecordHolder.date.setText(getDateToDisplay(date));
+                    setRecordPlayer(visitorRecordHolder);
                     break;
                 case AGENT_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
-                    visitorRecordHolder.name.setText(getNameForAgent(innerConversation));
-                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(innerConversation.actionType));
-                    visitorRecordHolder.date.setText(getDateToDisplay(innerConversation));
-                    setRecordPlayer(visitorRecordHolder, innerConversation);
+                    visitorRecordHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
+                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(actionType));
+                    visitorRecordHolder.date.setText(getDateToDisplay(date));
+                    setRecordPlayer(visitorRecordHolder);
                     break;
             }
         }
     }
 
-    private String getDateToDisplay(InnerConversation innerConversation) {
-        Date date = DateTimeHelper.convertFullFormatStringToDate(innerConversation.getTimeRequest());
+    private String getDateToDisplay(String timeRequest) {
+        Date date = DateTimeHelper.convertFullFormatStringToDate(timeRequest);
         return DateTimeHelper.getDisplayDate(date, R.string.hh_mm_format);
     }
 
-    private boolean setRecordPlayer(InnerConversationVisitorRecordHolder visitorRecordHolder, InnerConversation innerConversation) {
+    private boolean setRecordPlayer(InnerConversationVisitorRecordHolder visitorRecordHolder) {
+        if (cursor == null)
+            return false;
+        boolean record = cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1 ? true : false;
+        String mess = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
+        int actionType = cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE));
+        int req_id = cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_REQ_ID));
 
         String url = null;
-        if (innerConversation.record == true && innerConversation.mess != null && Integer.parseInt(innerConversation.mess) > 5 &&
-                (innerConversation.actionType == ChanelsTypes.callback || innerConversation.actionType == ChanelsTypes.webCall)) {
+        if (record == true && mess != null && Integer.parseInt(mess) > 5 &&
+                (actionType == ChanelsTypes.callback || actionType == ChanelsTypes.webCall)) {
             AgentDataManager agentDataManager = new AgentDataManager();
-    /*       url = context.getResources().getString(R.string.domain_api);
-            url += "record/" + agentDataManager.getAgentToken(context) + "/" + innerConversation.req_id + "/" + innerConversation.req_id + ".mp3";
-           */
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
                     .authority(context.getResources().getString(R.string.base_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
                     .appendPath("record")
                     .appendPath(agentDataManager.getAgentToken(context))
-                    .appendPath(String.valueOf(innerConversation.req_id))
-                    .appendPath(innerConversation.req_id + ".mp3");
+                    .appendPath(String.valueOf(req_id))
+                    .appendPath(req_id + ".mp3");
             url = builder.build().toString();
             Uri recordUri = Uri.parse(url);
 
             if (!visitorRecordHolder.player.preparePlayer(recordUri))
                 return false;
-        } else if (innerConversation.actionType == ChanelsTypes.callback && innerConversation.record == true)
+        } else if (actionType == ChanelsTypes.callback && record == true)
             visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.short_record);
-        else if (innerConversation.actionType == ChanelsTypes.callback)
+        else if (actionType == ChanelsTypes.callback)
             visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.account_not_allow);
         return true;
     }
 
-    private Spannable getMsgConcatWithDate(InnerConversation innerConversation) {
-
-        String msg = null;
+    private Spannable getMsgConcatWithDate(String strMsg, String timeRequest) {
         Spannable span = null;
-        msg = innerConversation.getMess();
+        String msg = strMsg;
 
-        String date = getDateToDisplay(innerConversation);
+        String date = getDateToDisplay(timeRequest);
         if (msg != null && date != null) {
             msg = msg.concat("   " + date);
             int index = msg.indexOf(date);
@@ -189,18 +192,18 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         return null;
     }
 
-    private String getNameForAgent(InnerConversation innerConversation) {
-        if (innerConversation.agentName == null)
+    private String getNameForAgent(String agentName) {
+        if (agentName == null)
             return "agent";
         else
-            return innerConversation.agentName;
+            return agentName;
     }
 
-    private String getNameForVisitor(InnerConversation innerConversation) {
-        if (innerConversation.from_s == null)
+    private String getNameForVisitor(String from) {
+        if (from == null)
             return "visitor";
         else
-            return innerConversation.from_s;
+            return from;
     }
 
     @Override

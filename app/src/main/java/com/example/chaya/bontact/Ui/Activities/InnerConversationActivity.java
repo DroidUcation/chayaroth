@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -185,8 +186,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         invite_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SocketManager.getInstance().inviteToChat(id_surfer);
                 setProgressBarState(View.VISIBLE);
+                SocketManager.getInstance().inviteToChat(id_surfer);
             }
         });
         LinearLayout bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
@@ -257,14 +258,15 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_send_chat_response:
-                if (chat_response_edittext != null && !chat_response_edittext.equals("")) {
-                    sendChatResponse(chat_response_edittext.getText().toString());
-                    chat_response_edittext.setText("");
-                }
+                String msg = chat_response_edittext.getText().toString();
                 View view = getCurrentFocus();
                 if (view != null) {
                     InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                chat_response_edittext.setText("");
+                if (msg != null && !msg.equals("")) {
+                    sendChatResponse(msg);
                 }
         }
     }
@@ -297,7 +299,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         sendResponseHelper = new SendResponseHelper();
         if (!sendResponseHelper.isAllowedChannelToResponse(current_conversation, channel)) {
-            Snackbar.make(chat_response_edittext, "you are not allowed do this action", Snackbar.LENGTH_LONG).show();
+            Toast.makeText(InnerConversationActivity.this, "you are not allowed do this action", Toast.LENGTH_SHORT).show();
             return;
         }
         switch (channel) {
@@ -310,9 +312,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 callbackInput.create(id_surfer, ChanelsTypes.callback);
                 break;
             case ChanelsTypes.email:
-                Intent intent=new Intent(this, EmailDialogActivity.class);
-                intent.putExtra(Contract.InnerConversation.COLUMN_ID_SURFUR,id_surfer);
-                intent.putExtra(Contract.Conversation.COLUMN_EMAIL,current_conversation.email);
+                Intent intent = new Intent(this, EmailDialogActivity.class);
+                intent.putExtra(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer);
+                intent.putExtra(Contract.Conversation.COLUMN_EMAIL, current_conversation.email);
                 startActivity(intent);
                 break;
 
@@ -351,6 +353,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void setProgressBarState(int state) {
         if (loading == null)
             loading = (ProgressBar) findViewById(R.id.loading_inner_conversation);
+        // if(state== View.VISIBLE&&loading.getVisibility()== View.GONE)
         loading.setVisibility(state);
     }
 
@@ -363,7 +366,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (invite_btn != null && isNew)
             invite_btn.setVisibility(View.GONE);
         else if (chat_response_edittext != null) {
-            // chat_response_edittext.setEnabled(false);
+            chat_response_edittext.setEnabled(false);
+            btn_send_mess.setEnabled(false);
             chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.gray_very_light));
             chat_response_edittext.setHint("the visitor is offline right now :(");
         }
