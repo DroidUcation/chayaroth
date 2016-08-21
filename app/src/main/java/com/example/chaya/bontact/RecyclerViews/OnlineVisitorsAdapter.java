@@ -40,13 +40,13 @@ import java.util.List;
  */
 public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAdapter.OnlineVisitorsHolder> {
 
-    List<Visitor> visitorsList;
+    //List<Visitor> visitorsList;
     Context context;
 
 
     public OnlineVisitorsAdapter(Context context) {
         this.context = context;
-        visitorsList = VisitorsDataManager.visitorsList;
+       // visitorsList = VisitorsDataManager.visitorsList;
     }
 
 
@@ -58,9 +58,9 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     @Override
     public void onBindViewHolder(OnlineVisitorsHolder holder, int position) {
-        if (visitorsList == null)
-            return;
-        final Visitor current_visitor = visitorsList.get(position);
+       // if (visitorsList == null)
+         //   return;
+        final Visitor current_visitor = VisitorsDataManager.getVisitorsList().get(position);
         if (current_visitor != null) {
             if (current_visitor.timeConnect != null)
                 holder.connect_time.setText(DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
@@ -117,8 +117,8 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     @Override
     public int getItemCount() {
-        if (visitorsList != null)
-            return visitorsList.size();
+        if (VisitorsDataManager.getVisitorsList() != null)
+            return VisitorsDataManager.getVisitorsList().size();
         return 0;
     }
 

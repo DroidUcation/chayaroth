@@ -25,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.Date;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -72,7 +71,7 @@ public class SocketManager {
                     .on("surferLeaved", surferLeavedListener);
             socket.connect();
         } catch (URISyntaxException e) {
-
+            int x = 0;
         }
 
     }
@@ -123,7 +122,7 @@ public class SocketManager {
                     int idSurfer = visitor.idSurfer;
                     Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
                     if (conversation != null) {//surfer is in conversation
-                        conversationDataManager.updateOnlineState(context, idSurfer, 1);
+                        conversationDataManager.updateOnlineState(idSurfer, 1);
                         visitor.isNew = false;
                         visitor.displayName = conversation.displayname;
                     } else {//new visitor
@@ -149,7 +148,7 @@ public class SocketManager {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
                 if (conversation != null) {//surfer is in conversation
-                    conversationDataManager.updateOnlineState(context, idSurfer, 1);
+                    conversationDataManager.updateOnlineState(idSurfer, 1);
                     visitor.isNew = false;
                     visitor.displayName = conversation.displayname;
                 } else {//new visitor
@@ -170,7 +169,7 @@ public class SocketManager {
                 Log.d("id", id_surfer + "");
                 ConversationDataManager converastionDataManager = new ConversationDataManager(context);
                 if (converastionDataManager.getConversationByIdSurfer(id_surfer) != null)
-                    converastionDataManager.updateOnlineState(context, id_surfer, 0);
+                    converastionDataManager.updateOnlineState(id_surfer, 0);
                 VisitorsDataManager.removeVisitorFromList(context, VisitorsDataManager.getVisitorByIdSurfer(id_surfer));
 
             }
@@ -196,7 +195,7 @@ public class SocketManager {
                 InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
                 final InnerConversation innerConversation = buildObjectFromJsonData(data, conversationDataManager);
                 if (innerConversationDataManager.saveData(innerConversation) == true) {
-                    updateConversationDetails(conversationDataManager, id_surfer, innerConversation);
+                    updateConversationDetails(conversationDataManager, id_surfer, innerConversation,data.optString("type"));
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -207,8 +206,8 @@ public class SocketManager {
             } else {
                 if (AgentDataManager.getAgentInstanse() != null) {
                     conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
-                    int current_unread_conversation_count = ConversationDataManager.getUnreadConversations(context);
-                    ConversationDataManager.setUnreadConversations(context, current_unread_conversation_count + 1);
+                    int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(context);
+                    ConversationDataManager.setAllUnreadConversations(context, current_unread_conversation_count + 1);
                 }
             }
         }
@@ -227,7 +226,7 @@ public class SocketManager {
         try {
             innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
             innerConversation.idSurfer = data.getInt("idSurfer");
-            int type = ChanelsTypes.convertStringChannelToInt(data.optString("actionType", null));
+            int type = ChanelsTypes.convertStringChannelToInt(data.optString("type", null));
             innerConversation.actionType = type;
             innerConversation.mess = data.optString("message", ChanelsTypes.getDeafultMsgByChanelType(context, type));
             innerConversation.rep_request = false;
@@ -247,21 +246,20 @@ public class SocketManager {
         return null;
     }
 
-    private void updateConversationDetails(ConversationDataManager conversationDataManager, int id_surfer, InnerConversation innerConversation) {
+    private void updateConversationDetails(ConversationDataManager conversationDataManager, int id_surfer, InnerConversation innerConversation, String type) {
         if (conversationDataManager == null)
             return;
-
-        conversationDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_LAST_TYPE, innerConversation.actionType);//set last type
-        if (innerConversation.datatype == ChanelsTypes.sms)
-            conversationDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_PHONE, innerConversation.from_s);//set phone
-        if (innerConversation.datatype == ChanelsTypes.email)
-            conversationDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_EMAIL, innerConversation.from_s);//set phone
-        //if(innerConversation.datatype==ChanelsTypes.callback)
-        // conversationDataManager.updateConversation(context,id_surfer,Contract.Conversation.COLUMN_EMAIL,innerConversation.from_s);//set phone
-        //todo:check the type field in data also
         Conversation conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
-        if (conversation != null)
-            conversationDataManager.updateConversation(context, id_surfer, Contract.Conversation.COLUMN_UNREAD, ++conversation.unread);
+        if (conversation == null)
+            return;
+        //int actionType = ChanelsTypes.convertStringChannelToInt(type);
+        conversationDataManager.updateLastType(id_surfer,innerConversation.actionType);//set last type
+        if (innerConversation.actionType == ChanelsTypes.sms && (conversation.phone == null || !conversation.phone.equals(innerConversation.from_s)))
+            conversationDataManager.updatePhoneNumber(id_surfer, innerConversation.from_s);//set phone
+        if (innerConversation.actionType == ChanelsTypes.email && (conversation.email == null || !conversation.email.equals(innerConversation.from_s)))
+            conversationDataManager.updateEmail(id_surfer, innerConversation.from_s);//set phone
+        conversationDataManager.updateUnread(id_surfer, conversation.unread + 1);//set unread
+        Log.d("from_s", innerConversation.from_s);
     }
 
     public void emitNotificationRegister(String token) {

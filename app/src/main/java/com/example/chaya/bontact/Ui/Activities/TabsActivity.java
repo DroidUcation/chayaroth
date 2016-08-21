@@ -55,7 +55,6 @@ public class TabsActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
-
         //tabLayout.setBackgroundColor(getResources().getColor(R.color.purple));
         inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
         if (resFirstTabTitle == R.string.inbox_title)
@@ -68,8 +67,9 @@ public class TabsActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
             }
         });
-
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,7 +155,7 @@ public class TabsActivity extends AppCompatActivity {
     public void setProgressBarCenterState(int state) {
 
         if (progressBarCenter == null)
-            progressBarCenter = (ProgressBar)findViewById(R.id.progress_bar_center);
+            progressBarCenter = (ProgressBar) findViewById(R.id.progress_bar_center);
         progressBarCenter.setVisibility(state);
     }
 

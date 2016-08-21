@@ -32,7 +32,7 @@ public class InitData {
          String token = agentDataManager.getAgentToken(context);
         if (token != null) {
             ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-            conversationDataManager.getConversationsUnreadCount(context);
+            conversationDataManager.getAllUnreadFromServer(context);
             conversationDataManager.getFirstDataFromServer(context, token);
         }
     }

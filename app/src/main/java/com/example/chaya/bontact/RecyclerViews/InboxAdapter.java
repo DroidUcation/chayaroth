@@ -2,6 +2,7 @@ package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -138,11 +139,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         ImageView avatar, onlinePoint;
         TextView displayName, lastSentence, date, unread;
         TextView chanelIcon;
+        View colorBack;
 
 
         public InboxHolder(View itemView) {
 
             super(itemView);
+
             avatar = (ImageView) itemView.findViewById(R.id.avatar);
             displayName = (TextView) itemView.findViewById(R.id.displayName);
             lastSentence = (TextView) itemView.findViewById(R.id.last_sentence);

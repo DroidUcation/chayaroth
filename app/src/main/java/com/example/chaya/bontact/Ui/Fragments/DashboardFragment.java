@@ -63,7 +63,7 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         RootView = null;
         getActivity().setTitle(R.string.dashboard_title);
-        unread_conversation = ConversationDataManager.getUnreadConversations(getContext());
+        unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext());
 
     }
 
@@ -88,7 +88,7 @@ public class DashboardFragment extends Fragment {
         }
         new_requests_count = (TextView) request_v.findViewById(R.id.count_new_requests);
         if (new_requests_count != null)
-            new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
+            new_requests_count.setText(String.valueOf(ConversationDataManager.getAllUnreadConversations(getContext())));
         online_visitors_count = (TextView) online_v.findViewById(R.id.count_online_visitors);
         online_visitors_count.setText(String.valueOf(VisitorsDataManager.getVisitorsList().size()));
 
@@ -110,7 +110,7 @@ public class DashboardFragment extends Fragment {
     public class NewRequestsCountReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            new_requests_count.setText(String.valueOf(ConversationDataManager.getUnreadConversations(getContext())));
+            new_requests_count.setText(String.valueOf(ConversationDataManager.getAllUnreadConversations(getContext())));
         }
     }
 

@@ -108,7 +108,7 @@ public class InnerConversationDataManager {
 
             if (innerConversation != null && innerConversation.getMess() != null) {//check type
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                conversationDataManager.updateConversation(context, current_conversation.idSurfer, Contract.Conversation.COLUMN_LAST_MESSAGE, innerConversation.getMess());
+                conversationDataManager.updateLastMessage( current_conversation.idSurfer, innerConversation.getMess());
             }
             return true;
 

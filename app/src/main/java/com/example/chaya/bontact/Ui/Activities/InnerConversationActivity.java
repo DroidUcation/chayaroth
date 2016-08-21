@@ -34,6 +34,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Ui.Dialogs.DialogInput;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
@@ -47,7 +48,6 @@ import com.example.chaya.bontact.Socket.io.SocketManager;
 import com.example.chaya.bontact.Ui.Dialogs.EmailDialogActivity;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,9 +99,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (current_conversation != null) {//THIS ID HAS CONVERSATIONS
             isNew = false;
             //update unread  numbers
-            int current_unread_conversation_count = ConversationDataManager.getUnreadConversations(this);
-            ConversationDataManager.setUnreadConversations(this, current_unread_conversation_count - 1);
-            conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
+            int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
+            ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
+            conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         } else { //surfer is new
             // isNew = true;
         }
@@ -337,7 +337,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             return;
 
         sendResponseHelper = new SendResponseHelper();
-        if (!sendResponseHelper.isAllowedChannelToResponse(current_conversation, channel)) {
+        if (!sendResponseHelper.isAllowedChannelToResponse(conversationDataManager.getConversationByIdSurfer(id_surfer), channel)) {
             Toast.makeText(InnerConversationActivity.this, "you are not allowed do this action", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -360,7 +360,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     }
 
     public void sendChatResponse(String msg) {
-        Log.d("gotttt",msg);
+        Log.d("gotttt", msg);
         if (current_conversation != null && current_conversation.isOnline) {
             sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);
         }
@@ -397,6 +397,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
  */
     @Override
     public void onBackPressed() {
+        conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         super.onBackPressed();
     }
 
@@ -473,21 +474,17 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             boolean status = intent.getBooleanExtra(getResources().getString(R.string.is_successed_key), false);
             int invited_id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), 0);
             if (invited_id_surfer != id_surfer || invited_id_surfer == 0) {
-                //setProgressBarState(View.GONE);
                 load_animations(false);
                 return;
             }
             if (status) {
                 isNew = false;
-                if (AgentDataManager.getAgentInstanse() != null) {
+                if (AgentDataManager.getAgentInstanse() != null)
                     conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
-                }
-                //setProgressBarState(View.VISIBLE);
-                //init();
+                if (VisitorsDataManager.getVisitorByIdSurfer(id_surfer) != null)
+                    VisitorsDataManager.getVisitorByIdSurfer(id_surfer).isNew = false;
             } else {
                 load_animations(false);
-                // setProgressBarState(View.GONE);
-                //invite failed
             }
         }
     }
@@ -510,14 +507,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 JSONObject jsonObject = new JSONObject(response).getJSONObject("conversations");
                 current_conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
                 if (current_conversation == null || current_conversation.innerConversationData == null && tryCount < 3) {
-                    // conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
                     tryCount++;
                     return;
                 }
-
+                conversationDataManager.insertOrUpdate(current_conversation);
+                //todo: change inner save data
                 for (InnerConversation innerConversation : current_conversation.innerConversationData)
                     innerConversationDataManager.saveData(innerConversation);
-                conversationDataManager.saveData(current_conversation);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -529,10 +526,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 });
             } catch (JSONException e) {
                 if (tryCount < 3) {
-                    //conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
                     tryCount++;
                 }
-                e.printStackTrace();
             }
         }
     };

@@ -41,16 +41,16 @@ public class SplashActivity extends AppCompatActivity {
         super.onResume();
         AgentDataManager agentDataManager = new AgentDataManager();
         Intent intent;
-    if (agentDataManager.isLoggedIn(this) == true) {
+        if (agentDataManager.isLoggedIn(this) == true) {
 
             InitData initData = new InitData();
             initData.start(this);
 
             //  exportDB();
             intent = new Intent(this, MenuActivity.class);
-       } else {
+        } else {
             intent = new Intent(this, MainActivity.class);
-     }
+        }
         startActivity(intent);
         //finish();
     }
@@ -80,4 +80,3 @@ public class SplashActivity extends AppCompatActivity {
 
 
 }
-
