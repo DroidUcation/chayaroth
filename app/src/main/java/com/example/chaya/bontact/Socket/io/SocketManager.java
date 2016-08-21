@@ -301,6 +301,7 @@ public class SocketManager {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject();
+            JSONObject data = new JSONObject();
             Agent agent = AgentDataManager.getAgentInstanse();
             if (agent != null && agent.getRep() != null)
                 jsonObject.put("rep_Sur", true)
@@ -312,38 +313,34 @@ public class SocketManager {
                         .put("id_Surfer", id_surfer)
                         .put("id_Call", 0)
                         .put("id_Customer", agent.getRep().idCustomer);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        JSONObject data = new JSONObject();
-        try {
             data.put("surfer", new JSONObject(gson.toJson(VisitorsDataManager.getVisitorByIdSurfer(id_surfer))))
                     .put("preChat", new JSONObject())
                     .put("messageObj", jsonObject);
+
+            socket.emit("inviteStartChat", data, new Ack() {
+                        @Override
+                        public void call(Object... args) {
+                            JSONObject json = null;
+                            try {
+                                json = new JSONObject(args[0].toString());
+                                Intent intent = new Intent(context.getResources().getString(R.string.invite_complete_action));
+                                intent.setType("*/*");
+                                intent.putExtra(context.getResources().getString(R.string.is_successed_key), json.getBoolean("status"));
+                                intent.putExtra(context.getResources().getString(R.string.id_surfer), id_surfer);
+                                context.sendBroadcast(intent);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+            );
         } catch (JSONException e) {
             e.printStackTrace();
             return;
         }
-        socket.emit("inviteStartChat", data, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        JSONObject json = null;
-                        try {
-                            json = new JSONObject(args[0].toString());
-                            Intent intent = new Intent(context.getResources().getString(R.string.invite_complete_action));
-                            intent.setType("*/*");
-                            intent.putExtra(context.getResources().getString(R.string.is_successed_key), json.getBoolean("status"));
-                            intent.putExtra(context.getResources().getString(R.string.id_surfer), id_surfer);
-                            context.sendBroadcast(intent);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        );
     }
-
-
 }
+
+
+

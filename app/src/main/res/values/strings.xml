@@ -68,6 +68,7 @@
     <string name="base_api">dev-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
     <string name="conversation_api">getConversations</string>
+    <string name="conversation_by_id_api">contacts/conversationvisitor</string>
     <string name="count_conversation_api">getmainConversations</string>
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>

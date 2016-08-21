@@ -108,7 +108,7 @@ public class InnerConversationDataManager {
 
             if (innerConversation != null && innerConversation.getMess() != null) {//check type
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                conversationDataManager.setLastSentence(context, current_conversation, innerConversation.getMess());
+                conversationDataManager.updateConversation(context, current_conversation.idSurfer, Contract.Conversation.COLUMN_LAST_MESSAGE, innerConversation.getMess());
             }
             return true;
 
@@ -173,6 +173,8 @@ public class InnerConversationDataManager {
     ServerCallResponse getDataOnResponse = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+            if(isSuccsed==false&&errorType==ErrorType.network_problems)
+                notifyEmptyInnerData();
             if (isSuccsed == true) {
                 try {
                     JSONObject res = new JSONObject(response);

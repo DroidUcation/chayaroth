@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -17,15 +16,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Ui.Dialogs.DialogInput;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.ErrorType;
@@ -43,14 +45,19 @@ import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
 import com.example.chaya.bontact.Socket.io.SocketManager;
 import com.example.chaya.bontact.Ui.Dialogs.EmailDialogActivity;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+
     private static final int INNER_CONVERSATION_LOADER = 1;
     private RecyclerView recyclerView;
     private InnerConversationAdapter adapter;
     private EditText chat_response_edittext;
-    private ProgressBar loading;
+    // private ProgressBar loading;
     private Conversation current_conversation;
     private SendResponseHelper sendResponseHelper;
     private onlineStateChangesReceiver onlineStateBroadcastReceiver;
@@ -66,6 +73,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     ConversationDataManager conversationDataManager;
     InnerConversationDataManager innerConversationDataManager;
     FloatingActionButton btn_send_mess;
+    ImageView loading;
+    Animation.AnimationListener animationListener;
+    LinearLayout bottom_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +85,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         Bundle args = getIntent().getExtras();
         if (args != null)
             id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
-        init();
-    }
-
-    public void init() {
-        initData();
-        initHeader();
+        initData();//open conversation and update current conversation
+        drawHeader();
         initContent();
         initFooter();
     }
@@ -97,7 +103,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             ConversationDataManager.setUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateConversation(this, current_conversation.idSurfer, Contract.Conversation.COLUMN_UNREAD, 0);
         } else { //surfer is new
-            isNew = true;
+            // isNew = true;
         }
 
         AgentDataManager agentDataManager = new AgentDataManager();
@@ -108,6 +114,55 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
+    private void drawHeader() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        if (current_conversation != null && current_conversation.displayname != null)
+            setTitle(current_conversation.displayname);
+        else
+            setTitle("#" + id_surfer);
+    }
+
+    private void initContent() {
+        setContentView(R.layout.activity_inner_conversation);
+        recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            adapter = new InnerConversationAdapter(this, null);
+            recyclerView.setAdapter(adapter);
+        }
+        initLoading();
+        getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
+    }
+
+    private void initFooter() {
+        sendResponseHelper = new SendResponseHelper();
+        bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
+        btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_chat_response);
+        chat_response_edittext = (EditText) findViewById(R.id.chat_response_edittext);
+
+        chat_response_edittext.addTextChangedListener(textWatcher);
+        btn_send_mess.setOnClickListener(this);
+
+        if (current_conversation != null)
+            if (!current_conversation.isOnline)
+                setEnableFooter(false);
+        /*if (!isNew) {
+            btn_send_mess.setEnabled(true);
+            if (current_conversation != null) {
+                if (!current_conversation.isOnline) {
+                    setFooter();
+                } else {
+                    chat_response_edittext.setEnabled(true);
+                    chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+            }
+        } else {
+        }*/
+    }
+
     ServerCallResponse callResponse = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
@@ -116,8 +171,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setProgressBarState(View.GONE);
-                        setEmptyDetails();
+                        //setProgressBarState(View.GONE);
+                        load_animations(false);
+                        setEmptyDetails(true);
                         isNew = true;
                     }
                 });
@@ -125,75 +181,72 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     };
 
-    private void initHeader() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (current_conversation != null && current_conversation.displayname != null)
-            setTitle(current_conversation.displayname);
-        if (isNew) {
-            setTitle("#" + id_surfer);
-        }
-
-    }
-
-    private void initContent() {
-        setContentView(R.layout.activity_inner_conversation);
-
-        recyclerView = (RecyclerView) findViewById(R.id.inner_conversation_recyclerView);
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            adapter = new InnerConversationAdapter(this, null);
-            recyclerView.setAdapter(adapter);
-        }
-        setProgressBarState(View.VISIBLE);
-        getSupportLoaderManager().initLoader(INNER_CONVERSATION_LOADER, null, this);
-    }
-
-    private void initFooter() {
-
-        if (!isNew) {
-            btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_chat_response);
-            btn_send_mess.setOnClickListener(this);
-            chat_response_edittext = (EditText) findViewById(R.id.chat_response_edittext);
-            chat_response_edittext.addTextChangedListener(textWatcher);
-            if (current_conversation != null) {
-                if (!current_conversation.isOnline) {
-                    setDisableFooter();
-                } else {
-                    chat_response_edittext.setEnabled(true);
-                    chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.white));
-                }
+    public void initLoading() {
+        animationListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
             }
-            //  chat_response_edittext.setOnKeyListener(this);
 
-            sendResponseHelper = new SendResponseHelper();
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                System.out.println("End Animation!");
+            }
+        };
+        loading = (ImageView) findViewById(R.id.loading);
+        load_animations(true);
+    }
+
+    void load_animations(boolean state) {
+        new AnimationUtils();
+        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotation);
+        rotation.setAnimationListener(animationListener);
+        if (state) {
+            loading.setVisibility(View.VISIBLE);
+            loading.startAnimation(rotation);
         } else {
-
+            loading.setVisibility(View.GONE);
+            loading.clearAnimation();
         }
     }
 
-    private void setEmptyDetails() {
+    private void setEmptyDetails(boolean value) {
         no_msg_title = (TextView) findViewById(R.id.no_msg_title);
         no_msg_text = (TextView) findViewById(R.id.no_msg_txt);
         no_msg_image = (ImageView) findViewById(R.id.no_msg_img);
-        no_msg_image.setVisibility(View.VISIBLE);
-        no_msg_title.setVisibility(View.VISIBLE);
-        no_msg_text.setVisibility(View.VISIBLE);
         invite_btn = (Button) findViewById(R.id.invite_btn);
-        invite_btn.setVisibility(View.VISIBLE);
-        invite_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setProgressBarState(View.VISIBLE);
-                SocketManager.getInstance().inviteToChat(id_surfer);
-            }
-        });
-        LinearLayout bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
-        bottom_layout.setVisibility(View.GONE);
-
+        if (!value) {
+            no_msg_image.setVisibility(View.GONE);
+            no_msg_title.setVisibility(View.GONE);
+            no_msg_text.setVisibility(View.GONE);
+            invite_btn.setVisibility(View.GONE);
+        } else {
+            load_animations(false);
+            no_msg_image.setVisibility(View.VISIBLE);
+            no_msg_title.setVisibility(View.VISIBLE);
+            no_msg_text.setVisibility(View.VISIBLE);
+            invite_btn.setVisibility(View.VISIBLE);
+            invite_btn.setOnClickListener(inviteListener);
+            bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
+            bottom_layout.setVisibility(View.GONE);
+        }
     }
+
+    View.OnClickListener inviteListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //setProgressBarState(View.VISIBLE);
+            load_animations(true);
+            setEmptyDetails(false);
+            SocketManager.getInstance().inviteToChat(id_surfer);
+
+        }
+    };
+
 
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -204,7 +257,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             menu.setGroupVisible(R.id.inner_conversation_menu, false);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
@@ -218,41 +270,28 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
         if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
             adapter.swapCursor(cursor);
             recyclerView.smoothScrollToPosition(cursor.getCount());
-            setProgressBarState(View.GONE);
+            //setProgressBarState(View.GONE);
+            load_animations(false);
             recyclerView.setVisibility(View.VISIBLE);
             isNew = false;
             if (menu != null)
                 menu.setGroupVisible(R.id.inner_conversation_menu, true);
             if (current_conversation == null)//conversation is not in list
             {
-                //todo: get the current conversation
+                current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
             }
         } else {
-            setProgressBarState(View.VISIBLE);
+            //setProgressBarState(View.VISIBLE);
+            load_animations(true);
         }
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
     }
-
-   /* public boolean onKey(View view, int keyCode, KeyEvent event) {
-       *//* if (keyCode == EditorInfo.IME_ACTION_SEARCH || keyCode == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            switch (view.getId()) {
-                case R.id.chat_response_edittext:
-                    Log.d("enter pressed", "enter pressed");
-                    sendChatResponse(chat_response_edittext.getText().toString());
-                    chat_response_edittext.setText("");
-                    break;
-            }
-            return true;
-        }*//*
-        return false; // pass on to other listeners.
-    }*/
 
     @Override
     public void onClick(View v) {
@@ -317,12 +356,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 intent.putExtra(Contract.Conversation.COLUMN_EMAIL, current_conversation.email);
                 startActivity(intent);
                 break;
-
         }
-
     }
 
     public void sendChatResponse(String msg) {
+        Log.d("gotttt",msg);
         if (current_conversation != null && current_conversation.isOnline) {
             sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);
         }
@@ -350,28 +388,42 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         unregisterReceiver(conversationChangedReceiver);
     }
 
-    public void setProgressBarState(int state) {
-        if (loading == null)
-            loading = (ProgressBar) findViewById(R.id.loading_inner_conversation);
-        // if(state== View.VISIBLE&&loading.getVisibility()== View.GONE)
-        loading.setVisibility(state);
-    }
-
+    /* public void setProgressBarState(int state) {
+         if (loading == null)
+             loading = (ProgressBar) findViewById(R.id.loading_inner_conversation);
+         // if(state== View.VISIBLE&&loading.getVisibility()== View.GONE)
+         loading.setVisibility(state);
+     }
+ */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
-    public void setDisableFooter() {
-        if (invite_btn != null && isNew)
-            invite_btn.setVisibility(View.GONE);
-        else if (chat_response_edittext != null) {
-            chat_response_edittext.setEnabled(false);
-            btn_send_mess.setEnabled(false);
-            chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.gray_very_light));
-            chat_response_edittext.setHint("the visitor is offline right now :(");
+    public void setEnableFooter(boolean value) {
+        if (!value) {
+            if (isNew) {
+                if (invite_btn != null)
+                    invite_btn.setVisibility(View.GONE);
+            } else if (chat_response_edittext != null) {
+                chat_response_edittext.setEnabled(false);
+                btn_send_mess.setEnabled(false);
+                chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.gray_very_light));
+                chat_response_edittext.setHint("the visitor is offline right now :(");
+            }
+        } else {
+            if (isNew) {
+                if (invite_btn != null)
+                    invite_btn.setVisibility(View.VISIBLE);
+            } else if (chat_response_edittext != null) {
+                bottom_layout.setVisibility(View.VISIBLE);
+                chat_response_edittext.setEnabled(true);
+                btn_send_mess.setEnabled(true);
+                chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.white));
+            }
         }
     }
+
 
     TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -382,65 +434,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             if (charSequence.length() > 0) {
                 btn_send_mess.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
-                /*if (charSequence.length() == 1) {
-                    btn_send_mess.animate()
-                            .scaleX(0f)
-                            .scaleY(0f)
-                            .setListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    btn_send_mess.animate()
-                                            .scaleX(1f)
-                                            .scaleY(1f)
-                                            .start();
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animation) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animation) {
-                                }
-                            })
-                            .start();
-
-               }*/
             } else {
                 btn_send_mess.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray_light)));
-              /*  btn_send_mess.animate()
-                        .scaleX(0f)
-                        .scaleY(0f)
-                        .setListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                btn_send_mess.animate()
-                                        .scaleX(1f)
-                                        .scaleY(1f)
-                                        .start();
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-                                btn_send_mess.animate()
-                                        .scaleX(0f)
-                                        .scaleY(0f)
-                                        .start();
-                            }
-                        })
-                        .start();*/
             }
         }
 
@@ -455,8 +450,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         public void onReceive(Context context, Intent intent) {
 
             int state = intent.getIntExtra(getResources().getString(R.string.online_state), -1);
-            int id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), -1);
-            if (id_surfer == id_surfer) {
+            int changed_id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), -1);
+            if (id_surfer == changed_id_surfer) {
                 if (current_conversation != null) {
                     if (state == 0)
                         current_conversation.isOnline = false;
@@ -464,7 +459,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                         current_conversation.isOnline = true;
                 }
                 if (state == 0)
-                    setDisableFooter();
+                    setEnableFooter(false);
+                else
+                    setEnableFooter(true);
             }
         }
 
@@ -476,18 +473,20 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             boolean status = intent.getBooleanExtra(getResources().getString(R.string.is_successed_key), false);
             int invited_id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), 0);
             if (invited_id_surfer != id_surfer || invited_id_surfer == 0) {
-                setProgressBarState(View.GONE);
+                //setProgressBarState(View.GONE);
+                load_animations(false);
                 return;
             }
             if (status) {
-                if (AgentDataManager.getAgentInstanse() != null) {
-                    conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
-                }
                 isNew = false;
-                setProgressBarState(View.VISIBLE);
-                init();
+                if (AgentDataManager.getAgentInstanse() != null) {
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                }
+                //setProgressBarState(View.VISIBLE);
+                //init();
             } else {
-                setProgressBarState(View.GONE);
+                load_animations(false);
+                // setProgressBarState(View.GONE);
                 //invite failed
             }
         }
@@ -502,4 +501,44 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
+    ServerCallResponse getConversationByIdOnResponse = new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+            int tryCount = 0;
+            Gson gson = new Gson();
+            try {
+                JSONObject jsonObject = new JSONObject(response).getJSONObject("conversations");
+                current_conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
+                if (current_conversation == null || current_conversation.innerConversationData == null && tryCount < 3) {
+                    // conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                    tryCount++;
+                    return;
+                }
+
+                for (InnerConversation innerConversation : current_conversation.innerConversationData)
+                    innerConversationDataManager.saveData(innerConversation);
+                conversationDataManager.saveData(current_conversation);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isNew = false;
+                        drawHeader();
+                        load_animations(false);
+                        setEnableFooter(true);
+                    }
+                });
+            } catch (JSONException e) {
+                if (tryCount < 3) {
+                    //conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                    tryCount++;
+                }
+                e.printStackTrace();
+            }
+        }
+    };
 }
+
+
+
+
+

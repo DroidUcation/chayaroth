@@ -77,7 +77,8 @@ public class Conversation {
     @SerializedName("isOnline")
     @Expose
     public boolean isOnline;
-
+    @SerializedName("data")
+    @Expose
     public List<InnerConversation> innerConversationData;
 
 
