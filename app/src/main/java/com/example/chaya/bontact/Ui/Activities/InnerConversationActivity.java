@@ -99,9 +99,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (current_conversation != null) {//THIS ID HAS CONVERSATIONS
             isNew = false;
             //update unread  numbers
-            int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
-            ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
-            conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
+
         } else { //surfer is new
             // isNew = true;
         }
@@ -383,6 +381,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     @Override
     public void onPause() {
         super.onPause();
+        int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
+        ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
+        conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         unregisterReceiver(onlineStateBroadcastReceiver);
         unregisterReceiver(inviteReceiver);
         unregisterReceiver(conversationChangedReceiver);
@@ -397,7 +398,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
  */
     @Override
     public void onBackPressed() {
-        conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
+      //  conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         super.onBackPressed();
     }
 

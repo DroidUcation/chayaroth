@@ -85,9 +85,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.unread.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))));
             holder.setUnRead(true);
         }
-        //holder.itemView.settr(context.getResources().getColor(R.color.gray_opacity));
+
     }
-    //}
+
 
     public void setAvatar(String avatar, String displayName, ImageView avatarView) {
         //set default
@@ -156,7 +156,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             chanelIcon.setTypeface(font);
             onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
             itemView.setOnClickListener(this);
-
         }
 
         public void setUnRead(boolean status) {
