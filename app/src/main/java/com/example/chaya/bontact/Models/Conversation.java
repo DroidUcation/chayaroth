@@ -80,7 +80,9 @@ public class Conversation {
     @SerializedName("data")
     @Expose
     public List<InnerConversation> innerConversationData;
-
+    @SerializedName("agentselected")
+    @Expose
+    public int agentSelectedId;
 
     public int getIdSurfer() {
         return idSurfer;

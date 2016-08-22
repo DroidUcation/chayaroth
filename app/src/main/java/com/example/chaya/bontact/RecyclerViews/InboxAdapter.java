@@ -16,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
@@ -36,10 +38,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     Cursor cursor;
     Context context;
+    ConversationDataManager conversationDataManager;
 
     public InboxAdapter(Context context, Cursor cursor) {
         this.context = context;
         this.cursor = cursor;
+        conversationDataManager = new ConversationDataManager(context);
+
     }
 
 
@@ -84,6 +89,16 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)) > 0) {
             holder.unread.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))));
             holder.setUnRead(true);
+        }
+        int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
+        if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstanse().getIdRep()) {
+            holder.itemView.setEnabled(false);
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.gray_opacity));
+            holder.not_available.setVisibility(View.VISIBLE);
+        } else {//holder.itemView.setEnabled(true);
+            holder.itemView.setEnabled(true);
+            //holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.not_available.setVisibility(View.GONE);
         }
 
     }
@@ -137,7 +152,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView avatar, onlinePoint;
-        TextView displayName, lastSentence, date, unread;
+        TextView displayName, lastSentence, date, unread, not_available;
         TextView chanelIcon;
         View colorBack;
 
@@ -155,6 +170,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
             onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
+            not_available = (TextView) itemView.findViewById(R.id.taken_by_agent_txt);
             itemView.setOnClickListener(this);
         }
 

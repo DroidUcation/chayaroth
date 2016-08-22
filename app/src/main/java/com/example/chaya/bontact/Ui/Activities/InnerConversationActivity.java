@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -57,7 +58,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     private RecyclerView recyclerView;
     private InnerConversationAdapter adapter;
     private EditText chat_response_edittext;
-    // private ProgressBar loading;
     private Conversation current_conversation;
     private SendResponseHelper sendResponseHelper;
     private onlineStateChangesReceiver onlineStateBroadcastReceiver;
@@ -85,6 +85,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         Bundle args = getIntent().getExtras();
         if (args != null)
             id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+
         initData();//open conversation and update current conversation
         drawHeader();
         initContent();
@@ -376,14 +377,30 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         intentFilter = IntentFilter.create(getResources().getString(R.string.change_conversation_list_action), "*/*");
         conversationChangedReceiver = new CurrentConversationChangedReceiver();
         registerReceiver(conversationChangedReceiver, intentFilter);
+        if (id_surfer != 0)
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    conversationDataManager.setSelectedIdConversation(id_surfer);
+                }
+            });
+
+        if (current_conversation != null) {
+            int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
+            ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
+            conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
+        }
+
+    }
+
+    public void updateUnreadConversation() {
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
-        ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
-        conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
+        conversationDataManager.setUnSelectedIdConversation();
         unregisterReceiver(onlineStateBroadcastReceiver);
         unregisterReceiver(inviteReceiver);
         unregisterReceiver(conversationChangedReceiver);
@@ -398,7 +415,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
  */
     @Override
     public void onBackPressed() {
-      //  conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
+        //  conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         super.onBackPressed();
     }
 
@@ -482,8 +499,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 isNew = false;
                 if (AgentDataManager.getAgentInstanse() != null)
                     conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
-                if (VisitorsDataManager.getVisitorByIdSurfer(id_surfer) != null)
-                    VisitorsDataManager.getVisitorByIdSurfer(id_surfer).isNew = false;
+
+                    //visitorsDataManager.updateIsNew(id_surfer,false);
             } else {
                 load_animations(false);
             }

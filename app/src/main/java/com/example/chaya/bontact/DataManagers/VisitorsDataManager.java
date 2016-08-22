@@ -42,6 +42,10 @@ public class VisitorsDataManager {
 
     }
 
+    public void updateIsNew(int id_surfer, boolean state) {
+        getVisitorByIdSurfer(id_surfer).isNew = state;
+    }
+
     public static Visitor getVisitorByIdSurfer(int id_surfer) {
         if (getVisitorsList().size() > 0)
             for (Visitor visitor : getVisitorsList()) {

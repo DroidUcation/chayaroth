@@ -35,6 +35,7 @@ public class Contract {
         public static final String COLUMN_DISPLAY_NAME="displayname";
         public static final String COLUMN_LAST_MESSAGE ="lastMessage";
         public static final String COLUMN_IS_ONLINE="isOnline";
+        public static final String COLUMN_AGENT_SELECTED_ID="agentSelectedId";
     }
     public static class InnerConversation implements BaseColumns{
         public static final String AUTHORITY = "com.example.chaya.bontact.Data.InnerConversationProvider";

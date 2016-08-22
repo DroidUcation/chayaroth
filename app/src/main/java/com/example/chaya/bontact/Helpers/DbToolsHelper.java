@@ -73,6 +73,8 @@ public class DbToolsHelper {
         contentValues.put(Contract.Conversation.COLUMN_AGENT, conversation.agent);
         contentValues.put(Contract.Conversation.COLUMN_DISPLAY_NAME, conversation.displayname);
         contentValues.put(Contract.Conversation.COLUMN_IS_ONLINE, conversation.isOnline);
+        contentValues.put(Contract.Conversation.COLUMN_AGENT_SELECTED_ID, conversation.agentSelectedId);
+
         return contentValues;
     }
 
@@ -101,6 +103,7 @@ public class DbToolsHelper {
         conversation.agent = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT));
         conversation.displayname = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
         conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
+        conversation.agentSelectedId=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         return conversation;
        /* JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new Conversation(), cursor);
         if (jsonObject.length() > 0) {
@@ -183,8 +186,10 @@ public class DbToolsHelper {
     public static String removeHtmlTags(String msg) {
         if (msg == null)
             return null;
+        msg = msg.replaceAll("<br/>", "/n");
+        msg = msg.replaceAll("<br>", "/n");
         msg = msg.replaceAll("<(.*?)\\>", "");//Removes all items in brackets
-        msg = msg.replaceAll("<(.*?)\\\n", "");//Must be undeneath
+        //msg = msg.replaceAll("<(.*?)\\\n", "");//Must be undeneath
         msg = msg.replaceFirst("(.*?)\\>", "");//Removes any connected item to the last bracket
         msg = msg.replaceAll("&nbsp;", "");
         msg = msg.replaceAll("&amp;", "");

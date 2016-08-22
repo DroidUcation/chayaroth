@@ -35,6 +35,7 @@ public class InitData {
             conversationDataManager.getAllUnreadFromServer(context);
             conversationDataManager.getFirstDataFromServer(context, token);
         }
+
     }
 
 

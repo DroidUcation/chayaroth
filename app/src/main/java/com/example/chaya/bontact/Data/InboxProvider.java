@@ -55,7 +55,7 @@ public class InboxProvider extends ContentProvider {
         if (rowID > 0) {
             // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
             getContext().getContentResolver().notifyChange(uri, null);
-            checkDb();
+           // checkDb();
             return uri;
         }
 
@@ -74,11 +74,11 @@ public class InboxProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         long result = dbBontact.update(Contract.Conversation.TABLE_NAME, values, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
-        checkDb();
+        //checkDb();
         return (int) result;
     }
 
-    public void checkDb() {
+    /*public void checkDb() {
         Cursor cursor = query(Contract.Conversation.INBOX_URI, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
@@ -87,6 +87,6 @@ public class InboxProvider extends ContentProvider {
                 Log.d("cursor name " + cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)), cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) + "");
             } while (cursor.moveToNext());
         }
-    }
+    }*/
 
 }

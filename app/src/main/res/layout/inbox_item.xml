@@ -8,9 +8,10 @@
     <View
         android:id="@+id/border"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/purple"
-        android:layout_marginTop="15dp"/>
+        android:layout_height="10dp"
+        android:background="@color/gray_opacity"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/taken_by_agent_txt"
         android:layout_width="wrap_content"
@@ -18,6 +19,7 @@
         android:layout_centerInParent="true"
         android:text="Conversation taken by another agent"
         android:textColor="@color/white"
+        android:visibility="gone"
     />
 
     <ImageView

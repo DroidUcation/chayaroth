@@ -92,7 +92,11 @@ public class Agent {
             return rep.getName();
         return null;
     }
-
+    public int getIdRep() {
+        if (rep != null)
+            return rep.idRepresentive;
+        return 0;
+    }
     public Rep getRep() {
         return rep;
     }

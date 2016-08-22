@@ -36,7 +36,8 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_AGENT + " TEXT, " +
             Contract.Conversation.COLUMN_LAST_MESSAGE + " TEXT, " +
             Contract.Conversation.COLUMN_DISPLAY_NAME + " TEXT ," +
-            Contract.Conversation.COLUMN_IS_ONLINE + " INT DEFAULT 0" +
+            Contract.Conversation.COLUMN_IS_ONLINE + " INT DEFAULT 0 , " +
+            Contract.Conversation.COLUMN_AGENT_SELECTED_ID+" INT DEFAULT 0" +
             " )";
     private String CreateInnerConversationTable = "CREATE TABLE " + Contract.InnerConversation.TABLE_NAME + "(" +
             Contract.InnerConversation.COLUMN_ID + "  INTEGER PRIMARY KEY,  " +
@@ -102,6 +103,7 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
         strings.add(Contract.Conversation.COLUMN_LAST_MESSAGE);
         strings.add(Contract.Conversation.COLUMN_IS_ONLINE);
+        strings.add(Contract.Conversation.COLUMN_AGENT_SELECTED_ID);
         return strings;
     }
 

@@ -15,6 +15,8 @@ import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Socket.io.SocketManager;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -33,7 +35,7 @@ public class ConversationDataManager {
     private Context context;
     public static int current_page = 0;
     public static int unread_conversations = 0;
-
+    public static int selectedIdConversation = 0;
 
     public ConversationDataManager(Context context) {
         if (conversationList == null)
@@ -43,15 +45,63 @@ public class ConversationDataManager {
             fillConversationList(context);
     }
 
+    public void setSelectedIdConversation(int idSurfer) {
+        selectedIdConversation = idSurfer;
+        Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
+        if (conversation != null) {
+            conversation.agentSelectedId = AgentDataManager.getAgentInstanse().getIdRep();
+            update(conversation);
+            SocketManager.getInstance().emitSelectConversationState(conversation, true);
+        }
+    }
+
+    public void setUnSelectedIdConversation() {
+        Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
+        if (conversation != null) {
+            SocketManager.getInstance().emitSelectConversationState(conversation, false);
+            conversation.agentSelectedId = 0;
+            update(conversation);
+        }
+
+    }
+
+    public boolean updateSelectedByAgent(int idSurfer, int idAgent, boolean state) {
+        Conversation conversation = getConversationByIdSurfer(idSurfer);
+        if (conversation != null)
+            if (state)
+                conversation.agentSelectedId = idAgent;
+            else
+                conversation.agentSelectedId = 0;
+        if (update(conversation) != null)
+            return true;
+        return false;
+    }
+
+    public boolean updateUnSelectedByAgentForAll(int idAgent) {
+        if (idAgent == 0)
+            return false;
+        for (Conversation conversation : conversationList) {
+            if (conversation.agentSelectedId == idAgent) {
+                conversation.agentSelectedId = 0;
+                update(conversation);
+            }
+        }
+        return true;
+
+    }
+
     //--mange functions
     public void fillConversationList(Context context) {
-        //todo: do in async task
+        if (conversationList.size() > 0) {
+            return;
+        } //todo: do in async task
         Cursor cursor = context.getContentResolver().query(Contract.Conversation.INBOX_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             Conversation conversation = DbToolsHelper.convertCursorToConversation(cursor);
             insertOrUpdate(conversation);
         }
         cursor.close();
+
     }
 
     public Conversation getConversationByIdSurfer(int idSurfer) {
@@ -64,6 +114,13 @@ public class ConversationDataManager {
         }
         return null;
     }
+
+    /*public boolean isConversationAvailable(int id_agent) {
+        Conversation conversation = getConversationByIdSurfer(idSurfer);
+        if (conversation != null && conversation.agentSelectedId == 0)
+            return true;
+        return false;
+    }*/
 
     public Conversation insertOrUpdate(Conversation conversation) {
         if (conversation == null)
@@ -224,6 +281,7 @@ public class ConversationDataManager {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 insertOrUpdate(gson.fromJson(strObj, Conversation.class));
             }
+            SocketManager.getInstance().refreshSelectConversation();
             return true;
         } catch (JSONException e) {
             e.printStackTrace();

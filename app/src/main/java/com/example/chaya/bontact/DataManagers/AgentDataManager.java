@@ -106,6 +106,13 @@ public class AgentDataManager {
         return null;
     }
 
+    public int getAgentId(Context context) {
+        if (isLoggedIn(context) == true)
+            if (agent != null && getAgentInstanse().getRep() != null)
+                return getAgentInstanse().getRep().idRepresentive;
+        return 0;
+    }
+
     public boolean isLoggedIn(Context context) {
         this.context = context;
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
