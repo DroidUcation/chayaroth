@@ -11,6 +11,7 @@ import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
+import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -32,7 +33,7 @@ public class AgentDataManager {
         return context;
     }
 
-    public static Agent getAgentInstanse() {
+    public static Agent getAgentInstance() {
         if (agent == null)
             return new Agent();
         return agent;
@@ -42,8 +43,17 @@ public class AgentDataManager {
         AgentDataManager.agent = agent;
     }
 
+    public static boolean getMsgPushNotification() {
+
+        return getAgentInstance().settings.msgPushNotification;
+    }
+
+    public static boolean getVisitorPushNotification() {
+        return getAgentInstance().settings.visitorPushNotification;
+    }
+
     public AgentDataManager() {
-        agent = getAgentInstanse();
+        agent = getAgentInstance();
         setContext(null);
     }
 
@@ -76,13 +86,13 @@ public class AgentDataManager {
         agent.settings.msgPushNotification = true;
         agent.settings.visitorPushNotification = false;
         if (agent != null && context != null) {
-            // String agent_str= gson.toJson(getAgentInstanse());
+            // String agent_str= gson.toJson(getAgentInstance());
             SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
             SharedPreferences.Editor editor = Preferences.edit();
             editor.clear();
-            editor.putString(context.getResources().getString(R.string.agent), gson.toJson(getAgentInstanse().getRep()));
-            editor.putString(context.getResources().getString(R.string.settings), gson.toJson(getAgentInstanse().getSettings()));
-            editor.putString(context.getResources().getString(R.string.token), getAgentInstanse().getToken());
+            editor.putString(context.getResources().getString(R.string.agent), gson.toJson(getAgentInstance().getRep()));
+            editor.putString(context.getResources().getString(R.string.settings), gson.toJson(getAgentInstance().getSettings()));
+            editor.putString(context.getResources().getString(R.string.token), getAgentInstance().getToken());
             editor.apply();
            /* gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null),Agent.Rep.class);
             gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null),Agent.Settings.class);*/
@@ -94,7 +104,7 @@ public class AgentDataManager {
     public String getAgentToken(Context context) {
         if (isLoggedIn(context) == true)
             if (agent != null)
-                return getAgentInstanse().getToken();
+                return getAgentInstance().getToken();
 
         return null;
     }
@@ -102,14 +112,14 @@ public class AgentDataManager {
     public String getAgentName(Context context) {
         if (isLoggedIn(context) == true)
             if (agent != null)
-                return getAgentInstanse().getName();
+                return getAgentInstance().getName();
         return null;
     }
 
     public int getAgentId(Context context) {
         if (isLoggedIn(context) == true)
-            if (agent != null && getAgentInstanse().getRep() != null)
-                return getAgentInstanse().getRep().idRepresentive;
+            if (agent != null && getAgentInstance().getRep() != null)
+                return getAgentInstance().getRep().idRepresentive;
         return 0;
     }
 
@@ -131,7 +141,8 @@ public class AgentDataManager {
         return false;
     }
 
-    public boolean logOut(Context context) {
+    public static boolean logOut(Context context) {
+
         //clear agent details
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
         SharedPreferences.Editor editor = Preferences.edit();
@@ -139,6 +150,10 @@ public class AgentDataManager {
         //claer db
         context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
         context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, null, null);
+        ConversationDataManager.conversationList = null;
+        ConversationDataManager.unread_conversations = 0;
+        VisitorsDataManager.visitorsList = null;
+
         return true;
 
     }
@@ -161,7 +176,7 @@ public class AgentDataManager {
                     return;
                 }
                 if (msg.equals("user not found")) {
-                    sendResToUi(false, null, ErrorType.user_not_exists);
+                    sendResToUi(false, null, ErrorType.invalid_details);
                     return;
                 }
             } catch (JSONException e) {

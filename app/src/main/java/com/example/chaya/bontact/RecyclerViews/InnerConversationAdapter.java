@@ -12,6 +12,7 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -112,27 +113,27 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     innerConversationHolder = (InnerConversationHolder) holder;
                     innerConversationHolder.msg.setText(getMsgConcatWithDate(msg, date));
                     innerConversationHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
-                    innerConversationHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(actionType));
+                    innerConversationHolder.chanelIcon.setImageResource(ChanelsTypes.getDrawableIconByChannelType(actionType));
                     break;
                 case VISITOR_TEXT_VH:
                     innerConversationHolder = (InnerConversationHolder) holder;
                     innerConversationHolder.msg.setText(getMsgConcatWithDate(msg, date));
-                    innerConversationHolder.name.setText(getNameForVisitor(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
-                    int icon = ChanelsTypes.getIconByChanelType(actionType);
+                    innerConversationHolder.name.setText(getNameForVisitor(getNameForVisitor(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
+                    int icon = ChanelsTypes.getDrawableIconByChannelType(actionType);
                     if (icon != 0)
-                        innerConversationHolder.chanelIcon.setText(icon);
+                        innerConversationHolder.chanelIcon.setImageResource(icon);
                     break;
                 case VISITOR_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
                     visitorRecordHolder.name.setText(getNameForVisitor(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
-                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(actionType));
+                    visitorRecordHolder.chanelIcon.setImageResource(ChanelsTypes.getDrawableIconByChannelType(actionType));
                     visitorRecordHolder.date.setText(getDateToDisplay(date));
                     setRecordPlayer(visitorRecordHolder);
                     break;
                 case AGENT_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
                     visitorRecordHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
-                    visitorRecordHolder.chanelIcon.setText(ChanelsTypes.getIconByChanelType(actionType));
+                    visitorRecordHolder.chanelIcon.setImageResource(ChanelsTypes.getDrawableIconByChannelType(actionType));
                     visitorRecordHolder.date.setText(getDateToDisplay(date));
                     setRecordPlayer(visitorRecordHolder);
                     break;
@@ -255,13 +256,14 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public class InnerConversationVisitorRecordHolder extends RecyclerView.ViewHolder {
 
-        TextView chanelIcon, name, date;
+        TextView name, date;
         AudioPlayerInnerHelper player;
+        ImageView chanelIcon;
 
         public InnerConversationVisitorRecordHolder(View itemView) {
             super(itemView);
-            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
-            chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            chanelIcon = (ImageView) itemView.findViewById(R.id.chanelIcon);
+            //chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
             name = (TextView) itemView.findViewById(R.id.displayName);
             name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
             date = (TextView) itemView.findViewById(R.id.date);
@@ -270,12 +272,13 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     class InnerConversationHolder extends InnerConversationMsgHolder {
-        TextView chanelIcon, name;
+        TextView name;
+        ImageView chanelIcon;
 
         public InnerConversationHolder(View itemView) {
             super(itemView);
-            chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
-            chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+            chanelIcon = (ImageView) itemView.findViewById(R.id.chanelIcon);
+            //chanelIcon.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
             name = (TextView) itemView.findViewById(R.id.displayName);
             name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
 

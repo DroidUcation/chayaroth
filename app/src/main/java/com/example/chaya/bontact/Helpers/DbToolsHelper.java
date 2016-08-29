@@ -62,7 +62,7 @@ public class DbToolsHelper {
         contentValues.put(Contract.Conversation.COLUMN_LAST_TYPE, conversation.lasttype);
         contentValues.put(Contract.Conversation.COLUMN_ACTION_ID, conversation.actionId);
         contentValues.put(Contract.Conversation.COLUMN_REPLY, conversation.reply);
-        contentValues.put(Contract.Conversation.COLUMN_LAST_MESSAGE, removeHtmlTags(contentValues.getAsString(Contract.Conversation.COLUMN_LAST_MESSAGE)));
+        contentValues.put(Contract.Conversation.COLUMN_LAST_MESSAGE, removeHtmlTags(conversation.lastMessage));
         contentValues.put(Contract.Conversation.COLUMN_PAGE, conversation.page);
         contentValues.put(Contract.Conversation.COLUMN_IP, conversation.ip);
         contentValues.put(Contract.Conversation.COLUMN_BROWSER, conversation.browser);

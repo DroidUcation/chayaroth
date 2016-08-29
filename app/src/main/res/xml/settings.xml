@@ -9,8 +9,7 @@
             android:defaultValue="true"
             android:key="@string/new_message_push_key"
             android:summary="@string/new_message_description"
-            android:title="@string/push_notification"
-            />
+            android:title="@string/push_notification" />
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="@string/new_message_sound_key"
@@ -48,6 +47,8 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://www.bontact.com" />
         </Preference>
+        <Preference android:title="@string/disconnect_account_title" android:key="@string/disconnect_account_key" ></Preference>
+        <Preference android:title="@string/app_version_title"  ></Preference>
 
     </android.support.v7.preference.PreferenceCategory>
 

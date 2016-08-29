@@ -34,7 +34,6 @@ public class MenuActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
 
         agentDataManager = new AgentDataManager();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_layout);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -9,34 +9,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
 
 import com.example.chaya.bontact.Data.Contract;
-import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConversationDataManager;
-import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
-import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
-import com.example.chaya.bontact.Ui.Activities.MenuActivity;
 import com.example.chaya.bontact.Ui.Activities.SplashActivity;
-import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.google.android.gms.gcm.GcmListenerService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by chaya on 8/3/2016.
  */
 public class GCMPushReceiverService extends GcmListenerService {
-
-    public static int notificationsCount = 0;
-    public static int id = 0;
-    public static List<String> strings = new ArrayList<>();
+    public static int NEW_VISITOR = 1;
+    public static int NEW_MESSAGE = 0;
+    public static int newMsgNotificationsCount = 0;
+    public static int newMsgId = 0;
+    public static int newVisitorNotificationsCount = 0;
+    public static int newVisitorId = 0;
+    // public static int id = 0;
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -44,43 +36,65 @@ public class GCMPushReceiverService extends GcmListenerService {
 
         String message = data.getString("message");
         String id_surfer = null;
+        int push_type = 0;
         String bontactData = data.getString("bontactdata");
         try {
             JSONObject object = new JSONObject(bontactData);
             id_surfer = object.getJSONObject("surfer").getString("idSurfer");
+            if (object.optString("pushtype", "new_message").equals("new visitor"))
+                push_type = NEW_VISITOR;
+            else
+                push_type = NEW_MESSAGE;
+
         } catch (JSONException e) {
             e.printStackTrace();
+            return;
         }
 
-        sendNotification(message, Integer.parseInt(id_surfer));
+        sendNotification(message, Integer.parseInt(id_surfer), push_type);
     }
 
+    public static void resetAllCounters() {
+        newMsgNotificationsCount = 0;
+        newVisitorNotificationsCount = 0;
 
-    private void sendNotification(String message, int id_surfer) {
+    }
+
+    private void sendNotification(String message, int id_surfer, int push_type) {
         Intent intent = new Intent(this, SplashActivity.class);
         Bundle b = new Bundle();
         b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
-        intent.putExtras(b); //Put your id to your next Intent
+        b.putInt(getResources().getString(R.string.push_notification_type), push_type);
+        intent.putExtras(b);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         int requestCode = 0;
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationsCount++;
-        NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.bontact_launcher)
-                .setContentTitle("u have " + notificationsCount + " new messages")
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setSound(sound);
+        if (push_type == NEW_MESSAGE) {
+            newMsgNotificationsCount++;
+            NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.bontact_launcher)
+                    .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setSound(sound);
 
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        for (String s : strings)
-            inboxStyle.addLine(s);
-        noBuilder.setStyle(inboxStyle);
-        notificationManager.notify(id, noBuilder.build()); //0 = ID of notification
+            notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
+        } else {
+            newVisitorNotificationsCount++;
+            NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.bontact_launcher)
+                    .setContentTitle("you have " + newVisitorNotificationsCount + " new visitors")
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setSound(sound);
+
+            notificationManager.notify(newVisitorId, noBuilder.build()); //0 = ID of notification
+        }
+
     }
 
 

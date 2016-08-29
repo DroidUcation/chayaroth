@@ -29,16 +29,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_addressee"
-        android:text="From:"
-      />
+        android:text="From:" />
 
     <EditText
         android:id="@+id/edit_text_from"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txt_from"
-        android:enabled="false"
-        />
+        android:enabled="false" />
 
     <TextView
         android:id="@+id/txt_subject"
@@ -51,7 +49,10 @@
         android:id="@+id/edit_text_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_subject" />
+        android:layout_below="@id/txt_subject"
+        android:lines="1"
+        android:singleLine="true"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/txt_content"

@@ -13,6 +13,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Services.GCMPushReceiverService;
 import com.example.chaya.bontact.Services.RegisterGcmService;
 import com.example.chaya.bontact.Socket.io.SocketManager;
 
@@ -33,50 +34,45 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        init(getIntent().getExtras());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        AgentDataManager agentDataManager = new AgentDataManager();
-        Intent intent;
-        if (agentDataManager.isLoggedIn(this) == true) {
 
-            InitData initData = new InitData();
-            initData.start(this);
-
-            //  exportDB();
-            intent = new Intent(this, MenuActivity.class);
-        } else {
-            intent = new Intent(this, MainActivity.class);
-        }
-        startActivity(intent);
         //finish();
     }
 
-    private void exportDB() {
-        String package_name = "com.example.chaya.bontact";
-        String Db_name = Contract.Conversation.TABLE_NAME;
-        File sd = Environment.getExternalStorageDirectory();
-        File data = Environment.getDataDirectory();
-        FileChannel source = null;
-        FileChannel destination = null;
-        String currentDBPath = "/data/" + package_name + "/databases/" + Db_name;
-        String backupDBPath = Db_name;
-        File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPath);
-        try {
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void init(Bundle args) {
+        int id_surfer = 0;
 
+        AgentDataManager agentDataManager = new AgentDataManager();
+        Intent intent;
+        if (agentDataManager.isLoggedIn(this) == true) {
+            InitData initData = new InitData();
+            initData.start(this);
+
+            if (args != null)
+                id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+            if (id_surfer != 0) {//from notification
+                int push_type = args.getInt(getResources().getString(R.string.push_notification_type));
+                if (push_type == GCMPushReceiverService.NEW_MESSAGE) {
+                    intent = new Intent(this, InnerConversationActivity.class);
+                    Bundle b = new Bundle();
+                    b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
+                    intent.putExtras(b); //Put your id to your next Intent
+                } else {
+                    intent = new Intent(this, TabsActivity.class);
+                    intent.putExtra(getString(R.string.first_tab_title_key), R.string.onlinevisitors_title);
+                }
+            } else //normal
+                intent = new Intent(this, MenuActivity.class);
+        } else //not logged in
+            intent = new Intent(this, MainActivity.class);
+
+        startActivity(intent);
+    }
 
 
 }

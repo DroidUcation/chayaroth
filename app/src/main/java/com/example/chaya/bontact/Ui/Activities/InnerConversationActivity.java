@@ -35,7 +35,6 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
-import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Ui.Dialogs.DialogInput;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
@@ -165,7 +164,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     ServerCallResponse callResponse = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-            if (response != null && response.equals("[]"))//empty data
+            if (response != null && response.equals("[]")&&isNew==true)//empty data
             {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -337,7 +336,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         sendResponseHelper = new SendResponseHelper();
         if (!sendResponseHelper.isAllowedChannelToResponse(conversationDataManager.getConversationByIdSurfer(id_surfer), channel)) {
-            Toast.makeText(InnerConversationActivity.this, "you are not allowed do this action", Toast.LENGTH_SHORT).show();
+            String msg = ChanelsTypes.getNotAllowedMsgByChannelType(this, channel);
+            Toast.makeText(InnerConversationActivity.this, msg, Toast.LENGTH_SHORT).show();
             return;
         }
         switch (channel) {
@@ -497,10 +497,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             }
             if (status) {
                 isNew = false;
-                if (AgentDataManager.getAgentInstanse() != null)
-                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                if (AgentDataManager.getAgentInstance() != null)
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse);
 
-                    //visitorsDataManager.updateIsNew(id_surfer,false);
+                //visitorsDataManager.updateIsNew(id_surfer,false);
             } else {
                 load_animations(false);
             }
@@ -525,7 +525,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 JSONObject jsonObject = new JSONObject(response).getJSONObject("conversations");
                 current_conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
                 if (current_conversation == null || current_conversation.innerConversationData == null && tryCount < 3) {
-                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse);
                     tryCount++;
                     return;
                 }
@@ -544,7 +544,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 });
             } catch (JSONException e) {
                 if (tryCount < 3) {
-                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstanse().token, id_surfer, getConversationByIdOnResponse);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse);
                     tryCount++;
                 }
             }

@@ -6,7 +6,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
-    <string name="dashboard_title">Dahboard</string>
+    <string name="dashboard_title">Dashboard</string>
     <string name="onlinevisitors_title">Online visitors</string>
     <string name="login_title">Login</string>
     <string name="inbox_title">Inbox</string>
@@ -23,7 +23,7 @@
     <string name="idCustomer">idCustomer</string>
     <string name="name">name</string>
     <string name="password">Password</string>
-    <string name="user_name">User name</string>
+    <string name="user_name">Username</string>
     <string name="sp_user_details">user_details</string>
     <string name="sp_count_numbers">sp_count_numbers</string>
     <string name="count_unread_conversation">count_unread_conversation</string>
@@ -54,13 +54,16 @@
 
 
     <!--Error messages -->
-    <string name="empty_user_name">Please enter User name</string>
+    <string name="empty_user_name">Please enter username</string>
     <string name="empty_password">Please enter password</string>
 
-    <string name="invalid_deatails">Invalid User name or password</string>
+    <string name="invalid_login_details">The details you entered are incorrect.</string>
     <string name="user_not_exists">the user is not found please try again</string>
     <string name="some_problem">Please re enter the details. there was some problem </string>
     <string name="network_problem">Please check your internet connections!</string>
+    <string name="phone_number_is_not_provided">Phone number isn\'t provided</string>
+    <string name="email_address_is_not_provided">Email address isn\'t provided</string>
+    <string name="empty_email_fields_msg">Please fill all required fields</string>
 
     <!--URLS to api -->
     <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
@@ -88,8 +91,9 @@
     <string name="unread_sms">Unread SMS, read now.</string>
     <string name="unread_chat">Unread Chat, read now. </string>
     <string name="unread_email">Unread Email, read now.</string>
-    <string name="unread_callback">New voice recording ,play now</string>
-    <string name="unread_webcall">New voice recording ,play now</string>
+    <string name="unread_callback">voice recording.</string>
+    <string name="unread_webcall">voice recording.</string>
+
     <!--icons-->
 
     <string name="email_icon">&#xf0e0;</string>
@@ -164,11 +168,17 @@
     <string name="new_visitor_sound_key">new_visitor_sound_key</string>
     <string name="new_visitor_push_key">new_visitor_push_key</string>
     <string name="new_message_push_key">new_message_push_key</string>
-    <string name="about_us_title">about us</string>
+
     <string name="empty_inner_data_action">empty_inner_data_action</string>
     <string name="invite_complete_action">invite_complete_action</string>
     <string name="change_conversation_list_action">change_conversation_list_action</string>
     <string name="first_fragment">first_fragment</string>
+    <string name="push_notification_type">push_notification_type</string>
+    <string name="about_us_title">about us</string>
+    <string name="disconnect_account_title">disconnect account</string>
+    <string name="disconnect_account_key">disconnect_account_key</string>
+    <string name="app_version_title">app version: V3.0</string>
+
 
 </resources>
 

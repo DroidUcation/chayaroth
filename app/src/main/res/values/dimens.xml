@@ -12,7 +12,7 @@
     <!-- my dimens -->
     <dimen name="padding_dashboard_layouts">15dp</dimen>
     <dimen name="padding_inbox_items">10dp</dimen>
-    <dimen name="big_numbers_text_size_dashboard">100sp</dimen>
+    <dimen name="big_numbers_text_size_dashboard">70sp</dimen>
     <dimen name="content_text_size_dashboard">15sp</dimen>
 
 </resources>

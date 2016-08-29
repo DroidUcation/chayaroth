@@ -1,22 +1,16 @@
 package com.example.chaya.bontact.Ui.Dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.ChanelsTypes;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
 import com.example.chaya.bontact.Models.Agent;
-import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 /**
@@ -45,7 +39,7 @@ public class DialogInput {
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
 
         if (channel == ChanelsTypes.callback) {
-            Agent agent = AgentDataManager.getAgentInstanse();
+            Agent agent = AgentDataManager.getAgentInstance();
             String phone_number = "";
             if (agent != null && agent.getRep() != null) {
                 phone_number = agent.getRep().telephone;
@@ -56,7 +50,7 @@ public class DialogInput {
                     .setPositiveButton("Call", callbackOnClickListener)
                     .setNegativeButton("Cancel", callbackOnClickListener);
         } else if (channel == ChanelsTypes.sms) {
-            alertBuilder.setTitle("please enter your msg")
+            alertBuilder.setTitle("Type your SMS message below")
                     .setView(input)
                     .setPositiveButton("Send", smsOnClickListener)
                     .setNegativeButton("Cancel", smsOnClickListener);

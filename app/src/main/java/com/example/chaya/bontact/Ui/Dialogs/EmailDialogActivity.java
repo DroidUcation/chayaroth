@@ -9,9 +9,7 @@ import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
-import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 public class EmailDialogActivity extends AppCompatActivity {
@@ -46,8 +44,8 @@ public class EmailDialogActivity extends AppCompatActivity {
         content_edit_text = (EditText) findViewById(R.id.edit_text_content);
         if (email_address != null)
             addressee_edit_text.setText(email_address);
-        if (AgentDataManager.getAgentInstanse().getRep().username != null)
-            from_edit_text.setText(AgentDataManager.getAgentInstanse().getRep().username);
+        if (AgentDataManager.getAgentInstance().getRep().username != null)
+            from_edit_text.setText(AgentDataManager.getAgentInstance().getRep().username);
 
 
     }
@@ -79,9 +77,15 @@ public class EmailDialogActivity extends AppCompatActivity {
     }
 
     public void sendEmail() {
-        onBackPressed();
-        //BACKGROUND
-        SendResponseHelper sendResponseHelper = new SendResponseHelper();
-        sendResponseHelper.sendEmail(this, content_edit_text.getText().toString(), id_surfer);
+        if(content_edit_text.getText().length()>0&&subject_edit_text.getText().length()>0) {
+            onBackPressed();
+            //BACKGROUND
+            SendResponseHelper sendResponseHelper = new SendResponseHelper();
+            sendResponseHelper.sendEmail(this, content_edit_text.getText().toString(), id_surfer);
+        }
+        else
+        {
+            Toast.makeText(EmailDialogActivity.this,R.string.empty_email_fields_msg, Toast.LENGTH_SHORT).show();
+        }
     }
 }

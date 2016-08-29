@@ -95,7 +95,7 @@ public class SocketManager {
 
                 JSONObject jsonObject = null;
                 try {
-                    jsonObject = new JSONObject(gson.toJson(agentDataManager.getAgentInstanse().rep));
+                    jsonObject = new JSONObject(gson.toJson(agentDataManager.getAgentInstance().rep));
                     socket.emit("agentConnected", jsonObject, connectEmitCallBack);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -205,7 +205,7 @@ public class SocketManager {
                 jsonObject = jsonObject.getJSONObject("visitor");
                 int idSurfer = jsonObject.optInt("idSurfer", 0);
                 int idAgent = jsonObject.optInt("agentselected", 0);
-                if (idSurfer != 0 && idAgent != AgentDataManager.getAgentInstanse().getIdRep()) {
+                if (idSurfer != 0 && idAgent != AgentDataManager.getAgentInstance().getIdRep()) {
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                     conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, false);
                 }
@@ -250,8 +250,8 @@ public class SocketManager {
                     updateConversationDetails(conversationDataManager, id_surfer, innerConversation);
                 }
             } else {
-                if (AgentDataManager.getAgentInstanse() != null) {
-                    conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstanse().getToken());
+                if (AgentDataManager.getAgentInstance() != null) {
+                    conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstance().getToken());
                     //todo: use new api
                 }
             }
@@ -259,14 +259,14 @@ public class SocketManager {
             if (id_surfer != ConversationDataManager.selectedIdConversation) {
                 int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(context);
                 ConversationDataManager.setAllUnreadConversations(context, current_unread_conversation_count + 1);
-                if (current_conversation != null) {
+               /* if (current_conversation != null) {
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(context, " you have a new message from " + current_conversation.displayname, Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
+                }*/
             }
         }
     };
@@ -287,8 +287,8 @@ public class SocketManager {
             innerConversation.actionType = type;
             innerConversation.mess = data.optString("message", ChanelsTypes.getDeafultMsgByChanelType(context, type));
             innerConversation.rep_request = false;
-            if (AgentDataManager.getAgentInstanse() != null)
-                innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
+            if (AgentDataManager.getAgentInstance() != null)
+                innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
             innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
             innerConversation.datatype = data.optInt("datatype", 1);
             innerConversation.from_s = data.optString("from_s", "visitor");
@@ -326,9 +326,9 @@ public class SocketManager {
         if (socket == null)
             return;
         JSONObject jsonObject = new JSONObject();
-        if (AgentDataManager.getAgentInstanse() != null && AgentDataManager.getAgentInstanse().getRep() != null)
+        if (AgentDataManager.getAgentInstance() != null && AgentDataManager.getAgentInstance().getRep() != null)
             try {
-                jsonObject.put("idRepresentative", AgentDataManager.getAgentInstanse().getRep().idRepresentive);
+                jsonObject.put("idRepresentative", AgentDataManager.getAgentInstance().getRep().idRepresentive);
                 jsonObject.put("registrationId", token);
                 jsonObject.put("allow", true);
                 jsonObject.put("device", "android");
@@ -359,7 +359,7 @@ public class SocketManager {
         try {
             jsonObject = new JSONObject();
             JSONObject data = new JSONObject();
-            Agent agent = AgentDataManager.getAgentInstanse();
+            Agent agent = AgentDataManager.getAgentInstance();
             if (agent != null && agent.getRep() != null)
                 jsonObject.put("rep_Sur", true)
                         .put("systemMsg", false)
@@ -408,8 +408,8 @@ public class SocketManager {
             String s = gson.toJson(conversation);
             visitor = new JSONObject(s);
             visitor.put("agentselected", new JSONObject()
-                    .put("id", AgentDataManager.getAgentInstanse().getIdRep())
-                    .put("name", AgentDataManager.getAgentInstanse().getName()));
+                    .put("id", AgentDataManager.getAgentInstance().getIdRep())
+                    .put("name", AgentDataManager.getAgentInstance().getName()));
             JSONObject jsonObject = new JSONObject().put("visitor", visitor);
             if (state)
                 socket.emit("selectConversation", jsonObject, selectConversationCallback);

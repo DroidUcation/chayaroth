@@ -22,13 +22,13 @@ public class SendResponseHelper {
     InnerConversationDataManager innerConversationDataManager;
 
     public SendResponseHelper() {
-        agent = AgentDataManager.getAgentInstanse();
+        agent = AgentDataManager.getAgentInstance();
     }
 
     public void sendCallBack(Context context, int idSurfer, String telephone) {
         String url = null;
         if (agent == null) {
-            agent = AgentDataManager.getAgentInstanse();
+            agent = AgentDataManager.getAgentInstance();
         }
         url = context.getResources().getString(R.string.dev_domain_api) +
                 "returnchannel/callback/" +
@@ -45,7 +45,7 @@ public class SendResponseHelper {
 
     public void sendChat(Context context, String msg, int id_surfer) {
         if (agent == null) {
-            agent = AgentDataManager.getAgentInstanse();
+            agent = AgentDataManager.getAgentInstance();
         }
 
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
@@ -88,7 +88,7 @@ public class SendResponseHelper {
 
         String url = null;
         if (agent == null) {
-            agent = AgentDataManager.getAgentInstanse();
+            agent = AgentDataManager.getAgentInstance();
         }
         url = context.getResources().getString(R.string.dev_domain_api) +
                 "returnchannel/" +

@@ -16,7 +16,6 @@ import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Socket.io.SocketManager;
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -49,7 +48,7 @@ public class ConversationDataManager {
         selectedIdConversation = idSurfer;
         Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
         if (conversation != null) {
-            conversation.agentSelectedId = AgentDataManager.getAgentInstanse().getIdRep();
+            conversation.agentSelectedId = AgentDataManager.getAgentInstance().getIdRep();
             update(conversation);
             SocketManager.getInstance().emitSelectConversationState(conversation, true);
         }
@@ -329,7 +328,7 @@ public class ConversationDataManager {
                 .authority(context.getResources().getString(R.string.base_api))
                 .appendPath(context.getResources().getString(R.string.rout_api))
                 .appendPath(context.getResources().getString(R.string.count_conversation_api))
-                .appendPath(AgentDataManager.getAgentInstanse().getToken());
+                .appendPath(AgentDataManager.getAgentInstance().getToken());
         String url = builder.build().toString();
         OkHttpRequests okHttpRequests = new OkHttpRequests(url, getAllUnreadCountCallback);
     }

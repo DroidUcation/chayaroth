@@ -2,7 +2,6 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -25,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by chaya on 6/26/2016.
@@ -197,8 +195,8 @@ public class InnerConversationDataManager {
         innerConversation.actionType = channelType;
         innerConversation.mess = textMsg;
         innerConversation.rep_request = true;
-        if (AgentDataManager.getAgentInstanse() != null)
-            innerConversation.agentName = AgentDataManager.getAgentInstanse().getName();
+        if (AgentDataManager.getAgentInstance() != null)
+            innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
         innerConversation.name = innerConversation.agentName;
         if (current_conversation != null)
             innerConversation.idSurfer = current_conversation.idSurfer;
