@@ -1,6 +1,7 @@
 package com.example.chaya.bontact.Helpers;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
@@ -44,12 +45,13 @@ public class SendResponseHelper {
     }
 
     public void sendChat(Context context, String msg, int id_surfer) {
+
         if (agent == null) {
             agent = AgentDataManager.getAgentInstance();
         }
 
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
-        innerConversationDataManager.addTextMsgToList(ChanelsTypes.chat, msg, false);
+        innerConversationDataManager.addTextMsgToList(ChannelsTypes.chat, msg, false);
 
         if (agent.getRep() != null) {
             JSONObject postData = new JSONObject();
@@ -67,6 +69,7 @@ public class SendResponseHelper {
                 e.printStackTrace();
                 return;
             }
+            Toast.makeText(context,"send  "+ msg, Toast.LENGTH_SHORT).show();
             ConversationDataManager conversationDataManager = new ConversationDataManager(context);
             SocketManager.getInstance().emitChatMsg(postData, conversationDataManager.getConversationByIdSurfer(id_surfer));
         }
@@ -74,14 +77,14 @@ public class SendResponseHelper {
 
     public void sendSms(Context context, String msg, int id_surfer) {
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
-        innerConversationDataManager.addTextMsgToList(ChanelsTypes.sms, msg, false);
-        sendSmsOrEmail(context, ChanelsTypes.sms, msg, id_surfer);
+        innerConversationDataManager.addTextMsgToList(ChannelsTypes.sms, msg, false);
+        sendSmsOrEmail(context, ChannelsTypes.sms, msg, id_surfer);
     }
 
     public void sendEmail(Context context, String msg, int id_surfer) {
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
-        innerConversationDataManager.addTextMsgToList(ChanelsTypes.email, msg, false);
-       sendSmsOrEmail(context, ChanelsTypes.email, msg, id_surfer);
+        innerConversationDataManager.addTextMsgToList(ChannelsTypes.email, msg, false);
+       sendSmsOrEmail(context, ChannelsTypes.email, msg, id_surfer);
     }
 
     private void sendSmsOrEmail(Context context, int ChannelType, String contentMsg, int idSurfer) {
@@ -92,7 +95,7 @@ public class SendResponseHelper {
         }
         url = context.getResources().getString(R.string.dev_domain_api) +
                 "returnchannel/" +
-                ChanelsTypes.convertChannelTypeToString(context, ChannelType) + "/" +
+                ChannelsTypes.convertChannelTypeToString(context, ChannelType) + "/" +
                 agent.getToken();
 
         JSONObject postDataObject = new JSONObject();
@@ -110,13 +113,13 @@ public class SendResponseHelper {
         if (conversation == null)
             return false;
         switch (current_channel) {
-            case ChanelsTypes.callback:
+            case ChannelsTypes.callback:
                 return conversation.phone == null ? false : true;
-            case ChanelsTypes.sms:
+            case ChannelsTypes.sms:
                 return conversation.phone == null ? false : true;
-            case ChanelsTypes.chat:
+            case ChannelsTypes.chat:
                 return conversation.isOnline == false ? false : true;
-            case ChanelsTypes.email:
+            case ChannelsTypes.email:
                 return conversation.email == null ? false : true;
         }
         return false;

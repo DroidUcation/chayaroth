@@ -52,14 +52,14 @@ public class InboxProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
 
         long rowID = dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME, values, new String[]{Contract.Conversation.COLUMN_ID_SURFER});
-       // if (rowID > 0) {
-            // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
-            getContext().getContentResolver().notifyChange(uri, null);
-           // checkDb();
-            return uri;
-       // }
+        // if (rowID > 0) {
+        // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
+        getContext().getContentResolver().notifyChange(uri, null);
+        // checkDb();
+        return uri;
+        // }
 
-       // return null;
+        // return null;
     }
 
     @Override

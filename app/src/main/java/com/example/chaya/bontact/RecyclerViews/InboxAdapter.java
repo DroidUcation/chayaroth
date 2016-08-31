@@ -19,7 +19,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.R;
@@ -63,14 +63,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
                 , holder.avatar);
         //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
-        int icon = ChanelsTypes.getIconByChanelType(lastType);
+        int icon = ChannelsTypes.getIconByChanelType(lastType);
         if (icon != 0)
             holder.chanelIcon.setText(icon);
        /*if (cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)) == null)
-            holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
+            holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
         else*/
-        if (lastType == ChanelsTypes.webCall || lastType == ChanelsTypes.callback)
-            holder.lastSentence.setText(ChanelsTypes.getDeafultMsgByChanelType(context, lastType));
+        if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
+            holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
         else
             holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
@@ -90,7 +90,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
             holder.itemView.setEnabled(false);
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.gray_opacity));
+           // holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.gray_opacity));
             // holder.disable_color.setVisibility(View.VISIBLE);
             //   holder.disable_txt.setVisibility(View.VISIBLE);
         } else {

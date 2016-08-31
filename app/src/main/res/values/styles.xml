@@ -7,8 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/gray_light</item>
-        <item name="colorControlActivated">@color/purple_meduim</item>
-        <item name="colorControlHighlight">@color/purple</item>
+        <item name="colorControlActivated">@color/orange_dark</item>
+        <item name="colorControlHighlight">@color/orange_dark</item>
         <item name="colorSwitchThumbNormal">@color/orange_dark</item>
         <item name="actionButtonStyle">@style/CustomActionBar</item>
         <item name="android:actionButtonStyle">@style/CustomActionBar</item>

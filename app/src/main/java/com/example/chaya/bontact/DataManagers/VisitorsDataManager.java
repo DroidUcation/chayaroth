@@ -2,7 +2,9 @@ package com.example.chaya.bontact.DataManagers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
+import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 
@@ -18,7 +20,7 @@ public class VisitorsDataManager {
     public static Context contextStatic;
     public static final int ACTION_NEW_VISITOR = 0;
     public static final int ACTION_REMOVE_VISITOR = 1;
-
+    public static final int ACTION_UPDATE_VISITOR = 2;
 
     public VisitorsDataManager(Context context) {
         initVisitorsList();
@@ -42,8 +44,11 @@ public class VisitorsDataManager {
 
     }
 
-    public void updateIsNew(int id_surfer, boolean state) {
-        getVisitorByIdSurfer(id_surfer).isNew = state;
+    public static void updateIsNewState(Context context,int id_surfer, boolean state) {
+       Visitor visitor =getVisitorByIdSurfer(id_surfer);
+        visitor.isNew=state;
+        int position = getVisitorsList().indexOf(visitor);
+        notifyAdapter(context,ACTION_UPDATE_VISITOR,position);
     }
 
     public static Visitor getVisitorByIdSurfer(int id_surfer) {
@@ -78,6 +83,7 @@ public class VisitorsDataManager {
     }
 
     private static void notifyAdapter(Context context, int action, int position) {
+        //Toast.makeText(context, String.valueOf(action), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context.getResources().getString(R.string.change_visitors_list_action));
         intent.setType("*/*");
         intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_action), action);

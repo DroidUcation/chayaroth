@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by chaya on 7/3/2016.
  */
-public class ChanelsTypes {
+public class ChannelsTypes {
     public static final int callback = 1;
     public static final int sms = 2;
     public static final int chat = 3;

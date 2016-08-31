@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
@@ -148,11 +148,6 @@ public class InnerConversationDataManager {
         return idPlaceHolder--;
     }
 
-    public void sendResToUi() {
-      /*  if (context != null && context instanceof ServerCallResponseToUi) {
-            ((ServerCallResponseToUi) context).OnServerCallResponseToUi(true, current_conversation.idSurfer + "", null, getClass());
-        }*/
-    }
 
     public InnerConversation convertCursorToInnerConversation(Cursor cursor) {
         JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new InnerConversation(), cursor);
@@ -171,7 +166,7 @@ public class InnerConversationDataManager {
     ServerCallResponse getDataOnResponse = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-            if(isSuccsed==false&&errorType==ErrorType.network_problems)
+          if(isSuccsed==false&&errorType==ErrorType.network_problems)
                 notifyEmptyInnerData();
             if (isSuccsed == true) {
                 try {
@@ -202,7 +197,7 @@ public class InnerConversationDataManager {
             innerConversation.idSurfer = current_conversation.idSurfer;
         innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
         //innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
-        if (channelType != ChanelsTypes.callback && channelType != ChanelsTypes.webCall)
+        if (channelType != ChannelsTypes.callback && channelType != ChannelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = systemMsg;
         //Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();

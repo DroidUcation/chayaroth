@@ -68,38 +68,44 @@
         android:text="JOIN CHATS"
         android:visibility="gone" />
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:weightSum="7">
+        android:weightSum="7">-->
 
         <EditText
             android:id="@+id/chat_response_edittext"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="40dp"
-            android:layout_weight="6"
+            android:layout_marginRight="100dp"
             android:hint="Enter message"
             android:lines="1"
             android:paddingLeft="10dp"
             android:textColorHint="@color/gray_light"
-            android:textSize="14sp" />
+            android:textSize="13sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="16dp"
+            />
 
         <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/btn_send_chat_response"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_send_24dp"
-            app:backgroundTint="@color/gray_light"
+            app:backgroundTint="@color/orange_dark"
             app:borderWidth="0dp"
             app:elevation="6dp"
-            app:fabSize="normal" />
+            app:fabSize="normal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"/>
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </RelativeLayout>

@@ -98,6 +98,7 @@ public class MenuActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, new SettingsFragment()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_exit) {
+            finish();
             return true;
         }
         return false;

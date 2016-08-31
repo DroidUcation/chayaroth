@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,7 +194,15 @@ public class ConversationDataManager {
             return true;
         return false;
     }
-
+    public boolean updateLastDate(int idSurfer,String lastDate ) {
+        lastDate= DateTimeHelper.convertDateStringToDbFormat(lastDate);
+        Conversation conversation = getConversationByIdSurfer(idSurfer);
+        if (conversation != null)
+            conversation.lastdate = lastDate;
+        if (update(conversation) != null)
+            return true;
+        return false;
+    }
     public boolean updateEmail(int idSurfer, String email) {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null)

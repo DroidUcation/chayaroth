@@ -2,38 +2,22 @@ package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
-import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConversationDataManager;
-import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
-import com.example.chaya.bontact.Helpers.AvatarHelper;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
-import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
-import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 /**
  * Created by chaya on 8/1/2016.

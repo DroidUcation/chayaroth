@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.R;
@@ -38,7 +38,7 @@ public class DialogInput {
         this.id_surfer = id_surfer;
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
 
-        if (channel == ChanelsTypes.callback) {
+        if (channel == ChannelsTypes.callback) {
             Agent agent = AgentDataManager.getAgentInstance();
             String phone_number = "";
             if (agent != null && agent.getRep() != null) {
@@ -49,12 +49,12 @@ public class DialogInput {
                     .setView(input)
                     .setPositiveButton("Call", callbackOnClickListener)
                     .setNegativeButton("Cancel", callbackOnClickListener);
-        } else if (channel == ChanelsTypes.sms) {
+        } else if (channel == ChannelsTypes.sms) {
             alertBuilder.setTitle("Type your SMS message below")
                     .setView(input)
                     .setPositiveButton("Send", smsOnClickListener)
                     .setNegativeButton("Cancel", smsOnClickListener);
-        } /*else if (channel == ChanelsTypes.email) {
+        } /*else if (channel == ChannelsTypes.email) {
             alertBuilder.setMessage("please enter your msg")
                     .setView(input)
                     .setPositiveButton("Yes", emailOnClickListener)
@@ -120,7 +120,7 @@ public class DialogInput {
                 case DialogInterface.BUTTON_POSITIVE:
                     if (!input.getText().toString().equals("") && input.getText().toString() != null) {
                         sendResponseHelper.sendSms(context, input.getText().toString(), id_surfer);
-                        //  innerConversationDataManager.addTextMsgToList(ChanelsTypes.sms, input.getText().toString(), false);
+                        //  innerConversationDataManager.addTextMsgToList(ChannelsTypes.sms, input.getText().toString(), false);
                     } else
                         dialog.dismiss();
                     break;

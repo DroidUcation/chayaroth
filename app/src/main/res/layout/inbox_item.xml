@@ -4,8 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_inbox_items">
+    <View
+        android:id="@+id/border"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/purple" />
+<!-- android:background="?attr/selectableItemBackgroundBorderless"-->
 
-    <!-- android:background="?attr/selectableItemBackgroundBorderless"-->
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="40dp"
@@ -76,13 +81,6 @@
         android:text="20"
         android:textColor="@color/white"
         android:visibility="invisible" />
-    <View
-        android:id="@+id/disable_forground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray_opacity"
-        android:visibility="gone" />
-
 
     <TextView
         android:id="@+id/disable_text"
@@ -90,5 +88,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Conversation taken by another agent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
 </RelativeLayout>

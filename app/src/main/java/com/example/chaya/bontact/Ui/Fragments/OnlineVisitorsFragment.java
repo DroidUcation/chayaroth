@@ -49,14 +49,15 @@ public class OnlineVisitorsFragment extends Fragment {
         getContext().unregisterReceiver(broadcastReceiver);
 
     }
-  /*  @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-    }
-*/
+
+    /*  @Override
+      public void onCreateOptionsMenu(
+              Menu menu, MenuInflater inflater) {
+          inflater.inflate(R.menu.menu, menu);
+      }
+  */
     public OnlineVisitorsFragment() {
-        Log.d("now","ONLINE");
+        Log.d("now", "ONLINE");
 
 
     }
@@ -69,7 +70,7 @@ public class OnlineVisitorsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-      //  getActivity().setTitle(R.string.onlinevisitors_title);
+        //  getActivity().setTitle(R.string.onlinevisitors_title);
         super.onCreate(savedInstanceState);
 
     }
@@ -93,7 +94,6 @@ public class OnlineVisitorsFragment extends Fragment {
     }
 
 
-
     public class VisitorsListChangesReciver extends BroadcastReceiver {
 
         @Override
@@ -109,6 +109,8 @@ public class OnlineVisitorsFragment extends Fragment {
                 adapter.notifyItemInserted(position);
             } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
                 adapter.notifyItemRemoved(position);
+            } else if (action == VisitorsDataManager.ACTION_UPDATE_VISITOR) {
+                adapter.notifyItemChanged(position);
             }
         }
     }

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -17,12 +16,9 @@ import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.Helpers.AudioPlayerInnerHelper;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
-import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
-import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.R;
 
 import java.util.Date;
@@ -103,7 +99,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 case SYSTEM_MSG_VH:
                     innerConversationMsgHolder = (InnerConversationMsgHolder) holder;
-                    if (actionType == ChanelsTypes.webCall)
+                    if (actionType == ChannelsTypes.webCall)
                         innerConversationMsgHolder.msg.setText(R.string.webcall_cancled);
                     else
                         innerConversationMsgHolder.msg.setText(getMsgConcatWithDate(msg, date));
@@ -113,27 +109,27 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     innerConversationHolder = (InnerConversationHolder) holder;
                     innerConversationHolder.msg.setText(getMsgConcatWithDate(msg, date));
                     innerConversationHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
-                    innerConversationHolder.chanelIcon.setImageResource(ChanelsTypes.getDrawableIconByChannelType(actionType));
+                    innerConversationHolder.chanelIcon.setImageResource(ChannelsTypes.getDrawableIconByChannelType(actionType));
                     break;
                 case VISITOR_TEXT_VH:
                     innerConversationHolder = (InnerConversationHolder) holder;
                     innerConversationHolder.msg.setText(getMsgConcatWithDate(msg, date));
                     innerConversationHolder.name.setText(getNameForVisitor(getNameForVisitor(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
-                    int icon = ChanelsTypes.getDrawableIconByChannelType(actionType);
+                    int icon = ChannelsTypes.getDrawableIconByChannelType(actionType);
                     if (icon != 0)
                         innerConversationHolder.chanelIcon.setImageResource(icon);
                     break;
                 case VISITOR_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
                     visitorRecordHolder.name.setText(getNameForVisitor(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
-                    visitorRecordHolder.chanelIcon.setImageResource(ChanelsTypes.getDrawableIconByChannelType(actionType));
+                    visitorRecordHolder.chanelIcon.setImageResource(ChannelsTypes.getDrawableIconByChannelType(actionType));
                     visitorRecordHolder.date.setText(getDateToDisplay(date));
                     setRecordPlayer(visitorRecordHolder);
                     break;
                 case AGENT_RECORD_VH:
                     visitorRecordHolder = ((InnerConversationVisitorRecordHolder) holder);
                     visitorRecordHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
-                    visitorRecordHolder.chanelIcon.setImageResource(ChanelsTypes.getDrawableIconByChannelType(actionType));
+                    visitorRecordHolder.chanelIcon.setImageResource(ChannelsTypes.getDrawableIconByChannelType(actionType));
                     visitorRecordHolder.date.setText(getDateToDisplay(date));
                     setRecordPlayer(visitorRecordHolder);
                     break;
@@ -156,7 +152,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
         String url = null;
         if (record == true && mess != null && Integer.parseInt(mess) > 5 &&
-                (actionType == ChanelsTypes.callback || actionType == ChanelsTypes.webCall)) {
+                (actionType == ChannelsTypes.callback || actionType == ChannelsTypes.webCall)) {
             AgentDataManager agentDataManager = new AgentDataManager();
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
@@ -171,9 +167,9 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
 
             if (!visitorRecordHolder.player.preparePlayer(recordUri))
                 return false;
-        } else if (actionType == ChanelsTypes.callback && record == true)
+        } else if (actionType == ChannelsTypes.callback && record == true)
             visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.short_record);
-        else if (actionType == ChanelsTypes.callback)
+        else if (actionType == ChannelsTypes.callback)
             visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.account_not_allow);
         return true;
     }
@@ -214,17 +210,17 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_SYSTEM_MSG)) == 0)//not a system msg
             {
                 if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_REP_REQUEST)) == 1) {
-                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.callback ||
-                            (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.webCall &&
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChannelsTypes.callback ||
+                            (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChannelsTypes.webCall &&
                                     cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)) != null))
                         return AGENT_RECORD_VH;
                     return AGENT_TEXT_VH;
                 } else {
-                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.callback ||
-                            (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.webCall &&
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChannelsTypes.callback ||
+                            (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChannelsTypes.webCall &&
                                     cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS)) != null))
                         return VISITOR_RECORD_VH;
-                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChanelsTypes.webCall)
+                    if (cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE)) == ChannelsTypes.webCall)
                         return SYSTEM_MSG_VH;
                     return VISITOR_TEXT_VH;
                 }

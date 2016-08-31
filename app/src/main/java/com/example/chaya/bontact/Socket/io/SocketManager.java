@@ -1,6 +1,5 @@
 package com.example.chaya.bontact.Socket.io;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,7 +10,7 @@ import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
-import com.example.chaya.bontact.Helpers.ChanelsTypes;
+import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
@@ -167,14 +166,14 @@ public class SocketManager {
     Emitter.Listener surferLeavedListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (args != null) {
+           if (args != null) {
                 int id_surfer = Integer.parseInt(args[0].toString());
                 Log.d("id", id_surfer + "");
                 ConversationDataManager converastionDataManager = new ConversationDataManager(context);
                 if (converastionDataManager.getConversationByIdSurfer(id_surfer) != null)
                     converastionDataManager.updateOnlineState(id_surfer, 0);
                 VisitorsDataManager.removeVisitorFromList(context, VisitorsDataManager.getVisitorByIdSurfer(id_surfer));
-
+//                Toast.makeText(context, "surfer leaved", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -283,9 +282,9 @@ public class SocketManager {
         try {
             innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
             innerConversation.idSurfer = data.getInt("idSurfer");
-            int type = ChanelsTypes.convertStringChannelToInt(data.optString("type", null));
+            int type = ChannelsTypes.convertStringChannelToInt(data.optString("type", null));
             innerConversation.actionType = type;
-            innerConversation.mess = data.optString("message", ChanelsTypes.getDeafultMsgByChanelType(context, type));
+            innerConversation.mess = data.optString("message", ChannelsTypes.getDeafultMsgByChanelType(context, type));
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstance() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
@@ -309,11 +308,14 @@ public class SocketManager {
         Conversation conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
         if (conversation == null)
             return;
-        //int actionType = ChanelsTypes.convertStringChannelToInt(type);
+        //int actionType = ChannelsTypes.convertStringChannelToInt(type);
         conversationDataManager.updateLastType(id_surfer, innerConversation.actionType);//set last type
-        if (innerConversation.actionType == ChanelsTypes.sms && (conversation.phone == null || !conversation.phone.equals(innerConversation.from_s)))
+        conversationDataManager.updateLastDate(id_surfer, innerConversation.timeRequest);
+        if (innerConversation.mess!=null&&(innerConversation.actionType != ChannelsTypes.callback || innerConversation.actionType != ChannelsTypes.webCall))
+            conversationDataManager.updateLastMessage(id_surfer, innerConversation.mess);
+        if (innerConversation.actionType == ChannelsTypes.sms && (conversation.phone == null || !conversation.phone.equals(innerConversation.from_s)))
             conversationDataManager.updatePhoneNumber(id_surfer, innerConversation.from_s);//set phone
-        if (innerConversation.actionType == ChanelsTypes.email && (conversation.email == null || !conversation.email.equals(innerConversation.from_s)))
+        if (innerConversation.actionType == ChannelsTypes.email && (conversation.email == null || !conversation.email.equals(innerConversation.from_s)))
             conversationDataManager.updateEmail(id_surfer, innerConversation.from_s);//set phone
         if (conversation.idSurfer != ConversationDataManager.selectedIdConversation) {
             conversationDataManager.updateUnread(id_surfer, conversation.unread + 1);//set unread
