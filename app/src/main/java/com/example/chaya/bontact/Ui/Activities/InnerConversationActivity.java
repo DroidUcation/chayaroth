@@ -15,9 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +24,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +33,7 @@ import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.InnerConversation;
-import com.example.chaya.bontact.Ui.Dialogs.DialogInput;
+import com.example.chaya.bontact.Ui.Dialogs.callbackDialog;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Helpers.SendResponseHelper;
@@ -47,6 +43,7 @@ import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.InnerConversationAdapter;
 import com.example.chaya.bontact.Socket.io.SocketManager;
 import com.example.chaya.bontact.Ui.Dialogs.EmailDialogActivity;
+import com.example.chaya.bontact.Ui.Dialogs.SmsDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -315,21 +312,23 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        if (loading != null && loading.getVisibility() != View.VISIBLE) {//DONT WORKING IN BACKGROUND
+            int id = item.getItemId();
 
-        switch (id) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.sms_channel:
-                SendResponse(ChannelsTypes.sms);
-                break;
-            case R.id.phone_call_channel:
-                SendResponse(ChannelsTypes.callback);
-                break;
-            case R.id.email_channel:
-                SendResponse(ChannelsTypes.email);
-                break;
+            switch (id) {
+                case android.R.id.home:
+                    onBackPressed();
+                    return true;
+                case R.id.sms_channel:
+                    SendResponse(ChannelsTypes.sms);
+                    break;
+                case R.id.phone_call_channel:
+                    SendResponse(ChannelsTypes.callback);
+                    break;
+                case R.id.email_channel:
+                    SendResponse(ChannelsTypes.email);
+                    break;
+            }
         }
         return true;
     }
@@ -347,12 +346,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
         switch (channel) {
             case ChannelsTypes.sms:
-                DialogInput smsInput = new DialogInput(this);
-                smsInput.create(id_surfer, ChannelsTypes.sms);
+                SmsDialog smsDialog = new SmsDialog(this);
+                smsDialog.create(id_surfer);
                 break;
             case ChannelsTypes.callback:
-                DialogInput callbackInput = new DialogInput(this);
-                callbackInput.create(id_surfer, ChannelsTypes.callback);
+                callbackDialog callbackInput = new callbackDialog(this);
+                callbackInput.create(id_surfer);
                 break;
             case ChannelsTypes.email:
                 Intent intent = new Intent(this, EmailDialogActivity.class);
@@ -365,8 +364,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     }
 
     public void sendChatResponse(String msg) {
-        //Toast.makeText(InnerConversationActivity.this,"get the msg "+ msg, Toast.LENGTH_SHORT).show();
-
         if (current_conversation != null) {
             if (current_conversation.isOnline)
                 sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);

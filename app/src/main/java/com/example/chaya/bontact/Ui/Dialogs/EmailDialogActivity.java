@@ -14,7 +14,7 @@ import com.example.chaya.bontact.R;
 
 public class EmailDialogActivity extends AppCompatActivity {
     EditText addressee_edit_text;
-    EditText from_edit_text;
+   /* EditText from_edit_text;*/
     EditText subject_edit_text;
     EditText content_edit_text;
     int id_surfer;
@@ -39,13 +39,13 @@ public class EmailDialogActivity extends AppCompatActivity {
         setTitle("Email");
 
         addressee_edit_text = (EditText) findViewById(R.id.edit_text_addressee);
-        from_edit_text = (EditText) findViewById(R.id.edit_text_from);
+       /* from_edit_text = (EditText) findViewById(R.id.edit_text_from);*/
         subject_edit_text = (EditText) findViewById(R.id.edit_text_subject);
         content_edit_text = (EditText) findViewById(R.id.edit_text_content);
         if (email_address != null)
             addressee_edit_text.setText(email_address);
-        if (AgentDataManager.getAgentInstance().getRep().username != null)
-            from_edit_text.setText(AgentDataManager.getAgentInstance().getRep().username);
+      /*  if (AgentDataManager.getAgentInstance().getRep().username != null)
+            from_edit_text.setText(AgentDataManager.getAgentInstance().getRep().username);*/
 
 
     }

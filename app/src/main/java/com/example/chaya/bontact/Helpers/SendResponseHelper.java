@@ -69,7 +69,7 @@ public class SendResponseHelper {
                 e.printStackTrace();
                 return;
             }
-            Toast.makeText(context,"send  "+ msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "send  " + msg, Toast.LENGTH_SHORT).show();
             ConversationDataManager conversationDataManager = new ConversationDataManager(context);
             SocketManager.getInstance().emitChatMsg(postData, conversationDataManager.getConversationByIdSurfer(id_surfer));
         }
@@ -84,11 +84,10 @@ public class SendResponseHelper {
     public void sendEmail(Context context, String msg, int id_surfer) {
         innerConversationDataManager = new InnerConversationDataManager(context, id_surfer);
         innerConversationDataManager.addTextMsgToList(ChannelsTypes.email, msg, false);
-       sendSmsOrEmail(context, ChannelsTypes.email, msg, id_surfer);
+        sendSmsOrEmail(context, ChannelsTypes.email, msg, id_surfer);
     }
 
     private void sendSmsOrEmail(Context context, int ChannelType, String contentMsg, int idSurfer) {
-
         String url = null;
         if (agent == null) {
             agent = AgentDataManager.getAgentInstance();
@@ -105,7 +104,7 @@ public class SendResponseHelper {
             e.printStackTrace();
             return;
         }
-      OkHttpRequests okHttpRequests = new OkHttpRequests(url, null, postDataObject.toString());
+        OkHttpRequests okHttpRequests = new OkHttpRequests(url, null, postDataObject.toString());
     }
 
     public boolean isAllowedChannelToResponse(Conversation conversation, int current_channel) {

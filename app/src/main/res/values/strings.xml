@@ -101,9 +101,10 @@
     <string name="microphone_icon">&#xf130;</string>
     <string name="phone_square_icon">&#xf098;</string>
     <string name="device_icon">&#xf10b;</string>
-    <string name="phone_calling_icon">&#xf2a0;</string>
-    <string name="audio_icon">&#xf028;</string>
-    <string name="sms_icon">&#xf27a;</string>
+   <!-- <string name="phone_calling_icon">&#xf2a0;</string>&#xf095;-->
+    <string name="phone_calling_icon">&#xf095;</string>
+    <!-- <string name="sms_icon">&#xf27a;</string>-->
+    <string name="sms_icon">&#xf10b;</string>
     <string name="arrow_click">&#xf105;</string>
     <string name="password_icon">&#xf023;</string>
     <string name="user_name_icon">&#xf183;</string>
@@ -178,6 +179,8 @@
     <string name="disconnect_account_title">disconnect account</string>
     <string name="disconnect_account_key">disconnect_account_key</string>
     <string name="app_version_title">app version: V3.0</string>
+    <string name="invalid_callback_phone_number">Invaild phone number</string>
+    <string name="invalid_sms_content">Please enter your message</string>
 
 
 </resources>

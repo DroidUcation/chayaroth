@@ -66,7 +66,6 @@ public class InboxProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         long result = dbBontact.delete(Contract.Conversation.TABLE_NAME, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
-
         return (int) result;
     }
 
@@ -74,7 +73,7 @@ public class InboxProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         long result = dbBontact.update(Contract.Conversation.TABLE_NAME, values, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
-        //checkDb();
+        Log.d("update conversation", values.toString());
         return (int) result;
     }
 

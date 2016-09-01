@@ -60,6 +60,7 @@ public class ConversationDataManager {
         Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
         if (conversation != null) {
             SocketManager.getInstance().emitSelectConversationState(conversation, false);
+            selectedIdConversation = 0;
             conversation.agentSelectedId = 0;
             update(conversation);
         }
@@ -147,7 +148,7 @@ public class ConversationDataManager {
     public Conversation update(Conversation conversation) {
         if (conversation == null || conversationList == null)
             return null;
-        int index = conversationList.indexOf(conversation);
+        int index = conversationList.indexOf(getConversationByIdSurfer(conversation.idSurfer));
         if (index == -1) {
             return null;
         }
@@ -194,8 +195,9 @@ public class ConversationDataManager {
             return true;
         return false;
     }
-    public boolean updateLastDate(int idSurfer,String lastDate ) {
-        lastDate= DateTimeHelper.convertDateStringToDbFormat(lastDate);
+
+    public boolean updateLastDate(int idSurfer, String lastDate) {
+        lastDate = DateTimeHelper.convertDateStringToDbFormat(lastDate);
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null)
             conversation.lastdate = lastDate;
@@ -203,6 +205,7 @@ public class ConversationDataManager {
             return true;
         return false;
     }
+
     public boolean updateEmail(int idSurfer, String email) {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null)
