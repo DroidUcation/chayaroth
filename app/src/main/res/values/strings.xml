@@ -101,7 +101,7 @@
     <string name="microphone_icon">&#xf130;</string>
     <string name="phone_square_icon">&#xf098;</string>
     <string name="device_icon">&#xf10b;</string>
-   <!-- <string name="phone_calling_icon">&#xf2a0;</string>&#xf095;-->
+    <!-- <string name="phone_calling_icon">&#xf2a0;</string>&#xf095;-->
     <string name="phone_calling_icon">&#xf095;</string>
     <!-- <string name="sms_icon">&#xf27a;</string>-->
     <string name="sms_icon">&#xf10b;</string>

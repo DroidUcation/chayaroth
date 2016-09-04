@@ -1,7 +1,7 @@
 package com.example.chaya.bontact.Ui.Activities;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -11,27 +11,29 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
-import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.R;
-import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
-import com.example.chaya.bontact.Ui.Fragments.SettingsFragment;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     AgentDataManager agentDataManager;
+    ImageView agentPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_menu);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).commit();
 
         agentDataManager = new AgentDataManager();
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_layout);
@@ -44,6 +46,7 @@ public class MenuActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
+        agentPicture = (ImageView) header.findViewById(R.id.agent_pic);
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + agentDataManager.getAgentName(this));
@@ -57,37 +60,53 @@ public class MenuActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+    /*    agentPicture.setImageResource(R.mipmap.bontact_launcher);
+        String avatar = agentDataManager.getAgentAvatarUrl();
+        if (avatar != null)
+            Picasso.with(this)
+                    .load(avatar)
+                    .placeholder(R.mipmap.bontact_launcher) // optional
+                    .error(R.mipmap.bontact_launcher)         // optional
+                    .into(agentPicture);*/
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }/* else {
             if (getFragmentManager().getBackStackEntryCount() > 0) {
                 getFragmentManager().popBackStack();
             } else {
                 super.onBackPressed();
             }
-        }
+        }*/
+        super.onBackPressed();
     }
 
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        if (ReplaceFragments(item.getItemId()) == false)
+        if (ReplaceViews(item.getItemId()) == false)
             return false;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public boolean ReplaceFragments(int id) {
+    public boolean ReplaceViews(int id) {
+        Intent intent;
         if (id == R.id.nav_dashboard) {
             //setProgressBarCenterState(View.GONE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
+            //  getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
             return true;
         } else if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout || id == R.id.nav_inbox || id == R.id.requests_dashboard_layout) {
-            Intent intent = new Intent(this, TabsActivity.class);
+            intent = new Intent(this, TabsActivity.class);
             if (id == R.id.nav_online_v || id == R.id.onlineVisitors_dashboard_layout)
                 intent.putExtra(getString(R.string.first_tab_title_key), R.string.onlinevisitors_title);
             else
@@ -95,7 +114,9 @@ public class MenuActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if (id == R.id.nav_settings) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, new SettingsFragment()).addToBackStack(null).commit();
+            // getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, new SettingsFragment()).addToBackStack(null).commit();
+            intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.nav_exit) {
             finish();
@@ -107,7 +128,7 @@ public class MenuActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
 
-        ReplaceFragments(v.getId());
+        ReplaceViews(v.getId());
 
     }
 

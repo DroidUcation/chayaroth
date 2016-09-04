@@ -90,7 +90,7 @@ public class callbackDialog {
     };
 
     public boolean checkValidNumber(String phone_number) {
-        String numbersValidation = "[0-9]+";
+        String numbersValidation = "[+0-9]+";
         if (phone_number.length() > 6 && phone_number.matches(numbersValidation))
             return true;
         return false;

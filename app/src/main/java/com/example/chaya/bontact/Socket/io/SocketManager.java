@@ -95,7 +95,8 @@ public class SocketManager {
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(gson.toJson(agentDataManager.getAgentInstance().rep));
-                    socket.emit("agentConnected", jsonObject, connectEmitCallBack);
+                    if (socket != null)
+                        socket.emit("agentConnected", jsonObject, connectEmitCallBack);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -166,7 +167,7 @@ public class SocketManager {
     Emitter.Listener surferLeavedListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-           if (args != null) {
+            if (args != null) {
                 int id_surfer = Integer.parseInt(args[0].toString());
                 Log.d("id", id_surfer + "");
                 ConversationDataManager converastionDataManager = new ConversationDataManager(context);
@@ -311,7 +312,7 @@ public class SocketManager {
         //int actionType = ChannelsTypes.convertStringChannelToInt(type);
         conversationDataManager.updateLastType(id_surfer, innerConversation.actionType);//set last type
         conversationDataManager.updateLastDate(id_surfer, innerConversation.timeRequest);
-        if (innerConversation.mess!=null&&(innerConversation.actionType != ChannelsTypes.callback || innerConversation.actionType != ChannelsTypes.webCall))
+        if (innerConversation.mess != null && (innerConversation.actionType != ChannelsTypes.callback || innerConversation.actionType != ChannelsTypes.webCall))
             conversationDataManager.updateLastMessage(id_surfer, innerConversation.mess);
         if (innerConversation.actionType == ChannelsTypes.sms && (conversation.phone == null || !conversation.phone.equals(innerConversation.from_s)))
             conversationDataManager.updatePhoneNumber(id_surfer, innerConversation.from_s);//set phone
@@ -337,8 +338,10 @@ public class SocketManager {
                 jsonObject.put("allServices", true);
                 jsonObject.put("lastconnect", DateTimeHelper.getCurrentStringDateInGmtZero());
                 jsonObject.put("pushversion", 3);
-                Log.d("emit", jsonObject.toString());
-                socket.emit("registerDevice", jsonObject);
+                if (socket != null) {
+                    Log.d("emit", jsonObject.toString());
+                    socket.emit("registerDevice", jsonObject);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -350,7 +353,9 @@ public class SocketManager {
         try {
             jsonObject.put("messageObj", chatMsg)
                     .put("surfer", new JSONObject(gson.toJson(conversation)));
-            socket.emit("sendChatTxt", jsonObject, sendChatEmitCallBack);
+            if (socket != null) {
+                socket.emit("sendChatTxt", jsonObject, sendChatEmitCallBack);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -375,25 +380,26 @@ public class SocketManager {
             data.put("surfer", new JSONObject(gson.toJson(VisitorsDataManager.getVisitorByIdSurfer(id_surfer))))
                     .put("preChat", new JSONObject())
                     .put("messageObj", jsonObject);
+            if (socket != null) {
+                socket.emit("inviteStartChat", data, new Ack() {
+                            @Override
+                            public void call(Object... args) {
+                                JSONObject json = null;
+                                try {
+                                    json = new JSONObject(args[0].toString());
+                                    Intent intent = new Intent(context.getResources().getString(R.string.invite_complete_action));
+                                    intent.setType("*/*");
+                                    intent.putExtra(context.getResources().getString(R.string.is_successed_key), json.getBoolean("status"));
+                                    intent.putExtra(context.getResources().getString(R.string.id_surfer), id_surfer);
+                                    context.sendBroadcast(intent);
 
-            socket.emit("inviteStartChat", data, new Ack() {
-                        @Override
-                        public void call(Object... args) {
-                            JSONObject json = null;
-                            try {
-                                json = new JSONObject(args[0].toString());
-                                Intent intent = new Intent(context.getResources().getString(R.string.invite_complete_action));
-                                intent.setType("*/*");
-                                intent.putExtra(context.getResources().getString(R.string.is_successed_key), json.getBoolean("status"));
-                                intent.putExtra(context.getResources().getString(R.string.id_surfer), id_surfer);
-                                context.sendBroadcast(intent);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    }
-            );
+                );
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             return;
@@ -413,11 +419,12 @@ public class SocketManager {
                     .put("id", AgentDataManager.getAgentInstance().getIdRep())
                     .put("name", AgentDataManager.getAgentInstance().getName()));
             JSONObject jsonObject = new JSONObject().put("visitor", visitor);
-            if (state)
-                socket.emit("selectConversation", jsonObject, selectConversationCallback);
-            else
-                socket.emit("unselectConversation", jsonObject, selectConversationCallback);
-
+            if (socket != null) {
+                if (state)
+                    socket.emit("selectConversation", jsonObject, selectConversationCallback);
+                else
+                    socket.emit("unselectConversation", jsonObject, selectConversationCallback);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -432,7 +439,9 @@ public class SocketManager {
     };
 
     public void refreshSelectConversation() {
-        socket.emit("refreshSelectConversation", new JSONObject());
+        if (socket != null) {
+            socket.emit("refreshSelectConversation", new JSONObject());
+        }
     }
 
     Emitter.Listener refreshSelectListener = new Emitter.Listener() {

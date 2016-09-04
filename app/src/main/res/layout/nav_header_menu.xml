@@ -14,20 +14,24 @@
 
     <ImageView
         android:id="@+id/agent_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
+       android:layout_alignParentLeft="true"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@mipmap/bontact_launcher" />
+        android:src="@mipmap/bontact_launcher"/>
 
     <TextView
         android:id="@+id/loggedInAsTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/agent_pic"
+        android:layout_toEndOf="@id/agent_pic"
         android:layout_marginTop="15dp"
         android:text="@string/logged_in_as"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:layout_toRightOf="@id/agent_pic"
+        android:layout_alignBottom="@id/agent_pic"
+        android:layout_marginLeft="4dp"/>
 
 
 </RelativeLayout>

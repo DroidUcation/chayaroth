@@ -1,32 +1,15 @@
 package com.example.chaya.bontact.Ui.Activities;
 
 import android.content.Intent;
-import android.os.Environment;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Services.GCMPushReceiverService;
-import com.example.chaya.bontact.Services.RegisterGcmService;
-import com.example.chaya.bontact.Socket.io.SocketManager;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -69,7 +52,7 @@ public class SplashActivity extends AppCompatActivity {
             } else //normal
                 intent = new Intent(this, MenuActivity.class);
         } else //not logged in
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, LoginActivity.class);
 
         startActivity(intent);
     }

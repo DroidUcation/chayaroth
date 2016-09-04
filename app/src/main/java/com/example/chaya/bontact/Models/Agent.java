@@ -25,27 +25,30 @@ public class Agent {
     @Generated("org.jsonschema2pojo")
     public class Rep {
 
-        @SerializedName("username")
-        @Expose
-        public String username;
-        @SerializedName("name")
-        @Expose
-        public String name;
         @SerializedName("id_Customer")
         @Expose
         public int idCustomer;
-        @SerializedName("code")
-        @Expose
-        public String code;
-        @SerializedName("telephone")
-        @Expose
-        public String telephone;
-        @SerializedName("key")
-        @Expose
-        public String key;
         @SerializedName("id_Representive")
         @Expose
         public int idRepresentive;
+        @SerializedName("username")
+        @Expose
+        public String username;
+        @SerializedName("code")
+        @Expose
+        public String code;
+        @SerializedName("key")
+        @Expose
+        public String key;
+        @SerializedName("name")
+        @Expose
+        public String name;
+        @SerializedName("telephone")
+        @Expose
+        public String telephone;
+        @SerializedName("avatar")
+        @Expose
+        public String avatar;
 
         public String getName() {
             if (name == null)

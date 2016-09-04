@@ -70,7 +70,7 @@ public class OkHttpRequests implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
-        Log.e("ON FAILER", "fall");
+        Log.e("ON FAILER", url);
         sendRes(false, null, ErrorType.network_problems);
     }
 

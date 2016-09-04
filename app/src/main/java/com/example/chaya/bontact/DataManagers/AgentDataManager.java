@@ -39,6 +39,13 @@ public class AgentDataManager {
         return agent;
     }
 
+    public static String getAgentAvatarUrl()
+    {
+        if(agent!=null&& agent.getRep()!=null)
+            return agent.getRep().avatar;
+        return null;
+    }
+
     private static void setAgent(Agent agent) {
         AgentDataManager.agent = agent;
     }

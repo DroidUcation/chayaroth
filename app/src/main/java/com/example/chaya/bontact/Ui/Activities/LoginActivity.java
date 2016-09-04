@@ -19,17 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Helpers.InitData;
-import com.example.chaya.bontact.Helpers.NetworkCheckConnection;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.R;
 /*import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;*/
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
 
     private EditText usernameEditText;
     private EditText passEditText;
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
         usernameEditText = (EditText) findViewById(R.id.username_edittext);
@@ -168,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         /*    case network_problems:
                 if (!NetworkCheckConnection.isConnected(this))
-                    Toast.makeText(MainActivity.this, R.string.network_problem, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(.this, R.string.network_problem, Toast.LENGTH_SHORT).show();
                 userNameInputLayout.setError(getResources().getString(R.string.some_problem));
                 passwordInputLayout.setError(getResources().getString(R.string.some_problem));
                 break;
@@ -218,14 +216,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             boolean isSuccsed = intent.getBooleanExtra(context.getResources().getString(R.string.is_successed_key), false);
             String response = intent.getStringExtra(context.getResources().getString(R.string.response_key));
             if (isSuccsed == true && response != null) {
-                if (agentDataManager.saveData(response, MainActivity.this) == true) {
+                if (agentDataManager.saveData(response, LoginActivity.this) == true) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             progressBar.setVisibility(View.GONE);
                             InitData initData = new InitData();
-                            initData.start(MainActivity.this);
-                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                            initData.start(LoginActivity.this);
+                            startActivity(new Intent(LoginActivity.this, MenuActivity.class));
                         }
                     });
                 } else {
@@ -253,8 +251,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void run() {
                             progressBar.setVisibility(View.GONE);
                             InitData initData = new InitData();
-                            initData.start(MainActivity.this);
-                            startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                            initData.start(.this);
+                            startActivity(new Intent(.this, MenuActivity.class));
                         }
                     });
                 } else {
