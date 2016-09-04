@@ -132,9 +132,11 @@ public class ConversationDataManager {
         int index = conversationList.indexOf(getConversationByIdSurfer(conversation.idSurfer));
         if (index != -1) {
             return update(conversation);
-
         } else {
             conversationList.add(conversation);
+            if (conversation.unread > 0 && conversation.idSurfer != selectedIdConversation) {
+                setAllUnreadConversations(context, getAllUnreadConversations(context) + 1);
+            }
             ContentValues contentValues = DbToolsHelper.convertConversationToContentValues(conversation);
             if (contentValues != null && context != null) {
                 context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
@@ -178,12 +180,15 @@ public class ConversationDataManager {
 
     }
 
-    public boolean updateUnread(int idSurfer, int unreadCount) {
+    public boolean updateUnread(int idSurfer, int newUnreadCount) {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
-        if (conversation != null)
-            conversation.unread = unreadCount;
-        if (update(conversation) != null)
-            return true;
+        if (conversation != null) {
+            if (conversation.unread == 0 && newUnreadCount > 0 && conversation.idSurfer != selectedIdConversation)
+                setAllUnreadConversations(context, getAllUnreadConversations(context) + 1);
+            conversation.unread = newUnreadCount;
+            if (update(conversation) != null)
+                return true;
+        }
         return false;
     }
 

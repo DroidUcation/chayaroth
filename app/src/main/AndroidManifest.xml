@@ -17,6 +17,7 @@
 
     <uses-permission android:name="com.example.chaya.bontact.permission.C2D_MESSAGE" />
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -82,8 +83,7 @@
             android:name=".Ui.Activities.TabsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Ui.Dialogs.EmailDialogActivity" />
-
-        <activity android:name=".Ui.Activities.SettingsActivity"></activity>
+        <activity android:name=".Ui.Activities.SettingsActivity" />
     </application>
 
 </manifest>

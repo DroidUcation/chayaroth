@@ -16,6 +16,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.R;
@@ -50,6 +54,18 @@ public class MenuActivity extends AppCompatActivity
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + agentDataManager.getAgentName(this));
+
+        String avatar = agentDataManager.getAgentAvatarUrl();
+        avatar=avatar.replace("https","http");
+
+
+        if (avatar != null)
+            Picasso.with(this)
+                    .load(avatar)
+                    .placeholder(R.mipmap.bontact_launcher) // optional
+                    .transform(new CircleTransform())
+                    .error(R.mipmap.bontact_launcher)         // optional
+                    .into(agentPicture);
         //get data to inbox
       /*  String token = agentDataManager.getAgentToken(this);
         if (token != null) {
@@ -63,14 +79,7 @@ public class MenuActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-    /*    agentPicture.setImageResource(R.mipmap.bontact_launcher);
-        String avatar = agentDataManager.getAgentAvatarUrl();
-        if (avatar != null)
-            Picasso.with(this)
-                    .load(avatar)
-                    .placeholder(R.mipmap.bontact_launcher) // optional
-                    .error(R.mipmap.bontact_launcher)         // optional
-                    .into(agentPicture);*/
+
     }
 
     @Override

@@ -38,6 +38,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private LinearLayoutManager linearLayoutManager;
     int lastVisibleItem;
     ViewGroup container;
+    ConversationDataManager conversationDataManager;
 
     public InboxFragment() {
         Log.d("now", "INBOX");
@@ -147,9 +148,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             if (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1 == adapter.getItemCount())//end of data
             {
                 lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                AgentDataManager agentDataManager = new AgentDataManager();
-                ConversationDataManager conversationDataManager = new ConversationDataManager(getContext());
-                conversationDataManager.getNextDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
+                getData(false);
                 progressBarBottom.setVisibility(View.VISIBLE);
             }
 
@@ -158,9 +157,18 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-
-            initLoader();
+            getData(true);
         }
     };
+
+    private void getData(boolean isFirst) {
+        AgentDataManager agentDataManager = new AgentDataManager();
+        conversationDataManager = new ConversationDataManager(getContext());
+        if (!isFirst)
+            conversationDataManager.getNextDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
+        else
+            conversationDataManager.getFirstDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
+
+    }
 
 }

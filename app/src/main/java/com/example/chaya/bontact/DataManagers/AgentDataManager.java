@@ -39,15 +39,14 @@ public class AgentDataManager {
         return agent;
     }
 
-    public static String getAgentAvatarUrl()
-    {
-        if(agent!=null&& agent.getRep()!=null)
+    public static String getAgentAvatarUrl() {
+        if (agent != null && agent.getRep() != null)
             return agent.getRep().avatar;
         return null;
     }
 
-    private static void setAgent(Agent agent) {
-        AgentDataManager.agent = agent;
+    private static void setNewAgent() {
+        agent = new Agent();
     }
 
     public static boolean getMsgPushNotification() {
@@ -154,6 +153,7 @@ public class AgentDataManager {
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
         SharedPreferences.Editor editor = Preferences.edit();
         editor.clear().commit();
+        setNewAgent();
         //claer db
         context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
         context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, null, null);

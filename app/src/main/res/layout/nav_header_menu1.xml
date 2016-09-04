@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
        android:layout_alignParentLeft="true"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@mipmap/bontact_launcher"/>
+      />
 
     <TextView
         android:id="@+id/loggedInAsTxt"

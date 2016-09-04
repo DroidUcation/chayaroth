@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
@@ -21,11 +22,12 @@ public class callbackDialog {
 
     Context context;
     EditText input;
-    TextInputLayout textInputLayout ;
+    TextInputLayout textInputLayout;
     int id_surfer;
     SendResponseHelper sendResponseHelper;
     InnerConversationDataManager innerConversationDataManager;
     AlertDialog alert;
+    TextView msgView;
 
     public callbackDialog(Context context) {
         this.context = context;
@@ -43,7 +45,7 @@ public class callbackDialog {
             phone_number = agent.getRep().telephone;
         }
         input.setText(phone_number);
-         textInputLayout = new TextInputLayout(context);
+        textInputLayout = new TextInputLayout(context);
         textInputLayout.addView(input);
         alert = new AlertDialog.Builder(context).setTitle("Enter your phone number").setMessage("include your country code")
                 .setView(textInputLayout)

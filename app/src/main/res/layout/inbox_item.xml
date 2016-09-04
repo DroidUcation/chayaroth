@@ -4,19 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_inbox_items">
-   <!-- <View
-        android:id="@+id/border"
+
+    <FrameLayout
+        android:id="@+id/blocked_view"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/purple" />-->
-<!-- android:background="?attr/selectableItemBackgroundBorderless"-->
+        android:layout_height="match_parent"
+        android:background="@color/gray_opacity"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Taken by another agent" />
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentTop="true" />
-
 
     <ImageView
         android:id="@+id/online_point"
@@ -27,7 +34,6 @@
         android:layout_alignRight="@id/avatar"
         android:background="@drawable/online_point"
         android:visibility="invisible" />
-
 
     <TextView
         android:id="@+id/displayName"
@@ -82,12 +88,5 @@
         android:textColor="@color/white"
         android:visibility="invisible" />
 
-    <TextView
-        android:id="@+id/disable_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Conversation taken by another agent"
-        android:visibility="gone" />
 
 </RelativeLayout>

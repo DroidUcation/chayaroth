@@ -394,7 +394,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 }
             });
 
-        if (current_conversation != null) {
+        if (current_conversation != null&&current_conversation.unread!=0) {
             int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
             ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateUnread(current_conversation.idSurfer, 0);

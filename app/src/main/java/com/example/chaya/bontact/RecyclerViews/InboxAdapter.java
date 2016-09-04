@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -90,7 +92,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
             holder.itemView.setEnabled(false);
-           // holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.gray_opacity));
+            holder.blocked_layout.bringToFront();
+            // holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.gray_opacity));
             // holder.disable_color.setVisibility(View.VISIBLE);
             //   holder.disable_txt.setVisibility(View.VISIBLE);
         } else {
@@ -153,8 +156,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         ImageView avatar, onlinePoint;
         TextView displayName, lastSentence, date, unread, disable_txt;
         TextView chanelIcon;
-        View disable_color;
-
+        FrameLayout blocked_layout;
 
         public InboxHolder(View itemView) {
 
@@ -169,8 +171,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
             onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
-            disable_txt = (TextView) itemView.findViewById(R.id.disable_text);
-            // disable_color = itemView.findViewById(R.id.disable_forground);
+            blocked_layout= (FrameLayout) itemView.findViewById(R.id.blocked_view);
+
             itemView.setOnClickListener(this);
         }
 

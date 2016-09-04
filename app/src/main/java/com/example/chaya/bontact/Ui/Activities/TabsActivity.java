@@ -28,6 +28,7 @@ import java.util.List;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 
@@ -45,18 +46,16 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.menu_wrraper);
-        initMenu();
+
         setProgressBarCenterState(View.VISIBLE);
         int resFirstTabTitle = R.string.inbox_title;
         Bundle args = getIntent().getExtras();
         if (args != null) {
             resFirstTabTitle = args.getInt(getString(R.string.first_tab_title_key));
         }
-     toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setTitle(R.string.app_name);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -77,6 +76,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
                 viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
             }
         });
+        initMenu();
     }
 
     public void initMenu() {
@@ -92,14 +92,6 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + AgentDataManager.getAgentInstance().getName());
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-       /* MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);*/
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -121,7 +113,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
             viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
             return true;
         } else if (id == R.id.nav_inbox) {
-            viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
+            viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.inbox_title)), true);
             return true;
         } else if (id == R.id.nav_settings) {
             intent = new Intent(this, SettingsActivity.class);

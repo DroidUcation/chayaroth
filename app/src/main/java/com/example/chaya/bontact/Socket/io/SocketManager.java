@@ -256,18 +256,11 @@ public class SocketManager {
                 }
             }
 
-            if (id_surfer != ConversationDataManager.selectedIdConversation) {
+          /*  if (id_surfer != ConversationDataManager.selectedIdConversation && current_conversation != null && current_conversation.unread == 0)
+            {
                 int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(context);
                 ConversationDataManager.setAllUnreadConversations(context, current_unread_conversation_count + 1);
-               /* if (current_conversation != null) {
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(context, " you have a new message from " + current_conversation.displayname, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }*/
-            }
+            }*/
         }
     };
     Ack sendChatEmitCallBack = new Ack() {

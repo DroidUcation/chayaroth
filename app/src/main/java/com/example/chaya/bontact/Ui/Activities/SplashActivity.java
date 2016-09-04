@@ -53,7 +53,6 @@ public class SplashActivity extends AppCompatActivity {
                 intent = new Intent(this, MenuActivity.class);
         } else //not logged in
             intent = new Intent(this, LoginActivity.class);
-
         startActivity(intent);
     }
 

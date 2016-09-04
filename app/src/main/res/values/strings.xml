@@ -181,6 +181,7 @@
     <string name="app_version_title">app version: V3.0</string>
     <string name="invalid_callback_phone_number">Invaild phone number</string>
     <string name="invalid_sms_content">Please enter your message</string>
+    <string name="title_activity_main">MainActivity</string>
 
 
 </resources>
