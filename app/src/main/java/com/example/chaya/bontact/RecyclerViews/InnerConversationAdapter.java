@@ -84,11 +84,9 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (cursor.moveToPosition(position)) {
-
             // int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
             //  InnerConversationDataManager dataManager = new InnerConversationDataManager(context, idSurfer);
             //InnerConversation innerConversation = dataManager.convertCursorToInnerConversation(cursor);
-
             InnerConversationHolder innerConversationHolder;
             InnerConversationMsgHolder innerConversationMsgHolder;
             InnerConversationRecordHolder recordHolder;
@@ -96,7 +94,6 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             String msg = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
             String date = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_TIME_REQUEST));
             switch (getItemViewType(position)) {
-
                 case SYSTEM_MSG_VH:
                     innerConversationMsgHolder = (InnerConversationMsgHolder) holder;
                     if (actionType == ChannelsTypes.webCall)

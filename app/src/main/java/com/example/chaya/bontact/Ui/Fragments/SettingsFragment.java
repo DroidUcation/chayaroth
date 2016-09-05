@@ -61,43 +61,44 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
-        if (s.equals(getResources().getString(R.string.new_visitor_push_key)) || s.equals(getResources().getString(R.string.new_message_push_key)))
-            updateSettings(s, sharedPreferences);
-
+        updateSettings(s, sharedPreferences);
     }
 
     public void updateSettings(String key, SharedPreferences preferences) {
-        AgentDataManager.getAgentInstance().getSettings().visitorPushNotification = preferences.
-                getBoolean(getResources().getString(R.string.new_visitor_push_key), false);
-        AgentDataManager.getAgentInstance().getSettings().msgPushNotification = preferences.
-                getBoolean(getResources().getString(R.string.new_message_push_key), true);
+        if (key.equals(getResources().getString(R.string.new_message_sound_key)))
+            AgentDataManager.getAgentInstance().getSettings().msgPushNotificationSound = preferences.getBoolean(key, true);
+        if (key.equals(getResources().getString(R.string.new_visitor_sound_key)))
+            AgentDataManager.getAgentInstance().getSettings().msgPushNotificationSound = preferences.getBoolean(key, false);
 
-        /*var url = bontactServers.api + 'updatePushNotification/' + agent.TokenAgent()+
-                '?visitorpush='+this.settings.push_notification.visitor+'&messagepush='+this.settings.push_notification.message;*/
+        if (key.equals(getResources().getString(R.string.new_visitor_push_key)) ||
+                key.equals(getResources().getString(R.string.new_message_push_key))) {
+            AgentDataManager.getAgentInstance().getSettings().visitorPushNotification = preferences.
+                    getBoolean(getResources().getString(R.string.new_visitor_push_key), false);
+            AgentDataManager.getAgentInstance().getSettings().msgPushNotification = preferences.
+                    getBoolean(getResources().getString(R.string.new_message_push_key), true);
 
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority(getResources().getString(R.string.base_api))
-                .appendPath(getResources().getString(R.string.rout_api))
-                .appendPath(getResources().getString(R.string.update_settings_api))
-                .appendPath(AgentDataManager.getAgentInstance().getToken())
-                .appendQueryParameter("visitorpush", AgentDataManager.getAgentInstance().getSettings().visitorPushNotification + "")
-                .appendQueryParameter("messagepush", AgentDataManager.getAgentInstance().getSettings().msgPushNotification + "");
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("https")
+                    .authority(getResources().getString(R.string.base_api))
+                    .appendPath(getResources().getString(R.string.rout_api))
+                    .appendPath(getResources().getString(R.string.update_settings_api))
+                    .appendPath(AgentDataManager.getAgentInstance().getToken())
+                    .appendQueryParameter("visitorpush", AgentDataManager.getAgentInstance().getSettings().visitorPushNotification + "")
+                    .appendQueryParameter("messagepush", AgentDataManager.getAgentInstance().getSettings().msgPushNotification + "");
 
-        String url = builder.build().toString();
-        OkHttpRequests okHttpRequests = new OkHttpRequests(url, new ServerCallResponse() {
-            @Override
-            public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
+            String url = builder.build().toString();
+            OkHttpRequests okHttpRequests = new OkHttpRequests(url, new ServerCallResponse() {
+                @Override
+                public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override

@@ -39,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
             if (args != null)
                 id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
             if (id_surfer != 0) {//from notification
+                GCMPushReceiverService.resetAllCounters();
                 int push_type = args.getInt(getResources().getString(R.string.push_notification_type));
                 if (push_type == GCMPushReceiverService.NEW_MESSAGE) {
                     intent = new Intent(this, InnerConversationActivity.class);
@@ -46,11 +47,11 @@ public class SplashActivity extends AppCompatActivity {
                     b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
                     intent.putExtras(b); //Put your id to your next Intent
                 } else {
-                    intent = new Intent(this, TabsActivity.class);
+                    intent = new Intent(this, MainActivity.class);
                     intent.putExtra(getString(R.string.first_tab_title_key), R.string.onlinevisitors_title);
                 }
             } else { //normal
-                intent = new Intent(this, TabsActivity.class);
+                intent = new Intent(this, MainActivity.class);
             }
         } else //not logged in
             intent = new Intent(this, LoginActivity.class);

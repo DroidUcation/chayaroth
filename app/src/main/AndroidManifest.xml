@@ -80,7 +80,7 @@
         </receiver>
 
         <activity
-            android:name=".Ui.Activities.TabsActivity"
+            android:name=".Ui.Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
         <activity android:name=".Ui.Dialogs.EmailDialogActivity" />

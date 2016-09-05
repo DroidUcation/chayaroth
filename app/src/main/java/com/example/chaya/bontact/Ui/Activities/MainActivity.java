@@ -27,12 +27,14 @@ import java.util.List;
 
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
+import com.squareup.picasso.Picasso;
 
-public class TabsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -46,7 +48,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
+       super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_wrraper);
 
         setProgressBarCenterState(View.VISIBLE);
@@ -65,6 +67,8 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
+
+
         inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
         if (resFirstTabTitle == R.string.inbox_title)
             inbox_fab.setVisibility(View.VISIBLE);
@@ -78,7 +82,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
         });
         initMenu();
         dashboard = (FrameLayout) findViewById(R.id.dashboard_fragment);
-        getSupportFragmentManager().beginTransaction().replace(R.id.dashboard_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.dashboard_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
         replaceViews(R.string.dashboard_title);
     }
 
@@ -95,6 +99,16 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + AgentDataManager.getAgentInstance().getName());
+        String avatar = AgentDataManager.getAgentAvatarUrl();
+        if (avatar != null) {
+            avatar = avatar.replace("https", "http");
+            Picasso.with(this)
+                    .load(avatar)
+                    .placeholder(R.mipmap.bontact_launcher) // optional
+                    .transform(new CircleTransform())
+                    .error(R.mipmap.bontact_launcher)         // optional
+                    .into(agentPicture);
+        }
     }
 
     @Override
@@ -124,7 +138,7 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean replaceViews(int resTitle) {
-        Log.e("current", getResources().getString(resTitle));
+        // Log.e("current", getResources().getString(resTitle));
         Intent intent;
         if (resTitle == R.string.dashboard_title) {
             //startActivity(new Intent(this, MenuActivity.class));
@@ -133,14 +147,12 @@ public class TabsActivity extends AppCompatActivity implements NavigationView.On
             tabLayout.setVisibility(View.GONE);
             return true;
         } else {
-            dashboard.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.VISIBLE);
-            if (resTitle == R.string.onlinevisitors_title) {
-                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
-                return true;
-            } else if (resTitle == R.string.inbox_title) {
-                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.inbox_title)), true);
+            if (resTitle == R.string.onlinevisitors_title || resTitle == R.string.inbox_title) {
+                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(resTitle)), true);
+                dashboard.setVisibility(View.GONE);
+                viewPager.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+                setTitle(R.string.app_name);
                 return true;
             } else if (resTitle == R.string.settings_title) {
                 intent = new Intent(this, SettingsActivity.class);

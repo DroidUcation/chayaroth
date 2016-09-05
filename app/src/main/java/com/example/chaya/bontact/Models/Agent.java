@@ -82,8 +82,10 @@ public class Agent {
         @SerializedName("visitorPushNotification")
         @Expose
         public boolean visitorPushNotification;
-
-
+        public boolean msgPushNotificationSound;
+        public boolean visitorPushNotificationSound;
+        public boolean msgPushNotificationVibrate;
+        public boolean visitorPushNotificationVibrate;
     }
 
     public String getToken() {
@@ -95,11 +97,13 @@ public class Agent {
             return rep.getName();
         return null;
     }
+
     public int getIdRep() {
         if (rep != null)
             return rep.idRepresentive;
         return 0;
     }
+
     public Rep getRep() {
         return rep;
     }

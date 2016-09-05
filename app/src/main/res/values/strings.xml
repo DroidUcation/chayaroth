@@ -78,7 +78,7 @@
     <string name="login_api">login</string>
     <string name="update_settings_api">updatePushNotification</string>
     <string name="socket_url">https://dev-socket01-eus.azurewebsites.net/</string>
-
+<string name="unregister_notifications_api">removePushNotification</string>
     <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
 
     <!-- time strings-->

@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.SplashActivity;
 import com.google.android.gms.gcm.GcmListenerService;
@@ -22,12 +25,12 @@ import org.json.JSONObject;
  * Created by chaya on 8/3/2016.
  */
 public class GCMPushReceiverService extends GcmListenerService {
-    public static int NEW_VISITOR = 1;
     public static int NEW_MESSAGE = 0;
     public static int newMsgNotificationsCount = 0;
     public static int newMsgId = 0;
-    public static int newVisitorNotificationsCount = 0;
-    public static int newVisitorId = 0;
+    public static int NEW_VISITOR = 1;
+    public static int newVisitorId = 1;
+    //public static int newVisitorNotificationsCount = 0;
     // public static int id = 0;
 
     @Override
@@ -46,17 +49,20 @@ public class GCMPushReceiverService extends GcmListenerService {
             else
                 push_type = NEW_MESSAGE;
 
+            int integer_id_surfer = Integer.parseInt(id_surfer);
+            if (integer_id_surfer != ConversationDataManager.selectedIdConversation)
+                sendNotification(message, integer_id_surfer, push_type);
+
         } catch (JSONException e) {
             e.printStackTrace();
             return;
         }
 
-        sendNotification(message, Integer.parseInt(id_surfer), push_type);
     }
 
     public static void resetAllCounters() {
         newMsgNotificationsCount = 0;
-        newVisitorNotificationsCount = 0;
+        //newVisitorNotificationsCount = 0;
 
     }
 
@@ -69,30 +75,33 @@ public class GCMPushReceiverService extends GcmListenerService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         int requestCode = 0;
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
-        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         if (push_type == NEW_MESSAGE) {
+
             newMsgNotificationsCount++;
             NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.bontact_launcher)
                     .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
                     .setContentText(message)
                     .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setSound(sound);
+                    .setContentIntent(pendingIntent);
 
+            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().msgPushNotificationVibrate)
+                noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().msgPushNotificationSound)
+                noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
             notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
         } else {
-            newVisitorNotificationsCount++;
             NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.bontact_launcher)
-                    .setContentTitle("you have " + newVisitorNotificationsCount + " new visitors")
+                    .setContentTitle("new visitor on your website")
                     .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setSound(sound);
-
-            notificationManager.notify(newVisitorId, noBuilder.build()); //0 = ID of notification
+                    .setContentIntent(pendingIntent);
+            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().visitorPushNotificationVibrate)
+                noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().visitorPushNotificationSound)
+                noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
         }
 
     }

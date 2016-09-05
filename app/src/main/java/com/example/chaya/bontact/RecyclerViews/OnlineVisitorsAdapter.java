@@ -14,6 +14,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
+import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
@@ -30,7 +31,7 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     public OnlineVisitorsAdapter(Context context) {
         this.context = context;
-       // visitorsList = VisitorsDataManager.visitorsList;
+        // visitorsList = VisitorsDataManager.visitorsList;
     }
 
 
@@ -42,14 +43,14 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     @Override
     public void onBindViewHolder(OnlineVisitorsHolder holder, int position) {
-       // if (visitorsList == null)
-         //   return;
+        // if (visitorsList == null)
+        //   return;
         final Visitor current_visitor = VisitorsDataManager.getVisitorsList().get(position);
         if (current_visitor != null) {
             if (current_visitor.timeConnect != null)
                 holder.connect_time.setText(DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
             holder.page_title.setText(current_visitor.title);
-            setAvatar(current_visitor, holder.avatar);
+            AvatarHelper.setAvatar(context, null, current_visitor.displayName, holder.avatar);
             //holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
             holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
             holder.displayName.setText(current_visitor.displayName);
@@ -90,10 +91,11 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
                         .into(avatarView);
             } else {//maybe letters*/
             String letter = null;
-            letter = visitor.displayName != null && !visitor.displayName.startsWith("#") ? visitor.displayName.substring(0, 1) : null;
+            if (visitor.displayName != null && !visitor.displayName.startsWith("#"))
+                letter = visitor.displayName.trim().substring(0, 1);
             if (letter != null)
                 avatarView.setImageDrawable(TextDrawable.builder()
-                        .buildRound(letter,ColorGenerator.MATERIAL.getRandomColor()));
+                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
             //context.getResources().getColor(R.color.orange_light)));
         }
     }

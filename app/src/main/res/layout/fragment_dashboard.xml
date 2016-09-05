@@ -1,6 +1,4 @@
-<RelativeLayout
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dashboard_fragment"
     android:layout_width="match_parent"
@@ -33,7 +31,6 @@
             android:textColor="@color/white"
             android:textSize="15sp" />
     </LinearLayout>
-
 
     <RelativeLayout
         android:id="@+id/onlineVisitors_dashboard_layout"

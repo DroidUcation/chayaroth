@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Models.Agent;
@@ -129,8 +130,7 @@ public class AgentDataManager {
         return 0;
     }
 
-    public boolean isLoggedIn(Context context) {
-        this.context = context;
+    public static boolean isLoggedIn(Context context) {
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
         String token = Preferences.getString(context.getResources().getString(R.string.token), null);
         if (token != null)//user is logged in
@@ -148,11 +148,11 @@ public class AgentDataManager {
     }
 
     public static boolean logOut(Context context) {
-
         //clear agent details
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
         SharedPreferences.Editor editor = Preferences.edit();
         editor.clear().commit();
+        editor.apply();
         setNewAgent();
         //claer db
         context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
@@ -161,8 +161,31 @@ public class AgentDataManager {
         ConversationDataManager.unread_conversations = 0;
         VisitorsDataManager.visitorsList = null;
 
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_token), context.MODE_PRIVATE);
+        String gcmToken = preferences.getString(context.getResources().getString(R.string.token), null);
+        if (gcmToken != null) {
+            if (getAgentInstance().getToken() != null) {
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("https")
+                        .authority(context.getResources().getString(R.string.base_api))
+                        .appendPath(context.getResources().getString(R.string.rout_api))
+                        .appendPath(context.getResources().getString(R.string.unregister_notifications_api))
+                        .appendPath(getAgentInstance().getToken())
+                        .appendQueryParameter("registrationId", gcmToken);
+                String url = builder.build().toString();
+                OkHttpRequests requests = new OkHttpRequests(url, new ServerCallResponse() {
+                    @Override
+                    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+                        Log.d("unregister", isSuccsed ? "true" : "false");
+                        Log.d("unregister", response);
+                    }
+                });
+                editor = Preferences.edit();
+                editor.clear().commit();
+                editor.apply();
+            }
+        }
         return true;
-
     }
 
     ServerCallResponse loginCallback = new ServerCallResponse() {

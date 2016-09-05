@@ -21,6 +21,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
@@ -61,7 +62,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         //  Conversation conversation= new Conversation();
         // if (conversation != null) {
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-        setAvatar(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
+        AvatarHelper.setAvatar(context,cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
                 cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
                 , holder.avatar);
         //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
