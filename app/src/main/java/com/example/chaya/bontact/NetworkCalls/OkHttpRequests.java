@@ -70,13 +70,13 @@ public class OkHttpRequests implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
-        Log.e("ON FAILER", url);
+        Log.e("ON FAILER", url+" "+e.getMessage());
         sendRes(false, null, ErrorType.network_problems);
     }
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        Log.e("on response", response.toString());
+        Log.e("ON res", response.toString());
         if (!response.isSuccessful()) {
             sendRes(false, null, ErrorType.network_problems);
             return;

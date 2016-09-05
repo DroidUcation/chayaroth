@@ -1,131 +1,138 @@
 <RelativeLayout
 
-    android:id="@+id/dashboard_fragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashboard_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ui.Fragments.DashboardFragment"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".Ui.Fragments.DashboardFragment">
 
-<LinearLayout
+    <LinearLayout
         android:id="@+id/welcome_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="@color/purple"
         android:orientation="vertical"
-        android:layout_alignParentTop="true"
         android:padding="@dimen/padding_dashboard_layouts">
 
-            <TextView
+        <TextView
             android:id="@+id/txt_welcom_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/welcome_name_msg"
             android:textColor="@color/white"
-                android:textSize="20sp"/>
-            <TextView
+            android:textSize="20sp" />
+
+        <TextView
             android:id="@+id/txt_welcom_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/welcome_msg"
             android:textColor="@color/white"
-                android:textSize="15sp"
-            />
+            android:textSize="15sp" />
     </LinearLayout>
 
 
     <RelativeLayout
-    android:id="@+id/onlineVisitors_dashboard_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:clickable="true"
-    android:padding="10dp"
-    android:layout_below="@id/welcome_layout"
-    android:layout_marginTop="30dp">
-        <TextView
-        android:id="@+id/count_online_visitors"
-        android:layout_width="wrap_content"
+        android:id="@+id/onlineVisitors_dashboard_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="0"
-        android:textColor="@color/purple"
-        android:textSize="@dimen/big_numbers_text_size_dashboard"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-          />
+        android:layout_below="@id/welcome_layout"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/count_online_visitors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="0"
+            android:textColor="@color/purple"
+            android:textSize="@dimen/big_numbers_text_size_dashboard" />
+
         <TextView
             android:id="@+id/online_arrow_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/arrow_click"
-            android:textSize="@dimen/big_numbers_text_size_dashboard"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
-            android:textColor="@color/purple"/>
+            android:layout_marginRight="20dp"
+            android:text="@string/arrow_click"
+            android:textColor="@color/purple"
+            android:textSize="@dimen/big_numbers_text_size_dashboard" />
+
         <TextView
             android:id="@+id/txt_online_v_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Online visitors"
-        android:textColor="@color/purple"
-        android:textSize="@dimen/content_text_size_dashboard"
-        android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/count_online_visitors"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="Online visitors"
+            android:textColor="@color/purple"
+            android:textSize="@dimen/content_text_size_dashboard" />
     </RelativeLayout>
+
     <View
         android:id="@+id/border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/purple"
         android:layout_below="@id/onlineVisitors_dashboard_layout"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:background="@color/purple" />
+
     <RelativeLayout
         android:id="@+id/requests_dashboard_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:clickable="true"
-        android:padding="10dp"
         android:layout_below="@id/border"
-        android:layout_marginTop="15dp" >
+        android:layout_marginTop="15dp"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:padding="10dp">
+
         <TextView
             android:id="@+id/count_new_requests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:text="0"
             android:textColor="@color/purple"
-            android:textSize="@dimen/big_numbers_text_size_dashboard"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:textSize="@dimen/big_numbers_text_size_dashboard" />
+
         <TextView
             android:id="@+id/visitors_arrow_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/arrow_click"
-            android:textSize="@dimen/big_numbers_text_size_dashboard"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
-            android:textColor="@color/purple"/>
+            android:layout_marginRight="20dp"
+            android:text="@string/arrow_click"
+            android:textColor="@color/purple"
+            android:textSize="@dimen/big_numbers_text_size_dashboard" />
+
         <TextView
             android:id="@+id/txt_requests_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/count_new_requests"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
             android:text="New requests"
             android:textColor="@color/purple"
-            android:textSize="@dimen/content_text_size_dashboard"
-            android:layout_gravity="center_horizontal"
-            android:layout_below="@id/count_new_requests"
-            android:layout_centerHorizontal="true" />
+            android:textSize="@dimen/content_text_size_dashboard" />
     </RelativeLayout>
 
-    </RelativeLayout>
+</RelativeLayout>
 
 

@@ -56,16 +56,15 @@ public class MenuActivity extends AppCompatActivity
             loggedInAs.append(" " + agentDataManager.getAgentName(this));
 
         String avatar = agentDataManager.getAgentAvatarUrl();
-        avatar=avatar.replace("https","http");
-
-
-        if (avatar != null)
+        if (avatar != null) {
+            avatar = avatar.replace("https", "http");
             Picasso.with(this)
                     .load(avatar)
                     .placeholder(R.mipmap.bontact_launcher) // optional
                     .transform(new CircleTransform())
                     .error(R.mipmap.bontact_launcher)         // optional
                     .into(agentPicture);
+        }
         //get data to inbox
       /*  String token = agentDataManager.getAgentToken(this);
         if (token != null) {
@@ -78,7 +77,6 @@ public class MenuActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
 
     }
 
@@ -133,7 +131,6 @@ public class MenuActivity extends AppCompatActivity
         }
         return false;
     }
-
     @Override
     public void onClick(View v) {
 
@@ -141,7 +138,38 @@ public class MenuActivity extends AppCompatActivity
 
     }
 
+/*
 
+    public boolean replaceViews(int id) {
+        Intent intent;
+        if (id == R.id.nav_dashboard) {
+            //startActivity(new Intent(this, MenuActivity.class));
+            dashboard.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.GONE);
+            return true;
+        } else {
+            dashboard.setVisibility(View.GONE);
+            viewPager.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.VISIBLE);
+            if (id == R.id.nav_online_v) {
+                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
+                return true;
+            } else if (id == R.id.nav_inbox) {
+                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.inbox_title)), true);
+                return true;
+            } else if (id == R.id.nav_settings) {
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_exit) {
+                finish();
+                return true;
+            }
+        }
+        return false;
+    }
+ */
 }
 
 

@@ -49,8 +49,9 @@ public class SplashActivity extends AppCompatActivity {
                     intent = new Intent(this, TabsActivity.class);
                     intent.putExtra(getString(R.string.first_tab_title_key), R.string.onlinevisitors_title);
                 }
-            } else //normal
-                intent = new Intent(this, MenuActivity.class);
+            } else { //normal
+                intent = new Intent(this, TabsActivity.class);
+            }
         } else //not logged in
             intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

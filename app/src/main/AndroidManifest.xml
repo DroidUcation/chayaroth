@@ -29,10 +29,10 @@
             android:name=".Ui.Activities.LoginActivity"
             android:label="@string/login_title"
             android:noHistory="true" />
-        <activity
+      <!--  <activity
             android:name=".Ui.Activities.MenuActivity"
             android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".Ui.Activities.SplashActivity"
             android:noHistory="true">
@@ -81,7 +81,8 @@
 
         <activity
             android:name=".Ui.Activities.TabsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity android:name=".Ui.Dialogs.EmailDialogActivity" />
         <activity android:name=".Ui.Activities.SettingsActivity" />
     </application>
