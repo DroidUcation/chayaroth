@@ -44,11 +44,11 @@ public class VisitorsDataManager {
 
     }
 
-    public static void updateIsNewState(Context context,int id_surfer, boolean state) {
-       Visitor visitor =getVisitorByIdSurfer(id_surfer);
-        visitor.isNew=state;
+    public static void updateIsNewState(Context context, int id_surfer, boolean state) {
+        Visitor visitor = getVisitorByIdSurfer(id_surfer);
+        visitor.isNew = state;
         int position = getVisitorsList().indexOf(visitor);
-        notifyAdapter(context,ACTION_UPDATE_VISITOR,position);
+        notifyAdapter(context, ACTION_UPDATE_VISITOR, position);
     }
 
     public static Visitor getVisitorByIdSurfer(int id_surfer) {
@@ -93,6 +93,12 @@ public class VisitorsDataManager {
             context.sendBroadcast(intent);
         else if (contextStatic != null)
             contextStatic.sendBroadcast(intent);
+    }
+
+    public static boolean isOnline(int idSurfer) {
+        if (getVisitorByIdSurfer(idSurfer) != null)
+            return true;
+        return false;
     }
 
     public static int getBrowserIcon(String browser) {

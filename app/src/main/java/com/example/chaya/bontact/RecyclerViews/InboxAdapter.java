@@ -21,6 +21,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
@@ -57,12 +58,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if (!cursor.moveToPosition(position))
             return;
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
+        int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
         //   ConversationDataManager conversationDataManager = new ConversationDataManager(context);
         // Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
         //  Conversation conversation= new Conversation();
         // if (conversation != null) {
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
-        AvatarHelper.setAvatar(context,cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
+        AvatarHelper.setAvatar(context, cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
                 cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
                 , holder.avatar);
         //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
@@ -83,9 +85,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             if (timeAgo != null)
                 holder.date.setText(timeAgo);
         }
-        if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
-            holder.onlinePoint.setVisibility(View.VISIBLE);
-        }
+        //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
+        if (VisitorsDataManager.getVisitorByIdSurfer(idSurfer) != null)
+            holder.online.setVisibility(View.VISIBLE);
+        else
+            holder.online.setVisibility(View.GONE);
+
         if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)) > 0) {
             holder.unread.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))));
             holder.setUnRead(true);
@@ -154,7 +159,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar, onlinePoint;
+        ImageView avatar, onlinePoint, online;
         TextView displayName, lastSentence, date, unread, disable_txt;
         TextView chanelIcon;
         FrameLayout blocked_layout;
@@ -172,7 +177,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
             onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
-            blocked_layout= (FrameLayout) itemView.findViewById(R.id.blocked_view);
+            online = (ImageView) itemView.findViewById(R.id.is_online);
+            blocked_layout = (FrameLayout) itemView.findViewById(R.id.blocked_view);
 
             itemView.setOnClickListener(this);
         }

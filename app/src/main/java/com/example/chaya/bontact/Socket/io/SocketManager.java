@@ -122,16 +122,7 @@ public class SocketManager {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 for (int i = 0; i < visitors.length(); i++) {
                     Visitor visitor = gson.fromJson(visitors.getJSONObject(i).toString(), Visitor.class);
-                    int idSurfer = visitor.idSurfer;
-                    Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
-                    if (conversation != null) {//surfer is in conversation
-                        conversationDataManager.updateOnlineState(idSurfer, 1);
-                        visitor.isNew = false;
-                        visitor.displayName = conversation.displayname;
-                    } else {//new visitor
-                        visitor.isNew = true;
-                        visitor.displayName = "#" + idSurfer;
-                    }
+                    syncVisitorWithConversation(visitor);
                     visitorsDataManager.addVisitorToList(context, visitor);
                 }
             } catch (JSONException e) {
@@ -148,16 +139,7 @@ public class SocketManager {
             try {
                 int idSurfer = data.getJSONObject("surfer").getInt("idSurfer");
                 Visitor visitor = gson.fromJson(data.getJSONObject("surfer").toString(), Visitor.class);
-                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
-                if (conversation != null) {//surfer is in conversation
-                    conversationDataManager.updateOnlineState(idSurfer, 1);
-                    visitor.isNew = false;
-                    visitor.displayName = conversation.displayname;
-                } else {//new visitor
-                    visitor.isNew = true;
-                    visitor.displayName = "#" + idSurfer;
-                }
+                syncVisitorWithConversation(visitor);
                 VisitorsDataManager.addVisitorToList(context, visitor);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -178,6 +160,21 @@ public class SocketManager {
             }
         }
     };
+
+    public void syncVisitorWithConversation(Visitor  visitor) {
+        ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+        Conversation conversation = conversationDataManager.getConversationByIdSurfer(visitor.idSurfer);
+        if (conversation != null) {//surfer is in conversation
+            conversationDataManager.updateOnlineState(visitor.idSurfer, 1);
+            visitor.isNew = false;
+            visitor.displayName = conversation.displayname;
+            visitor.avatar = conversation.avatar;
+        } else {//new visitor
+            visitor.isNew = true;
+            visitor.displayName = "#" + visitor.idSurfer;
+        }
+    }
+
     Emitter.Listener selectConversationListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -313,6 +310,8 @@ public class SocketManager {
             conversationDataManager.updateEmail(id_surfer, innerConversation.from_s);//set phone
         if (conversation.idSurfer != ConversationDataManager.selectedIdConversation) {
             conversationDataManager.updateUnread(id_surfer, conversation.unread + 1);//set unread
+        } else {
+            conversationDataManager.syncUnreadConversation(conversation);
         }
         Log.d("from_s", innerConversation.from_s);
     }

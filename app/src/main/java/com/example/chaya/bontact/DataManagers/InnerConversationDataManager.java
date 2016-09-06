@@ -18,6 +18,7 @@ import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +36,7 @@ public class InnerConversationDataManager {
     private int idSurfer;
     //private List<InnerConversation> innerConversationsList;
     public static int idPlaceHolder = -1;
-    public ServerCallResponse callback;
+    public ServerCallResponse callbackEmptyData;
 
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
 
@@ -54,10 +55,10 @@ public class InnerConversationDataManager {
     }
 
 
-    public void getData(Context context, String token, ServerCallResponse callback) {
+    public void getData(Context context, String token, ServerCallResponse callbackEmptyData) {
 
         this.context = context;
-        this.callback = callback;
+        this.callbackEmptyData = callbackEmptyData;
         //sendResToUi();
         getDataFromServer(context, token);
     }
@@ -68,7 +69,7 @@ public class InnerConversationDataManager {
             this.context = context;
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
-                    .authority(context.getResources().getString(R.string.base_api))
+                    .authority(context.getResources().getString(R.string.base_dev_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
                     .appendPath(context.getResources().getString(R.string.inner_conversation_api))
                     .appendPath(token)
@@ -80,10 +81,12 @@ public class InnerConversationDataManager {
         }
     }
 
-    public boolean saveServersData(String data) {
+    public boolean saveServersData(String data, ServerCallResponse callbackEmptyData) {
         try {
             JSONArray DataArray = new JSONArray(data);
             if (DataArray.length() == 0) {
+                if (callbackEmptyData != null)
+                    notifyEmptyInnerData(callbackEmptyData);
                 notifyEmptyInnerData();
                 return false;
             }
@@ -106,7 +109,7 @@ public class InnerConversationDataManager {
 
             if (innerConversation != null && innerConversation.getMess() != null) {//check type
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                conversationDataManager.updateLastMessage( current_conversation.idSurfer, innerConversation.getMess());
+                conversationDataManager.updateLastMessage(current_conversation.idSurfer, innerConversation.getMess());
             }
             return true;
 
@@ -160,13 +163,19 @@ public class InnerConversationDataManager {
     }
 
     public void notifyEmptyInnerData() {
-        callback.OnServerCallResponse(true, "[]", null);
+        if (this.callbackEmptyData != null)
+            notifyEmptyInnerData(this.callbackEmptyData);
+    }
+
+    public void notifyEmptyInnerData(ServerCallResponse callback) {
+        if (callback != null)
+            callback.OnServerCallResponse(true, "[]", null);
     }
 
     ServerCallResponse getDataOnResponse = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-          if(isSuccsed==false&&errorType==ErrorType.network_problems)
+            if (isSuccsed == false && errorType == ErrorType.network_problems)
                 notifyEmptyInnerData();
             if (isSuccsed == true) {
                 try {
@@ -174,7 +183,7 @@ public class InnerConversationDataManager {
                     if (res.getString("status").equals("true")) {
                         String inner_data = res.getJSONArray("data").toString();
                         Log.e("inner conversation", inner_data);
-                        saveServersData(inner_data);
+                        saveServersData(inner_data, null);
                         // sendResToUi();
                     }
                 } catch (JSONException e) {

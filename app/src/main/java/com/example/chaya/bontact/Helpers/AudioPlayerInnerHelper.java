@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +22,7 @@ import java.io.IOException;
  */
 public class AudioPlayerInnerHelper {
 
-    TextView playBtn, pauseBtn;
+    ImageView playBtn, pauseBtn;
     AppCompatSeekBar seekBar;
     MediaPlayer mediaPlayer;
     double startTime = 0;
@@ -61,13 +62,13 @@ public class AudioPlayerInnerHelper {
     }
 
     public void initPlayerComponent(View itemView) {
-        playBtn = (TextView) itemView.findViewById(R.id.play_btn);
-        pauseBtn = (TextView) itemView.findViewById(R.id.pause_btn);
+        playBtn = (ImageView) itemView.findViewById(R.id.play_btn);
+        pauseBtn = (ImageView) itemView.findViewById(R.id.pause_btn);
         seekBar = (AppCompatSeekBar) itemView.findViewById(R.id.seekbar_visitor_record);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
-        playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+       // playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
         playBtn.setOnClickListener(playListener);
-        pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+       // pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
         seekHandler = new Handler();
     }
 
@@ -119,7 +120,8 @@ public class AudioPlayerInnerHelper {
     public void playRecord(int newStartTime) {
         if (mediaPlayer == null)
             return;
-        playBtn.setText(R.string.pause_btn_icon);
+       // playBtn.setText(R.string.pause_btn_icon);
+        playBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.pause_btn));
         mediaPlayer.start();
         seekHandler.postDelayed(UpdateSongTime, 100);
         finalTime = mediaPlayer.getDuration();
@@ -135,7 +137,8 @@ public class AudioPlayerInnerHelper {
     }
 
     public void stopRecord() {
-        playBtn.setText(R.string.play_btn_icon);
+       // playBtn.setText(R.string.play_btn_icon);
+        playBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.play_btn));
         if (mediaPlayer != null && mediaPlayer.isPlaying())
             mediaPlayer.pause();
     }

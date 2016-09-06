@@ -25,6 +25,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/orange_medium</item>
     </style>
+
     <!-- Define your custom dialog theme here extending from base -->
     <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <!-- Define color properties as desired -->

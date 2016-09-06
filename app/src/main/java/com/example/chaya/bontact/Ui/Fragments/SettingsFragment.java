@@ -79,7 +79,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
-                    .authority(getResources().getString(R.string.base_api))
+                    .authority(getResources().getString(R.string.base_dev_api))
                     .appendPath(getResources().getString(R.string.rout_api))
                     .appendPath(getResources().getString(R.string.update_settings_api))
                     .appendPath(AgentDataManager.getAgentInstance().getToken())

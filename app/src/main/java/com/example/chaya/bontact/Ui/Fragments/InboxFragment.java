@@ -1,6 +1,9 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +23,7 @@ import android.widget.ProgressBar;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.RecyclerViews.InboxAdapter;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.R;
@@ -39,6 +43,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     int lastVisibleItem;
     ViewGroup container;
     ConversationDataManager conversationDataManager;
+    OnlineStatesChangesReceiver onlineStatesChangesReceiver;
 
     public InboxFragment() {
         Log.d("now", "INBOX");
@@ -54,6 +59,20 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         //getActivity().setTitle(R.string.inbox_title);
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
+        onlineStatesChangesReceiver = new OnlineStatesChangesReceiver();
+        getContext().registerReceiver(onlineStatesChangesReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getContext().unregisterReceiver(onlineStatesChangesReceiver);
     }
 
     public void setProgressBarCenterState(int state) {
@@ -169,6 +188,29 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         else
             conversationDataManager.getFirstDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
 
+    }
+
+    public class OnlineStatesChangesReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            int position = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_item_postion), -1);
+            int action = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_action), -1);
+
+            if (position == -1 || action == -1)
+                return;
+            if (action == VisitorsDataManager.ACTION_NEW_VISITOR) {
+                adapter.notifyDataSetChanged();
+                // adapter.notifyItemInserted(position);
+            } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
+                adapter.notifyDataSetChanged();
+                // adapter.notifyItemRemoved(position);
+            } else if (action == VisitorsDataManager.ACTION_UPDATE_VISITOR) {
+                // adapter.notifyDataSetChanged();
+                //adapter.notifyItemChanged(position);
+            }
+        }
     }
 
 }

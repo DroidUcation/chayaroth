@@ -20,6 +20,7 @@ public class Visitor {
     @SerializedName("displayName")
     @Expose
     public String displayName;
+    public String avatar;
     @SerializedName("isChatting")
     @Expose
     public boolean isChatting;

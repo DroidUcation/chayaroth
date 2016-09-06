@@ -69,10 +69,13 @@
     <!--URLS to api -->
     <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
     <string name="domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
-    <string name="base_api">dev-api01-eus.azurewebsites.net</string>
+    <string name="base_dev_api">dev-api01-eus.azurewebsites.net</string>
+    <string name="base_prd_api">dev-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
     <string name="conversation_api">getConversations</string>
-    <string name="conversation_by_id_api">contacts/conversationvisitor</string>
+    <string name="contacts_rout_api">contacts</string>
+    <string name="read_conversation_api">readconversation</string>
+    <string name="conversation_by_id_api">conversationvisitor</string>
     <string name="count_conversation_api">getmainConversations</string>
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>

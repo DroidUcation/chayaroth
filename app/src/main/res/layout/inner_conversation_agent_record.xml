@@ -33,24 +33,25 @@
             android:text="agent"
             android:textSize="10sp"
             android:textColor="@color/black"/>
-        <TextView
+        <ImageView
             android:id="@+id/play_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/chanelIcon"
             android:layout_marginTop="4dp"
-            android:text="@string/play_btn_icon" />
+            android:src="@drawable/play_btn"/>
 
-        <TextView
+        <ImageView
             android:id="@+id/pause_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/chanelIcon"
             android:layout_marginTop="4dp"
-            android:text="@string/pause_btn_icon"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:src="@drawable/pause_btn"
+            />
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seekbar_visitor_record"

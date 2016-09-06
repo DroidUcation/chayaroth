@@ -73,7 +73,7 @@ public class InboxProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         long result = dbBontact.update(Contract.Conversation.TABLE_NAME, values, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
-        Log.d("update conversation", values.toString());
+        //Log.d("update conversation", values.toString());
         return (int) result;
     }
 

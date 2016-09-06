@@ -91,23 +91,25 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     private void initData() {
         current_conversation = null;
+        AgentDataManager agentDataManager = new AgentDataManager();
+        String token = agentDataManager.getAgentToken(this);
         if (id_surfer != 0) {//init current conversation if possible
             this.current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
         }
         if (current_conversation != null) {//THIS ID HAS CONVERSATIONS
             isNew = false;
-            //update unread  numbers
-
+            if (token != null) {
+                innerConversationDataManager = new InnerConversationDataManager(this, current_conversation.idSurfer);
+                innerConversationDataManager.getData(this, token, callResponse);
+            }
         } else { //surfer is new
             isNew = true;
+            if (token != null && id_surfer != 0) {
+                conversationDataManager.getConversationByIdFromServer(token, id_surfer, null,callResponse);
+            }
         }
 
-        AgentDataManager agentDataManager = new AgentDataManager();
-        String token = agentDataManager.getAgentToken(this);
-        if (token != null && id_surfer != 0) {
-            innerConversationDataManager = new InnerConversationDataManager(this, id_surfer);
-            innerConversationDataManager.getData(this, token, callResponse);
-        }
+
     }
 
     private void drawHeader() {
@@ -394,9 +396,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 }
             });
 
-        if (current_conversation != null&&current_conversation.unread!=0) {
-            int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
-            ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
+        if (current_conversation != null ) {
+            // int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
+            //ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
             conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         }
 
@@ -504,7 +506,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             if (status) {
                 isNew = false;
                 if (AgentDataManager.getAgentInstance() != null)
-                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse,null);
                 VisitorsDataManager.updateIsNewState(InnerConversationActivity.this, id_surfer, false);
             } else {
                 load_animations(false);
@@ -526,8 +528,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-
-
             Gson gson = new Gson();
             try {
                 if (response == null) {
@@ -560,7 +560,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         private void retryCallGetConversationByIdFromServer() {
             if (tryCount < 3) {
-                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse);
+                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse,null);
                 tryCount++;
 
             }

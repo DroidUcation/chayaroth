@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.Conversation;
 import com.google.gson.Gson;
 
@@ -72,7 +73,7 @@ public class DbToolsHelper {
         contentValues.put(Contract.Conversation.COLUMN_EMAIL, conversation.email);
         contentValues.put(Contract.Conversation.COLUMN_AGENT, conversation.agent);
         contentValues.put(Contract.Conversation.COLUMN_DISPLAY_NAME, conversation.displayname);
-        contentValues.put(Contract.Conversation.COLUMN_IS_ONLINE, conversation.isOnline);
+        //contentValues.put(Contract.Conversation.COLUMN_IS_ONLINE, VisitorsDataManager.getVisitorByIdSurfer(conversation.idSurfer) != null ? 1 : 0);
         contentValues.put(Contract.Conversation.COLUMN_AGENT_SELECTED_ID, conversation.agentSelectedId);
 
         return contentValues;
@@ -102,8 +103,8 @@ public class DbToolsHelper {
         conversation.email = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_EMAIL));
         conversation.agent = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT));
         conversation.displayname = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-        conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
-        conversation.agentSelectedId=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
+       // conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
+        conversation.agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         return conversation;
        /* JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new Conversation(), cursor);
         if (jsonObject.length() > 0) {

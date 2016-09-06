@@ -153,7 +153,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             AgentDataManager agentDataManager = new AgentDataManager();
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
-                    .authority(context.getResources().getString(R.string.base_api))
+                    .authority(context.getResources().getString(R.string.base_dev_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
                     .appendPath("record")
                     .appendPath(agentDataManager.getAgentToken(context))

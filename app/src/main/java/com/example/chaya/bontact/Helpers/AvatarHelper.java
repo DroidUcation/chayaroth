@@ -53,7 +53,7 @@ public class AvatarHelper {
                 int color = getAvatarBackgroundColor(letter);
                 if (color != -1)
                     avatarView.setImageDrawable(TextDrawable.builder()
-                            .buildRound(letter,color ));
+                            .buildRound(letter, color));
             }
         }
     }

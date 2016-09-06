@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-       super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_wrraper);
 
         setProgressBarCenterState(View.VISIBLE);
@@ -68,7 +69,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
 
-
+        // Iterate over all tabs and set the custom view
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            //tab.setCustomView(adapter.getTabView(i));
+        }
         inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
         if (resFirstTabTitle == R.string.inbox_title)
             inbox_fab.setVisibility(View.VISIBLE);
@@ -259,6 +264,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public int getPosition(String pageTitle) {
 
             return mFragmentTitleList.indexOf(pageTitle);
+        }
+
+        public View getTabView(int position) {
+            // Given you have a custom layout in `res/layout/custom_tab.xml` with a TextView and ImageView
+            View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_header, null);
+            TextView tv = (TextView) v.findViewById(R.id.tab_title);
+            tv.setText(getPageTitle(position));
+           /* ImageView img = (ImageView) v.findViewById(R.id.imgView);
+            img.setImageResource(imageResId[position]);*/
+            return v;
         }
 
         @Override

@@ -105,12 +105,14 @@ public class OnlineVisitorsFragment extends Fragment {
             if (position == -1 || action == -1)
                 return;
             if (action == VisitorsDataManager.ACTION_NEW_VISITOR) {
-                //Toast.makeText(context, "new visitor", Toast.LENGTH_SHORT).show();
-                adapter.notifyItemInserted(position);
+                adapter.notifyDataSetChanged();
+               // adapter.notifyItemInserted(position);
             } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
-                adapter.notifyItemRemoved(position);
+                adapter.notifyDataSetChanged();
+                // adapter.notifyItemRemoved(position);
             } else if (action == VisitorsDataManager.ACTION_UPDATE_VISITOR) {
-                adapter.notifyItemChanged(position);
+                adapter.notifyDataSetChanged();
+                //adapter.notifyItemChanged(position);
             }
         }
     }

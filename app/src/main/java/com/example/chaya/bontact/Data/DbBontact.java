@@ -13,9 +13,9 @@ import java.util.ArrayList;
  */
 public class DbBontact extends SQLiteOpenHelper {
 
-    private static final String DBName = "Bontact.db";
-    private static final int DBVersion = 1;
-    private String CreateConversationTable = "CREATE TABLE " + Contract.Conversation.TABLE_NAME + " (" +
+    public static final String DBName = "Bontact.db";
+    public static final int DBVersion = 2;
+    public String CreateConversationTable = "CREATE TABLE " + Contract.Conversation.TABLE_NAME + " (" +
             Contract.Conversation.COLUMN_ID_SURFER + "  INTEGER PRIMARY KEY,  " +
             Contract.Conversation.COLUMN_NAME + " TEXT, " +
             Contract.Conversation.COLUMN_AVATAR + " TEXT, " +
@@ -36,10 +36,10 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_AGENT + " TEXT, " +
             Contract.Conversation.COLUMN_LAST_MESSAGE + " TEXT, " +
             Contract.Conversation.COLUMN_DISPLAY_NAME + " TEXT ," +
-            Contract.Conversation.COLUMN_IS_ONLINE + " INT DEFAULT 0 , " +
+           // Contract.Conversation.COLUMN_IS_ONLINE + " INT DEFAULT 0 , " +
             Contract.Conversation.COLUMN_AGENT_SELECTED_ID+" INT DEFAULT 0" +
             " )";
-    private String CreateInnerConversationTable = "CREATE TABLE " + Contract.InnerConversation.TABLE_NAME + "(" +
+    public String CreateInnerConversationTable = "CREATE TABLE " + Contract.InnerConversation.TABLE_NAME + "(" +
             Contract.InnerConversation.COLUMN_ID + "  INTEGER PRIMARY KEY,  " +
             Contract.InnerConversation.COLUMN_ID_SURFUR + " INT, " +
             Contract.InnerConversation.COLUMN_CONVERSATION_PAGE + " TEXT,  " +
@@ -57,8 +57,8 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.InnerConversation.COLUMN_RECORD_URL + " TEXT ," +
             "FOREIGN KEY(" + Contract.InnerConversation.COLUMN_ID_SURFUR + ") REFERENCES " + Contract.Conversation.TABLE_NAME + "(" + Contract.Conversation.COLUMN_ID_SURFER + ")" +
             " )";
-    private String DropConversationTable = "DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
-    private String DropInnerConversationTable = "DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
+    public String DropConversationTable = "DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
+    public String DropInnerConversationTable = "DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
 
     public static ArrayList<String> getAllInnerConversationFields() {
         ArrayList<String> strings = new ArrayList<>();
@@ -102,7 +102,7 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add(Contract.Conversation.COLUMN_AGENT);
         strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
         strings.add(Contract.Conversation.COLUMN_LAST_MESSAGE);
-        strings.add(Contract.Conversation.COLUMN_IS_ONLINE);
+        //strings.add(Contract.Conversation.COLUMN_IS_ONLINE);
         strings.add(Contract.Conversation.COLUMN_AGENT_SELECTED_ID);
         return strings;
     }

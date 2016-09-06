@@ -12,7 +12,6 @@ import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
-import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -69,7 +68,7 @@ public class AgentDataManager {
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
-                .authority(context.getResources().getString(R.string.base_api))
+                .authority(context.getResources().getString(R.string.base_dev_api))
                 .appendPath(context.getResources().getString(R.string.rout_api))
                 .appendPath(context.getResources().getString(R.string.login_api))
                 .appendQueryParameter("username", userName)
@@ -149,25 +148,14 @@ public class AgentDataManager {
 
     public static boolean logOut(Context context) {
         //clear agent details
-        SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = Preferences.edit();
-        editor.clear().commit();
-        editor.apply();
-        setNewAgent();
-        //claer db
-        context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
-        context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, null, null);
-        ConversationDataManager.conversationList = null;
-        ConversationDataManager.unread_conversations = 0;
-        VisitorsDataManager.visitorsList = null;
-
-        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_token), context.MODE_PRIVATE);
-        String gcmToken = preferences.getString(context.getResources().getString(R.string.token), null);
+        SharedPreferences.Editor editor;
+        SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_token), context.MODE_PRIVATE);
+        String gcmToken = Preferences.getString(context.getResources().getString(R.string.token), null);
         if (gcmToken != null) {
             if (getAgentInstance().getToken() != null) {
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("https")
-                        .authority(context.getResources().getString(R.string.base_api))
+                        .authority(context.getResources().getString(R.string.base_dev_api))
                         .appendPath(context.getResources().getString(R.string.rout_api))
                         .appendPath(context.getResources().getString(R.string.unregister_notifications_api))
                         .appendPath(getAgentInstance().getToken())
@@ -185,6 +173,20 @@ public class AgentDataManager {
                 editor.apply();
             }
         }
+
+        Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
+        editor = Preferences.edit();
+        editor.clear().commit();
+        editor.apply();
+        setNewAgent();
+        //claer db
+        context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
+        context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, null, null);
+        ConversationDataManager.conversationList = null;
+        ConversationDataManager.unread_conversations = 0;
+        VisitorsDataManager.visitorsList = null;
+
+
         return true;
     }
 

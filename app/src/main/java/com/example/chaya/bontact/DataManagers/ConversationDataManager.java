@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +36,7 @@ public class ConversationDataManager {
     public static int current_page = 0;
     public static int unread_conversations = 0;
     public static int selectedIdConversation = 0;
+    public ServerCallResponse innerEmptyDataCallback;
 
     public ConversationDataManager(Context context) {
         if (conversationList == null)
@@ -117,12 +117,6 @@ public class ConversationDataManager {
         return null;
     }
 
-    /*public boolean isConversationAvailable(int id_agent) {
-        Conversation conversation = getConversationByIdSurfer(idSurfer);
-        if (conversation != null && conversation.agentSelectedId == 0)
-            return true;
-        return false;
-    }*/
 
     public Conversation insertOrUpdate(Conversation conversation) {
         if (conversation == null)
@@ -133,6 +127,8 @@ public class ConversationDataManager {
         if (index != -1) {
             return update(conversation);
         } else {
+            //syncUnreadConversation(conversation);
+            conversation.isOnline = VisitorsDataManager.isOnline(conversation.idSurfer);
             conversationList.add(conversation);
             if (conversation.unread > 0 && conversation.idSurfer != selectedIdConversation) {
                 setAllUnreadConversations(context, getAllUnreadConversations(context) + 1);
@@ -147,19 +143,43 @@ public class ConversationDataManager {
         return null;
     }
 
-    public Conversation update(Conversation conversation) {
+    private Conversation update(Conversation conversation) {
+
         if (conversation == null || conversationList == null)
             return null;
         int index = conversationList.indexOf(getConversationByIdSurfer(conversation.idSurfer));
+        Log.d("updated", conversation.idSurfer + " " + conversation.unread + " " + index);
         if (index == -1) {
             return null;
         }
+        //conversation = syncUnreadConversation(conversation);
         conversationList.set(index, conversation);
         String selectionStr = Contract.Conversation.COLUMN_ID_SURFER + "=?";
         String[] selectionArgs = {String.valueOf(conversation.idSurfer)};
         int result = context.getContentResolver().update(Contract.Conversation.INBOX_URI, DbToolsHelper.convertConversationToContentValues(conversation), selectionStr, selectionArgs);
         notifyListChanged(conversation.idSurfer);
         return conversation;
+    }
+
+    public Conversation syncUnreadConversation(Conversation conversation) {
+        if (conversation == null)
+            return null;
+        if (conversation.idSurfer == selectedIdConversation && conversation.unread > 0) {
+            conversation.unread = 0;
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme("https")
+                    .authority(context.getResources().getString(R.string.base_dev_api))
+                    .appendPath(context.getResources().getString(R.string.rout_api))
+                    .appendPath(context.getResources().getString(R.string.contacts_rout_api))
+                    .appendPath(context.getResources().getString(R.string.read_conversation_api))
+                    .appendPath(AgentDataManager.getAgentInstance().getToken())
+                    .appendPath(String.valueOf(conversation.idSurfer));
+            String url = builder.build().toString();
+            Log.d("syncunread", url);
+            new OkHttpRequests(url, null);
+            return conversation;
+        }
+        return null;
     }
 
     public boolean updateOnlineState(int idSurfer, int state) {
@@ -276,7 +296,7 @@ public class ConversationDataManager {
 
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
-                    .authority(context.getResources().getString(R.string.base_api))
+                    .authority(context.getResources().getString(R.string.base_dev_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
                     .appendPath(context.getResources().getString(R.string.conversation_api))
                     .appendPath(token)
@@ -324,17 +344,23 @@ public class ConversationDataManager {
         }
     };
 
-    public void getConversationByIdFromServer(String token, int idSurfer, ServerCallResponse callback) {
+    public void getConversationByIdFromServer(String token, int idSurfer, ServerCallResponse regularCallback, ServerCallResponse emptyDataCallback) {
+        if (emptyDataCallback != null)
+            this.innerEmptyDataCallback = emptyDataCallback;
         if (token != null) {
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
-                    .authority(context.getResources().getString(R.string.base_api))
+                    .authority(context.getResources().getString(R.string.base_dev_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
+                    .appendPath(context.getResources().getString(R.string.contacts_rout_api))
                     .appendPath(context.getResources().getString(R.string.conversation_by_id_api))
                     .appendPath(String.valueOf(idSurfer))
                     .appendPath(token);
             String url = builder.build().toString();
-            new OkHttpRequests(url, callback);
+            if (regularCallback != null)
+                new OkHttpRequests(url, regularCallback);
+            else
+                new OkHttpRequests(url, getFullConversationByIdOnResponse);
         }
     }
 
@@ -343,7 +369,7 @@ public class ConversationDataManager {
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
-                .authority(context.getResources().getString(R.string.base_api))
+                .authority(context.getResources().getString(R.string.base_dev_api))
                 .appendPath(context.getResources().getString(R.string.rout_api))
                 .appendPath(context.getResources().getString(R.string.count_conversation_api))
                 .appendPath(AgentDataManager.getAgentInstance().getToken());
@@ -375,6 +401,31 @@ public class ConversationDataManager {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    };
+    ServerCallResponse getFullConversationByIdOnResponse = new ServerCallResponse() {
+        @Override
+        public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+            if (isSuccsed == true && response != null) {
+                Log.d("full api", response);
+                Gson gson = new Gson();
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(response).getJSONObject("conversations");
+                    Log.d("json obj", response);
+                    Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
+                    if (conversation != null) {
+                        insertOrUpdate(conversation);
+                        InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, conversation);
+                        innerConversationDataManager.saveServersData(jsonObject.getJSONArray("data").toString(), innerEmptyDataCallback);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //save in conversation
+                //save in inner conversation
+                //send call back when empty data
             }
         }
     };
