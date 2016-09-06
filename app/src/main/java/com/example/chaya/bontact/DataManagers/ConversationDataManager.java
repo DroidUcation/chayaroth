@@ -186,14 +186,14 @@ public class ConversationDataManager {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null) {
             conversation.isOnline = state == 1 ? true : false;
-            if (update(conversation) != null) {
+          //  if (update(conversation) != null) {
                 Intent intent = new Intent(context.getResources().getString(R.string.change_visitor_online_state));
                 intent.setType("*/*");
                 intent.putExtra(context.getResources().getString(R.string.online_state), state);
                 intent.putExtra(context.getResources().getString(R.string.id_surfer), idSurfer);
                 context.sendBroadcast(intent);
                 return true;
-            }
+          //  }
         }
         return false;
 

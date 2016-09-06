@@ -117,9 +117,8 @@ public class SocketManager {
             try {
                 JSONObject jsonObject = new JSONObject(args[0].toString());
                 JSONArray visitors = jsonObject.getJSONArray("visitors");
-
                 VisitorsDataManager visitorsDataManager = new VisitorsDataManager(context);
-                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+               // ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 for (int i = 0; i < visitors.length(); i++) {
                     Visitor visitor = gson.fromJson(visitors.getJSONObject(i).toString(), Visitor.class);
                     syncVisitorWithConversation(visitor);

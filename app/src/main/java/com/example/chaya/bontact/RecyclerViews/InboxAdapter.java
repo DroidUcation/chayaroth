@@ -26,6 +26,7 @@ import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
@@ -86,11 +87,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.date.setText(timeAgo);
         }
         //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
-        if (VisitorsDataManager.getVisitorByIdSurfer(idSurfer) != null)
+        Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
+        if (conversation != null && conversation.isOnline)
             holder.online.setVisibility(View.VISIBLE);
         else
             holder.online.setVisibility(View.GONE);
-
         if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)) > 0) {
             holder.unread.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))));
             holder.setUnRead(true);

@@ -83,6 +83,7 @@ public class VisitorsDataManager {
     }
 
     private static void notifyAdapter(Context context, int action, int position) {
+
         //Toast.makeText(context, String.valueOf(action), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context.getResources().getString(R.string.change_visitors_list_action));
         intent.setType("*/*");
