@@ -105,7 +105,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         } else { //surfer is new
             isNew = true;
             if (token != null && id_surfer != 0) {
-                conversationDataManager.getConversationByIdFromServer(token, id_surfer, null,callResponse);
+                conversationDataManager.getConversationByIdFromServer(token, id_surfer, null, callResponse);
             }
         }
 
@@ -297,7 +297,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         switch (v.getId()) {
             case R.id.btn_send_chat_response:
                 String msg = chat_response_edittext.getText().toString();
-                Toast.makeText(InnerConversationActivity.this, "get the msg " + msg, Toast.LENGTH_SHORT).show();
 
                 View view = getCurrentFocus();
                 if (view != null) {
@@ -314,13 +313,13 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         if (loading != null && loading.getVisibility() != View.VISIBLE) {//DONT WORKING IN BACKGROUND
-            int id = item.getItemId();
-
             switch (id) {
-                case android.R.id.home:
-                    onBackPressed();
-                    return true;
                 case R.id.sms_channel:
                     SendResponse(ChannelsTypes.sms);
                     break;
@@ -343,7 +342,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         sendResponseHelper = new SendResponseHelper();
         if (!sendResponseHelper.isAllowedChannelToResponse(conversationDataManager.getConversationByIdSurfer(id_surfer), channel)) {
             String msg = ChannelsTypes.getNotAllowedMsgByChannelType(this, channel);
-            Toast.makeText(InnerConversationActivity.this, msg, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(InnerConversationActivity.this, msg, Toast.LENGTH_SHORT).show();
             return;
         }
         switch (channel) {
@@ -395,23 +394,19 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     conversationDataManager.setSelectedIdConversation(id_surfer);
                 }
             });
-
-        if (current_conversation != null ) {
-            // int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(this);
-            //ConversationDataManager.setAllUnreadConversations(this, current_unread_conversation_count - 1);
-            conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
-        }
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (!isConversationBusy)
-            conversationDataManager.setUnSelectedIdConversation();
         unregisterReceiver(onlineStateBroadcastReceiver);
         unregisterReceiver(inviteReceiver);
         unregisterReceiver(conversationChangedReceiver);
+        if (current_conversation != null) {
+            conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
+        }
+        if (!isConversationBusy)
+            conversationDataManager.setUnSelectedIdConversation();
     }
 
     /* public void setProgressBarState(int state) {
@@ -506,7 +501,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             if (status) {
                 isNew = false;
                 if (AgentDataManager.getAgentInstance() != null)
-                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse,null);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
                 VisitorsDataManager.updateIsNewState(InnerConversationActivity.this, id_surfer, false);
             } else {
                 load_animations(false);
@@ -540,7 +535,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     retryCallGetConversationByIdFromServer();
                     return;
                 }
-                conversationDataManager.insertOrUpdate(current_conversation);
+                conversationDataManager.insertOrUpdate(current_conversation, true);
                 //todo: change inner save data
                 for (InnerConversation innerConversation : current_conversation.innerConversationData)
                     innerConversationDataManager.saveData(innerConversation);
@@ -560,7 +555,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
         private void retryCallGetConversationByIdFromServer() {
             if (tryCount < 3) {
-                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse,null);
+                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
                 tryCount++;
 
             }

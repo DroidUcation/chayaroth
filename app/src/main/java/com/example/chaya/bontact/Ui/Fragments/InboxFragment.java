@@ -164,7 +164,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1 == adapter.getItemCount())//end of data
+            if (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1 == adapter.getItemCount() && recyclerView.getVisibility() == View.VISIBLE)//end of data
             {
                 lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 getData(false);

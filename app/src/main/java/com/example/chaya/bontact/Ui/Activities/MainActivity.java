@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ProgressBar progressBarCenter;
     ImageView agentPicture;
     FrameLayout dashboard;
+    int resCurrentTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +54,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.menu_wrraper);
 
         setProgressBarCenterState(View.VISIBLE);
-        int resFirstTabTitle = R.string.dashboard_title;
+        int resFirstTabTitle = 0;
         Bundle args = getIntent().getExtras();
         if (args != null) {
             resFirstTabTitle = args.getInt(getString(R.string.first_tab_title_key));
+            resCurrentTitle = resFirstTabTitle;
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,7 +90,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initMenu();
         dashboard = (FrameLayout) findViewById(R.id.dashboard_fragment);
         getSupportFragmentManager().beginTransaction().add(R.id.dashboard_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
-        replaceViews(R.string.dashboard_title);
+        // if (resFirstTabTitle == R.string.dashboard_title)
+        replaceViews(resCurrentTitle);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public void initMenu() {
@@ -143,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean replaceViews(int resTitle) {
+        resCurrentTitle = resTitle;
         // Log.e("current", getResources().getString(resTitle));
         Intent intent;
         if (resTitle == R.string.dashboard_title) {

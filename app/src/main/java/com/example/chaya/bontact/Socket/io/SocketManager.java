@@ -118,7 +118,7 @@ public class SocketManager {
                 JSONObject jsonObject = new JSONObject(args[0].toString());
                 JSONArray visitors = jsonObject.getJSONArray("visitors");
                 VisitorsDataManager visitorsDataManager = new VisitorsDataManager(context);
-               // ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+                // ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 for (int i = 0; i < visitors.length(); i++) {
                     Visitor visitor = gson.fromJson(visitors.getJSONObject(i).toString(), Visitor.class);
                     syncVisitorWithConversation(visitor);
@@ -153,18 +153,18 @@ public class SocketManager {
                 Log.d("id", id_surfer + "");
                 ConversationDataManager converastionDataManager = new ConversationDataManager(context);
                 if (converastionDataManager.getConversationByIdSurfer(id_surfer) != null)
-                    converastionDataManager.updateOnlineState(id_surfer, 0);
+                    converastionDataManager.updateOnlineState(id_surfer, false);
                 VisitorsDataManager.removeVisitorFromList(context, VisitorsDataManager.getVisitorByIdSurfer(id_surfer));
 //                Toast.makeText(context, "surfer leaved", Toast.LENGTH_SHORT).show();
             }
         }
     };
 
-    public void syncVisitorWithConversation(Visitor  visitor) {
+    public void syncVisitorWithConversation(Visitor visitor) {
         ConversationDataManager conversationDataManager = new ConversationDataManager(context);
         Conversation conversation = conversationDataManager.getConversationByIdSurfer(visitor.idSurfer);
         if (conversation != null) {//surfer is in conversation
-            conversationDataManager.updateOnlineState(visitor.idSurfer, 1);
+            conversationDataManager.updateOnlineState(visitor.idSurfer, true);
             visitor.isNew = false;
             visitor.displayName = conversation.displayname;
             visitor.avatar = conversation.avatar;

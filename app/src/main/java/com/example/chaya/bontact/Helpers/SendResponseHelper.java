@@ -69,7 +69,6 @@ public class SendResponseHelper {
                 e.printStackTrace();
                 return;
             }
-            Toast.makeText(context, "send  " + msg, Toast.LENGTH_SHORT).show();
             ConversationDataManager conversationDataManager = new ConversationDataManager(context);
             SocketManager.getInstance().emitChatMsg(postData, conversationDataManager.getConversationByIdSurfer(id_surfer));
         }

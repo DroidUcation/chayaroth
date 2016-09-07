@@ -60,6 +60,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
             } else { //normal
                 intent = new Intent(this, MainActivity.class);
+                intent.putExtra(getString(R.string.first_tab_title_key), R.string.dashboard_title);
             }
         } else //not logged in
             intent = new Intent(this, LoginActivity.class);

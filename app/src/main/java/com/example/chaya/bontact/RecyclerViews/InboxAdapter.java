@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -60,6 +59,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             return;
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
+        int unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
+        // String displayName=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
         //   ConversationDataManager conversationDataManager = new ConversationDataManager(context);
         // Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
         //  Conversation conversation= new Conversation();
@@ -87,54 +88,37 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.date.setText(timeAgo);
         }
         //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
-        Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
-        if (conversation != null && conversation.isOnline)
+        // Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
+        if (VisitorsDataManager.isOnline(idSurfer))
             holder.online.setVisibility(View.VISIBLE);
         else
             holder.online.setVisibility(View.GONE);
-        if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD)) > 0) {
-            holder.unread.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD))));
-            holder.setUnRead(true);
+
+        holder.unread.setText(String.valueOf(unread));
+        if (unread > 0) {
+            holder.unread.setVisibility(View.VISIBLE);
+            // holder.unread.setBackground(context.getDrawable(R.drawable.online_point));
+            holder.displayName.setTypeface(null, Typeface.BOLD);
+            holder.lastSentence.setTypeface(null, Typeface.BOLD);
+            holder.date.setTypeface(null, Typeface.BOLD);
+        } else {
+            // holder.unread.setBackground(null);
+            holder.unread.setVisibility(View.GONE);
+            holder.displayName.setTypeface(null, Typeface.NORMAL);
+            holder.lastSentence.setTypeface(null, Typeface.NORMAL);
+            holder.date.setTypeface(null, Typeface.NORMAL);
         }
+
         int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
-            holder.itemView.setEnabled(false);
-            holder.blocked_layout.bringToFront();
-            // holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.gray_opacity));
-            // holder.disable_color.setVisibility(View.VISIBLE);
-            //   holder.disable_txt.setVisibility(View.VISIBLE);
+            holder.takenBy.setVisibility(View.VISIBLE);
+            // holder.takenBy.append();
         } else {
-            holder.itemView.setEnabled(true);
-            // holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
-            // holder.disable_color.setVisibility(View.GONE);
-            //  holder.disable_txt.setVisibility(View.GONE);
+            holder.takenBy.setVisibility(View.INVISIBLE);
         }
 
     }
 
-
-    public void setAvatar(String avatar, String displayName, ImageView avatarView) {
-        //set default
-        avatarView.setBackground(context.getResources().getDrawable(R.drawable.avatar_bg));
-        avatarView.setImageResource(R.drawable.default_avatar);
-      /*  if (conversation != null) {*/
-        if (avatar != null) {//has picture
-            Picasso.with(context)
-                    .load(avatar)
-                    .transform(new CircleTransform())
-                    .into(avatarView);
-        } else {//maybe letters
-            String letter = null;
-              /*  letter = conversation.visitor_name != null ? conversation.visitor_name.substring(0, 1) :
-                        conversation.email != null ? conversation.email.substring(0, 1) : null;*/
-            if (displayName != null && !displayName.startsWith("#"))
-                letter = displayName.substring(0, 1);
-            if (letter != null)
-                avatarView.setImageDrawable(TextDrawable.builder()
-                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
-           /* }*/
-        }
-    }
 
     @Override
     public int getItemCount() {
@@ -160,10 +144,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar, onlinePoint, online;
-        TextView displayName, lastSentence, date, unread, disable_txt;
+        ImageView avatar, online;
+        TextView displayName, lastSentence, date, unread, takenBy;
         TextView chanelIcon;
-        FrameLayout blocked_layout;
+
 
         public InboxHolder(View itemView) {
 
@@ -177,20 +161,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             chanelIcon = (TextView) itemView.findViewById(R.id.chanelIcon);
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
-            onlinePoint = (ImageView) itemView.findViewById(R.id.online_point);
-            online = (ImageView) itemView.findViewById(R.id.is_online);
-            blocked_layout = (FrameLayout) itemView.findViewById(R.id.blocked_view);
-
+            online = (ImageView) itemView.findViewById(R.id.online_point);
+            takenBy = (TextView) itemView.findViewById(R.id.taken_by_agent);
             itemView.setOnClickListener(this);
-        }
-
-        public void setUnRead(boolean status) {
-            if (status == true) {
-                displayName.setTypeface(null, Typeface.BOLD);
-                lastSentence.setTypeface(null, Typeface.BOLD);
-                date.setTypeface(null, Typeface.BOLD);
-                unread.setVisibility(View.VISIBLE);
-            }
         }
 
 

@@ -50,7 +50,7 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             if (current_visitor.timeConnect != null)
                 holder.connect_time.setText(DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
             holder.page_title.setText(current_visitor.title);
-            AvatarHelper.setAvatar(context,current_visitor.avatar, current_visitor.displayName, holder.avatar);
+            AvatarHelper.setAvatar(context, current_visitor.avatar, current_visitor.displayName, holder.avatar);
             //holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
             holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
             holder.displayName.setText(current_visitor.displayName);
@@ -63,40 +63,20 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), InnerConversationActivity.class);
-
                     for (Visitor visitor : VisitorsDataManager.getVisitorsList()) {
                         if (visitor.idSurfer == current_visitor.idSurfer) {
-                            int idSurfer = visitor.idSurfer;
                             Bundle b = new Bundle();
-                            b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, idSurfer); //Your id
+                            b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, visitor.idSurfer); //Your id
                             intent.putExtras(b);
                             break;
                         }
                     }
-                    v.getContext().startActivity(intent);
+                    if (current_visitor.idSurfer != 0)
+                        v.getContext().startActivity(intent);
+                  //  else
+                     //   VisitorsDataManager.removeVisitorFromList(context, current_visitor);
                 }
             });
-        }
-    }
-
-    public void setAvatar(Visitor visitor, ImageView avatarView) {
-        //set default
-        avatarView.setBackground(context.getResources().getDrawable(R.drawable.avatar_bg));
-        avatarView.setImageResource(R.drawable.default_avatar);
-        if (visitor != null) {
-         /*   if (conversation.avatar != null) {//has picture
-                Picasso.with(context)
-                        .load(conversation.avatar)
-                        .transform(new CircleTransform())
-                        .into(avatarView);
-            } else {//maybe letters*/
-            String letter = null;
-            if (visitor.displayName != null && !visitor.displayName.startsWith("#"))
-                letter = visitor.displayName.trim().substring(0, 1);
-            if (letter != null)
-                avatarView.setImageDrawable(TextDrawable.builder()
-                        .buildRound(letter, ColorGenerator.MATERIAL.getRandomColor()));
-            //context.getResources().getColor(R.color.orange_light)));
         }
     }
 

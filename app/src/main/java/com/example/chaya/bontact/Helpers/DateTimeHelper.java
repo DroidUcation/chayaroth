@@ -96,9 +96,11 @@ public class DateTimeHelper {
             format = new SimpleDateFormat("HH:mm:ss");
         }
         if (format != null) {
-            //format.setTimeZone(TimeZone.getDefault());
-            format.setTimeZone(TimeZone.getTimeZone("GMT+5"));
-            return format.format(date);
+            TimeZone timeZone = TimeZone.getDefault();
+            format.setTimeZone(timeZone);
+            //format.setTimeZone(TimeZone.getTimeZone("GMT+4"));
+            String s= format.format(date);
+            return s;
         }
         return null;
     }

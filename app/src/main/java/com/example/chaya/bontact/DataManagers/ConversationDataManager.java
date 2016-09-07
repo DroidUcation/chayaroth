@@ -100,7 +100,7 @@ public class ConversationDataManager {
         Cursor cursor = context.getContentResolver().query(Contract.Conversation.INBOX_URI, null, null, null, null);
         while (cursor.moveToNext()) {
             Conversation conversation = DbToolsHelper.convertCursorToConversation(cursor);
-            insertOrUpdate(conversation);
+            insertOrUpdate(conversation, false);
         }
         cursor.close();
 
@@ -118,7 +118,7 @@ public class ConversationDataManager {
     }
 
 
-    public Conversation insertOrUpdate(Conversation conversation) {
+    public Conversation insertOrUpdate(Conversation conversation, boolean insertToDb) {
         if (conversation == null)
             return null;
         if (conversationList == null)
@@ -130,14 +130,17 @@ public class ConversationDataManager {
             //syncUnreadConversation(conversation);
             conversation.isOnline = VisitorsDataManager.isOnline(conversation.idSurfer);
             conversationList.add(conversation);
-            if (conversation.unread > 0 && conversation.idSurfer != selectedIdConversation) {
-                setAllUnreadConversations(context, getAllUnreadConversations(context) + 1);
-            }
-            ContentValues contentValues = DbToolsHelper.convertConversationToContentValues(conversation);
-            if (contentValues != null && context != null) {
-                context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
-                notifyListChanged(conversation.idSurfer);
-                return conversation;
+            if (insertToDb == true) {
+                if (conversation.unread > 0 && conversation.idSurfer != selectedIdConversation) {
+                    setAllUnreadConversations(context, getAllUnreadConversations(context) + 1);
+                }
+
+                ContentValues contentValues = DbToolsHelper.convertConversationToContentValues(conversation);
+                if (contentValues != null && context != null) {
+                    context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
+                    notifyListChanged(conversation.idSurfer);
+                    return conversation;
+                }
             }
         }
         return null;
@@ -148,7 +151,7 @@ public class ConversationDataManager {
         if (conversation == null || conversationList == null)
             return null;
         int index = conversationList.indexOf(getConversationByIdSurfer(conversation.idSurfer));
-        Log.d("updated", conversation.idSurfer + " " + conversation.unread + " " + index);
+        // Log.d("updated", conversation.idSurfer + " " + conversation.unread + " " + index);
         if (index == -1) {
             return null;
         }
@@ -182,18 +185,18 @@ public class ConversationDataManager {
         return null;
     }
 
-    public boolean updateOnlineState(int idSurfer, int state) {
+    public boolean updateOnlineState(int idSurfer, boolean state) {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null) {
-            conversation.isOnline = state == 1 ? true : false;
-          //  if (update(conversation) != null) {
-                Intent intent = new Intent(context.getResources().getString(R.string.change_visitor_online_state));
-                intent.setType("*/*");
-                intent.putExtra(context.getResources().getString(R.string.online_state), state);
-                intent.putExtra(context.getResources().getString(R.string.id_surfer), idSurfer);
-                context.sendBroadcast(intent);
-                return true;
-          //  }
+            conversation.isOnline = state;
+            //  if (update(conversation) != null) {
+            Intent intent = new Intent(context.getResources().getString(R.string.change_visitor_online_state));
+            intent.setType("*/*");
+            intent.putExtra(context.getResources().getString(R.string.online_state), state);
+            intent.putExtra(context.getResources().getString(R.string.id_surfer), idSurfer);
+            context.sendBroadcast(intent);
+            return true;
+            //  }
         }
         return false;
 
@@ -205,6 +208,8 @@ public class ConversationDataManager {
         if (conversation != null) {
             if (conversation.unread == 0 && newUnreadCount > 0 && conversation.idSurfer != selectedIdConversation)
                 setAllUnreadConversations(context, getAllUnreadConversations(context) + 1);
+            if (conversation.unread > 0 && newUnreadCount == 0 && conversation.idSurfer == selectedIdConversation)
+                setAllUnreadConversations(context, getAllUnreadConversations(context) - 1);
             conversation.unread = newUnreadCount;
             if (update(conversation) != null)
                 return true;
@@ -308,15 +313,18 @@ public class ConversationDataManager {
         }
     }
 
-    public boolean saveData(String data) {
+    public boolean saveData(JSONArray jsonConversationArray) {
+        if (jsonConversationArray == null)
+            return false;
         Gson gson = new Gson();
         try {
-            JSONObject jsonObject = null;
+         /*   JSONObject jsonObject = null;
             jsonObject = new JSONObject(data);
-            JSONArray jsonConversationArray = jsonObject.getJSONArray("data");
+            JSONArray jsonConversationArray = jsonObject.getJSONArray("data");*/
+
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
-                insertOrUpdate(gson.fromJson(strObj, Conversation.class));
+                insertOrUpdate(gson.fromJson(strObj, Conversation.class), true);
             }
             SocketManager.getInstance().refreshSelectConversation();
             return true;
@@ -330,13 +338,12 @@ public class ConversationDataManager {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
             if (isSuccsed == true && response != null) {
-                JSONObject resObj = null;
+                // JSONObject resObj = null;
                 try {
-                    resObj = new JSONObject(response);
-                    resObj = resObj.getJSONObject("conversations");
-                    Log.e("response conversation", resObj.toString());
-
-                    boolean result = saveData(resObj.toString());
+                    //resObj = new JSONObject(response);
+                    JSONArray array = new JSONObject(response).getJSONObject("conversations").getJSONArray("data");
+                    //  Log.e("response conversation", resObj.toString());
+                    saveData(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -416,7 +423,7 @@ public class ConversationDataManager {
                     Log.d("json obj", response);
                     Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
                     if (conversation != null) {
-                        insertOrUpdate(conversation);
+                        insertOrUpdate(conversation, true);
                         InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, conversation);
                         innerConversationDataManager.saveServersData(jsonObject.getJSONArray("data").toString(), innerEmptyDataCallback);
                     }
