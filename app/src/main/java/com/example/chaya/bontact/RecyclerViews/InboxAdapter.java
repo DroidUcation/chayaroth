@@ -112,9 +112,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
             holder.takenBy.setVisibility(View.VISIBLE);
-            // holder.takenBy.append();
+            holder.takenBy.setText(String.valueOf(agentSelectedId));
+            holder.locked.setVisibility(View.VISIBLE);
+            holder.itemView.setEnabled(false);
         } else {
-            holder.takenBy.setVisibility(View.INVISIBLE);
+            holder.takenBy.setVisibility(View.GONE);
+            holder.locked.setVisibility(View.GONE);
+            holder.itemView.setEnabled(true);
+
         }
 
     }
@@ -144,7 +149,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar, online;
+        ImageView avatar, online, locked;
         TextView displayName, lastSentence, date, unread, takenBy;
         TextView chanelIcon;
 
@@ -163,6 +168,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             chanelIcon.setTypeface(font);
             online = (ImageView) itemView.findViewById(R.id.online_point);
             takenBy = (TextView) itemView.findViewById(R.id.taken_by_agent);
+            locked = (ImageView) itemView.findViewById(R.id.locked);
             itemView.setOnClickListener(this);
         }
 
