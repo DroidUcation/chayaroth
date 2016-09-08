@@ -32,6 +32,7 @@ import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Ui.Dialogs.callbackDialog;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
@@ -73,10 +74,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     ImageView loading;
     Animation.AnimationListener animationListener;
     private boolean isConversationBusy;
+    int tryRequestCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tryRequestCount = 0;
         conversationDataManager = new ConversationDataManager(this);
         id_surfer = 0;
         Bundle args = getIntent().getExtras();
@@ -537,6 +540,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     retryCallGetConversationByIdFromServer();
                     return;
                 }
+                current_conversation.lastdate = DatesHelper.convertDateToCurrentGmt(current_conversation.lastdate);
                 conversationDataManager.insertOrUpdate(current_conversation, true);
                 if (innerConversationDataManager == null)
                     innerConversationDataManager = new InnerConversationDataManager(InnerConversationActivity.this, current_conversation);

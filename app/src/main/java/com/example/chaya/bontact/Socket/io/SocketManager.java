@@ -3,7 +3,6 @@ package com.example.chaya.bontact.Socket.io;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -279,7 +278,7 @@ public class SocketManager {
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstance() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
-            innerConversation.timeRequest = DatesHelper.getCurrentDate();
+            innerConversation.timeRequest = DatesHelper.getCurrentStringDate();
             innerConversation.datatype = data.optInt("datatype", 1);
             innerConversation.from_s = data.optString("from_s", "visitor");
             Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);

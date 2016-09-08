@@ -10,27 +10,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
-import com.example.chaya.bontact.Helpers.CircleTransform;
-import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DatesHelper;
-import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
-import com.squareup.picasso.Picasso;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 
@@ -83,7 +76,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
         if (dateStringToConvert != null && context != null) {
-            dateStringToConvert = DatesHelper.getDateToInbox(dateStringToConvert);
+            dateStringToConvert = DatesHelper.getDateToDisplayInbox(context,dateStringToConvert);
             holder.date.setText(dateStringToConvert);
         }
         //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {

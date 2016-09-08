@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
@@ -67,6 +68,7 @@ public class VisitorsDataManager {
                 if (item.idSurfer == newVisitor.idSurfer)
                     return;
             }
+            newVisitor.timeConnect = DatesHelper.convertDateToCurrentGmt(newVisitor.timeConnect);
             getVisitorsList().add(newVisitor);
             int position = getVisitorsList().indexOf(newVisitor);
             notifyAdapter(context, ACTION_NEW_VISITOR, position);

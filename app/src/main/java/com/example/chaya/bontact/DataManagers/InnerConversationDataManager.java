@@ -9,7 +9,6 @@ import android.util.Log;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
-import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
@@ -19,14 +18,12 @@ import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
 import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
-import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by chaya on 6/26/2016.
@@ -206,8 +203,8 @@ public class InnerConversationDataManager {
         innerConversation.name = innerConversation.agentName;
         if (current_conversation != null)
             innerConversation.idSurfer = current_conversation.idSurfer;
-        //innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
-        innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+        // innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+        innerConversation.timeRequest = DatesHelper.getCurrentStringDate();
         if (channelType != ChannelsTypes.callback && channelType != ChannelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = systemMsg;

@@ -427,6 +427,7 @@ public class ConversationDataManager {
 
                     Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
                     if (conversation != null) {
+                        conversation.lastdate = DatesHelper.convertDateToCurrentGmt(conversation.lastdate);
                         insertOrUpdate(conversation, true);
                         InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, conversation);
                         innerConversationDataManager.saveServersData(jsonObject.getJSONArray("data").toString(), innerEmptyDataCallback);
@@ -434,9 +435,6 @@ public class ConversationDataManager {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //save in conversation
-                //save in inner conversation
-                //send call back when empty data
             }
         }
     };

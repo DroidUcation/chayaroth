@@ -17,11 +17,9 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.AudioPlayerInnerHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
-import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
 import com.example.chaya.bontact.R;
-
-import java.util.Date;
 
 
 /**
@@ -136,8 +134,9 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private String getDateToDisplay(String timeRequest) {
-        Date date = DateTimeHelper.convertFullFormatStringToDate(timeRequest);
-        return DateTimeHelper.getDisplayDate(date, R.string.hh_mm_format);
+       /* Date date = DatesHelper.(timeRequest);
+        return DateTimeHelper.getDisplayDate(date, R.string.hh_mm_format);*/
+        return timeRequest;
     }
 
     private boolean setRecordPlayer(InnerConversationRecordHolder recordHolder) {
@@ -176,7 +175,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         Spannable span = null;
         String msg = strMsg;
 
-        String date = getDateToDisplay(timeRequest);
+        String date = DatesHelper.getDateToDisplayInnerConversation(timeRequest);
         if (msg != null && date != null) {
             msg = msg.concat("   " + date);
             int index = msg.indexOf(date);

@@ -16,6 +16,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Models.Visitor;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
@@ -48,7 +49,7 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
         final Visitor current_visitor = VisitorsDataManager.getVisitorsList().get(position);
         if (current_visitor != null) {
             if (current_visitor.timeConnect != null)
-                holder.connect_time.setText("since "+DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
+                holder.connect_time.setText("since " + DatesHelper.getDateToDisplayInbox(context, current_visitor.timeConnect));
             holder.page_title.setText(current_visitor.title);
             AvatarHelper.setAvatar(context, current_visitor.avatar, current_visitor.displayName, holder.avatar);
             //holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
@@ -73,8 +74,8 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
                     }
                     if (current_visitor.idSurfer != 0)
                         v.getContext().startActivity(intent);
-                  //  else
-                     //   VisitorsDataManager.removeVisitorFromList(context, current_visitor);
+                    //  else
+                    //   VisitorsDataManager.removeVisitorFromList(context, current_visitor);
                 }
             });
         }
