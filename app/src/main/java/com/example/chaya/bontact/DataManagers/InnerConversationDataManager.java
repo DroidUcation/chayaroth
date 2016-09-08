@@ -167,7 +167,7 @@ public class InnerConversationDataManager {
             notifyEmptyInnerData(this.callbackEmptyData);
     }
 
-    public void notifyEmptyInnerData(ServerCallResponse callback) {
+    public static void notifyEmptyInnerData(ServerCallResponse callback) {
         if (callback != null)
             callback.OnServerCallResponse(true, "[]", null);
     }

@@ -85,7 +85,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if (dateStringToConvert != null && context != null) {
             timeAgo = DateTimeHelper.getDateToInbox(dateStringToConvert, context);
             if (timeAgo != null)
-                holder.date.setText(timeAgo);
+            holder.date.setText(timeAgo);
         }
         //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
         // Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
@@ -112,7 +112,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
             holder.takenBy.setVisibility(View.VISIBLE);
-            holder.takenBy.setText(String.valueOf(agentSelectedId));
+            //holder.takenBy.setText(String.valueOf(agentSelectedId));
+            holder.takenBy.setText("Linda");
             holder.locked.setVisibility(View.VISIBLE);
             holder.itemView.setEnabled(false);
         } else {
@@ -149,9 +150,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar, online, locked;
+        ImageView avatar, online;
         TextView displayName, lastSentence, date, unread, takenBy;
-        TextView chanelIcon;
+        TextView chanelIcon, locked;
 
 
         public InboxHolder(View itemView) {
@@ -168,7 +169,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             chanelIcon.setTypeface(font);
             online = (ImageView) itemView.findViewById(R.id.online_point);
             takenBy = (TextView) itemView.findViewById(R.id.taken_by_agent);
-            locked = (ImageView) itemView.findViewById(R.id.locked);
+            locked = (TextView) itemView.findViewById(R.id.locked);
+            locked.setTypeface(font);
             itemView.setOnClickListener(this);
         }
 

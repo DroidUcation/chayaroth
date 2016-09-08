@@ -33,6 +33,7 @@ public class DateTimeHelper {
         dateString = dateString.replace('T', ' ');
         dateString = dateString.replace('Z', ' ');
         try {
+            //   dateFullFormat.setTimeZone(TimeZone.getDefault());
             Date createdTime = dateFullFormat.parse(dateString);
             Date currentTime = new Date();
             //long diff = currentTime.getTime() - createdTime.getTime();
@@ -98,8 +99,7 @@ public class DateTimeHelper {
         if (format != null) {
             TimeZone timeZone = TimeZone.getDefault();
             format.setTimeZone(timeZone);
-            //format.setTimeZone(TimeZone.getTimeZone("GMT+4"));
-            String s= format.format(date);
+            String s = format.format(date);
             return s;
         }
         return null;
@@ -124,6 +124,11 @@ public class DateTimeHelper {
     public static String convertDateStringToDbFormat(String dateString) {
         if (dateString != null)
             return dateString.replace('T', ' ').replace('Z', ' ');
+        //final SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        //TimeZone timeZone = TimeZone.getDefault();
+        //format.setTimeZone(timeZone);
+        //format.setTimeZone(TimeZone.getTimeZone("GMT+4"));
+//        String s = format.format(dateString);
         return null;
     }
 
@@ -132,8 +137,37 @@ public class DateTimeHelper {
         final SimpleDateFormat sdf =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Log.d("GMT time: ", sdf.format(date));
+        // sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        // Log.d("GMT time: ", sdf.format(date));
         return sdf.format(date);
     }
+
+    public static String getDateInCurrentGmt(String date) {
+
+        if (date == null)
+            return null;
+        date = date.replace('T', ' ').replace('Z', ' ');
+        final SimpleDateFormat sdf =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        sdf.setTimeZone(TimeZone.getDefault());
+//        Date d= new Date(date);
+        // Log.d("GMT time: ", sdf.format(date));
+     //   return sdf.format(d);
+        return date;
+    }
+
+    public static String getDateToDb(String date) {
+        if (date == null)
+            return null;
+        date = date.replace('T', ' ').replace('Z', ' ');
+        final SimpleDateFormat format =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        TimeZone timeZone = TimeZone.getDefault();
+        format.setTimeZone(timeZone);
+        //format.setTimeZone(TimeZone.getTimeZone("GMT+4"));
+        String s = format.format(date);
+        return s;
+    }
+
+    //
 }

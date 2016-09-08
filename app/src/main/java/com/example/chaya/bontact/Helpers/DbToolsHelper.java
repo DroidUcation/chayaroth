@@ -59,7 +59,8 @@ public class DbToolsHelper {
         contentValues.put(Contract.Conversation.COLUMN_RETURNING, conversation.returning);
         contentValues.put(Contract.Conversation.COLUMN_CLOSED, conversation.closed);
         contentValues.put(Contract.Conversation.COLUMN_RESOLVED, conversation.resloved);
-        contentValues.put(Contract.Conversation.COLUMN_LAST_DATE, DateTimeHelper.convertDateStringToDbFormat(conversation.lastdate));
+        //contentValues.put(Contract.Conversation.COLUMN_LAST_DATE, DateTimeHelper.convertDateStringToDbFormat(conversation.lastdate));
+        contentValues.put(Contract.Conversation.COLUMN_LAST_DATE, conversation.lastdate);
         contentValues.put(Contract.Conversation.COLUMN_LAST_TYPE, conversation.lasttype);
         contentValues.put(Contract.Conversation.COLUMN_ACTION_ID, conversation.actionId);
         contentValues.put(Contract.Conversation.COLUMN_REPLY, conversation.reply);
@@ -103,7 +104,7 @@ public class DbToolsHelper {
         conversation.email = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_EMAIL));
         conversation.agent = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT));
         conversation.displayname = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-       // conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
+        // conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
         conversation.agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         return conversation;
        /* JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new Conversation(), cursor);

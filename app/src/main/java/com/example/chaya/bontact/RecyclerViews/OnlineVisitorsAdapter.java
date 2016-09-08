@@ -48,7 +48,7 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
         final Visitor current_visitor = VisitorsDataManager.getVisitorsList().get(position);
         if (current_visitor != null) {
             if (current_visitor.timeConnect != null)
-                holder.connect_time.setText(DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
+                holder.connect_time.setText("since "+DateTimeHelper.getDateToInbox(current_visitor.timeConnect, context));
             holder.page_title.setText(current_visitor.title);
             AvatarHelper.setAvatar(context, current_visitor.avatar, current_visitor.displayName, holder.avatar);
             //holder.avatar.setImageResource(AvatarHelper.getNextAvatar());

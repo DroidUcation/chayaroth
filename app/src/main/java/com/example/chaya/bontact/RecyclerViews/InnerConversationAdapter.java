@@ -139,7 +139,7 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         return DateTimeHelper.getDisplayDate(date, R.string.hh_mm_format);
     }
 
-    private boolean setRecordPlayer(InnerConversationRecordHolder visitorRecordHolder) {
+    private boolean setRecordPlayer(InnerConversationRecordHolder recordHolder) {
         if (cursor == null)
             return false;
         boolean record = cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_RECORD)) == 1 ? true : false;
@@ -162,12 +162,12 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             url = builder.build().toString();
             Uri recordUri = Uri.parse(url);
 
-            if (!visitorRecordHolder.player.preparePlayer(recordUri))
+            if (!recordHolder.player.preparePlayer(recordUri))
                 return false;
         } else if (actionType == ChannelsTypes.callback && record == true)
-            visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.short_record);
+            recordHolder.player.audioPlayerProblematicPrepare(R.string.short_record);
         else if (actionType == ChannelsTypes.callback)
-            visitorRecordHolder.player.audioPlayerProblematicPrepare(R.string.account_not_allow);
+            recordHolder.player.audioPlayerProblematicPrepare(R.string.account_not_allow);
         return true;
     }
 

@@ -19,12 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.ErrorType;
-import com.example.chaya.bontact.Helpers.InitData;
 import com.example.chaya.bontact.Helpers.SpecialFontsHelper;
+import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
+import com.example.chaya.bontact.Ui.Dialogs.ForgotPasswordDialog;
 /*import com.example.chaya.bontact.NetworkCalls.ServerCallResponseToUi;*/
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
@@ -38,12 +40,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     TextInputLayout passwordInputLayout;
     TextView errorMsg;
     LoginResponseReceiver broadcastReceiver;
+    TextView forgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setTitle(R.string.login_title);
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
         usernameEditText = (EditText) findViewById(R.id.username_edittext);
@@ -56,11 +60,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
         icon = (TextView) findViewById(R.id.icon_password);
         icon.setTypeface(SpecialFontsHelper.getFont(this, R.string.font_awesome));
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_login_loading);
+        progressBar = (ProgressBar) findViewById(R.id.progressbar_login);
         userNameInputLayout = (TextInputLayout) findViewById(R.id.username_input_layout);
         passwordInputLayout = (TextInputLayout) findViewById(R.id.password_input_layout);
         errorMsg = (TextView) findViewById(R.id.error_msg);
-        errorMsg.setText(R.string.invalid_login_details);
+
+        // errorMsg.setText(R.string.invalid_login_details);
+        forgotPassword = (TextView) findViewById(R.id.forgot_pass);
+        forgotPassword.setOnClickListener(this);
     }
 
     @Override
@@ -83,6 +90,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.btn_login:
                 doLogin();
+                break;
+            case R.id.forgot_pass:
+                ForgotPasswordDialog forgotPasswordDialog = new ForgotPasswordDialog(this);
+                forgotPasswordDialog.create(new ServerCallResponse() {
+                    @Override
+                    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+                        final String msg;
+                        if (response != null && response.toLowerCase().equals("true"))
+                            msg = getString(R.string.forgot_pass_response_success_message);
+                        else
+                            msg = getString(R.string.forgot_pass_response_failure_message);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }
+                });
         }
     }
 
@@ -221,8 +249,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void run() {
                             progressBar.setVisibility(View.GONE);
-                          //  InitData initData = new InitData();
-                           // initData.start(LoginActivity.this);
+                            //  InitData initData = new InitData();
+                            // initData.start(LoginActivity.this);
                             startActivity(new Intent(LoginActivity.this, SplashActivity.class));
                         }
                     });

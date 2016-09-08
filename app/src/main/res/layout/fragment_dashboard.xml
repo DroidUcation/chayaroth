@@ -1,10 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dashboard_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".Ui.Fragments.DashboardFragment">
+    android:orientation="vertical"
+    tools:context=".Ui.Fragments.DashboardFragment"
+    android:weightSum="4">
 
     <LinearLayout
         android:id="@+id/welcome_layout"
@@ -35,19 +37,19 @@
     <RelativeLayout
         android:id="@+id/onlineVisitors_dashboard_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@id/welcome_layout"
-        android:layout_marginTop="30dp"
+        android:layout_weight="2"
         android:clickable="true"
-        android:orientation="vertical"
-        android:padding="10dp">
+        >
 
         <TextView
             android:id="@+id/count_online_visitors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:text="0"
             android:textColor="@color/purple"
             android:textSize="@dimen/big_numbers_text_size_dashboard" />
@@ -75,32 +77,32 @@
             android:text="Online visitors"
             android:textColor="@color/purple"
             android:textSize="@dimen/content_text_size_dashboard" />
+
     </RelativeLayout>
 
-    <View
-        android:id="@+id/border"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/onlineVisitors_dashboard_layout"
-        android:layout_marginTop="15dp"
-        android:background="@color/purple" />
 
     <RelativeLayout
         android:id="@+id/requests_dashboard_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/border"
-        android:layout_marginTop="15dp"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:clickable="true"
-        android:orientation="vertical"
-        android:padding="10dp">
+       >
+
+        <View
+            android:id="@+id/border"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/purple" />
 
         <TextView
             android:id="@+id/count_new_requests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:text="0"
             android:textColor="@color/purple"
             android:textSize="@dimen/big_numbers_text_size_dashboard" />
@@ -130,6 +132,6 @@
             android:textSize="@dimen/content_text_size_dashboard" />
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
 
 

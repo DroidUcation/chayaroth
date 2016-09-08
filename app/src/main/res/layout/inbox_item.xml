@@ -77,7 +77,7 @@
         android:textSize="10sp"
         android:visibility="gone"/>
 
-    <ImageView
+    <TextView
         android:id="@+id/locked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,8 +85,8 @@
         android:layout_marginRight="4dp"
         android:layout_toLeftOf="@+id/date"
         android:layout_toStartOf="@+id/date"
-        android:src="@drawable/lock"
         android:visibility="gone"
+        android:text="@string/lock_icon"
         />
 
     <TextView

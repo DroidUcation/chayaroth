@@ -152,6 +152,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean replaceViews(int resTitle) {
+   if (resTitle == R.string.inbox_title)
+            inbox_fab.setVisibility(View.VISIBLE);
+        else
+            inbox_fab.setVisibility(View.GONE);
+
         resCurrentTitle = resTitle;
         // Log.e("current", getResources().getString(resTitle));
         Intent intent;

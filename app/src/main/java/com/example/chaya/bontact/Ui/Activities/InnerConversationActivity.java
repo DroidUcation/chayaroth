@@ -106,6 +106,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             isNew = true;
             if (token != null && id_surfer != 0) {
                 conversationDataManager.getConversationByIdFromServer(token, id_surfer, null, callResponse);
+                // innerConversationDataManager = new InnerConversationDataManager(this, id_surfer);
+                //innerConversationDataManager.getData(this, token, callResponse);
             }
         }
 
@@ -342,7 +344,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         sendResponseHelper = new SendResponseHelper();
         if (!sendResponseHelper.isAllowedChannelToResponse(conversationDataManager.getConversationByIdSurfer(id_surfer), channel)) {
             String msg = ChannelsTypes.getNotAllowedMsgByChannelType(this, channel);
-            // Toast.makeText(InnerConversationActivity.this, msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(InnerConversationActivity.this, msg, Toast.LENGTH_SHORT).show();
             return;
         }
         switch (channel) {
@@ -531,11 +533,13 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 }
                 JSONObject jsonObject = new JSONObject(response).getJSONObject("conversations");
                 current_conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
-                if (current_conversation == null || current_conversation.innerConversationData == null && tryCount < 3) {
+                if ((current_conversation == null || current_conversation.innerConversationData == null || current_conversation.innerConversationData.size() == 0) && tryCount < 3) {
                     retryCallGetConversationByIdFromServer();
                     return;
                 }
                 conversationDataManager.insertOrUpdate(current_conversation, true);
+                if (innerConversationDataManager == null)
+                    innerConversationDataManager = new InnerConversationDataManager(InnerConversationActivity.this, current_conversation);
                 //todo: change inner save data
                 for (InnerConversation innerConversation : current_conversation.innerConversationData)
                     innerConversationDataManager.saveData(innerConversation);

@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -324,7 +325,9 @@ public class ConversationDataManager {
 
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
-                insertOrUpdate(gson.fromJson(strObj, Conversation.class), true);
+                Conversation conversation = gson.fromJson(strObj, Conversation.class);
+                conversation.lastdate = DateTimeHelper.getDateInCurrentGmt(conversation.lastdate);
+                insertOrUpdate(conversation, true);
             }
             SocketManager.getInstance().refreshSelectConversation();
             return true;
@@ -421,6 +424,9 @@ public class ConversationDataManager {
                 try {
                     jsonObject = new JSONObject(response).getJSONObject("conversations");
                     Log.d("json obj", response);
+                    if (jsonObject.length() == 0)
+                        InnerConversationDataManager.notifyEmptyInnerData(innerEmptyDataCallback);
+
                     Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
                     if (conversation != null) {
                         insertOrUpdate(conversation, true);

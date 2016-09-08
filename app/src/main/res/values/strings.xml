@@ -46,6 +46,12 @@
     <string name="tbd">Don\'t worry!<br /> coming soon....:)</string>
     <string name="webcall_cancled">The web call was cancelled by the visitor.</string>
     <string name="taken_by_another_agent">Taken by another agent</string>
+    <string name="forgot_pass_title">Password recovery</string>
+    <string name="forgot_pass_sub_title">Please type your e-mail address:</string>
+    <string name="forgot_pass_error_message">Invalid e-mail address</string>
+    <string name="forgot_pass_response_success_message">Request sent, please check your inbox</string>
+    <string name="forgot_pass_response_failure_message">Username not found, please try again</string>
+    <string name="forgot_password_link">Forgot password?</string>
     <!--place holders-->
 
     <string name="email_place_holder">reply to email </string>
@@ -70,7 +76,7 @@
     <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
     <string name="domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
     <string name="base_dev_api">dev-api01-eus.azurewebsites.net</string>
-    <string name="base_prd_api">dev-api01-eus.azurewebsites.net</string>
+    <string name="base_prd_api">prd-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
     <string name="conversation_api">getConversations</string>
     <string name="contacts_rout_api">contacts</string>
@@ -82,7 +88,7 @@
     <string name="update_settings_api">updatePushNotification</string>
     <string name="socket_url">https://dev-socket01-eus.azurewebsites.net/</string>
     <string name="unregister_notifications_api">removePushNotification</string>
-    <!--link avatar :https://www.gravatar.com/avatar/b2b966d3fc9213835205fb38d3328072?d=null-->
+    <string name="forgot_pass_url">http://dashboard.bontact.com/html/login.aspx?func=getLostPassword</string>
 
     <!-- time strings-->
     <string name="minutes">min ago</string>
@@ -95,8 +101,8 @@
     <string name="unread_sms">Unread SMS, read now.</string>
     <string name="unread_chat">Unread Chat, read now. </string>
     <string name="unread_email">Unread Email, read now.</string>
-    <string name="unread_callback">voice recording.</string>
-    <string name="unread_webcall">voice recording.</string>
+    <string name="unread_callback">recorded call.</string>
+    <string name="unread_webcall">recorded call</string>
 
     <!--icons-->
 
@@ -114,7 +120,7 @@
     <string name="user_name_icon">&#xf183;</string>
     <string name="play_btn_icon">&#xf04b;</string>
     <string name="pause_btn_icon">&#xf04c;</string>
-
+    <string name="lock_icon">&#xf023;</string>
     <!--fonts names-->
     <string name="font_awesome">fontawesome-webfont.ttf</string>
 

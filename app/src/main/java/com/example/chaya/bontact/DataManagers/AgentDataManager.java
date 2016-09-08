@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Patterns;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Models.Agent;
@@ -235,5 +236,12 @@ public class AgentDataManager {
 
     }
 
+    public static void forgotPassword(final Context context, String email, ServerCallResponse callback) {
+        if (email == null || !Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return;
+        //http://dashboard.bontact.com/html/login.aspx?func=getLostPassword&email=[email]
+        String forgot_pass_url = context.getResources().getString(R.string.forgot_pass_url) + "&email=" + email;
+        OkHttpRequests requests = new OkHttpRequests(forgot_pass_url,callback);
 
+    }
 }
