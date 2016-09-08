@@ -12,6 +12,7 @@ import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.Models.InnerConversation;
@@ -278,7 +279,7 @@ public class SocketManager {
             innerConversation.rep_request = false;
             if (AgentDataManager.getAgentInstance() != null)
                 innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
-            innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
+            innerConversation.timeRequest = DatesHelper.getCurrentDate();
             innerConversation.datatype = data.optInt("datatype", 1);
             innerConversation.from_s = data.optString("from_s", "visitor");
             Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);

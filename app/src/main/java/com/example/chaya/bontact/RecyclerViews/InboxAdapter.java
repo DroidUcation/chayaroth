@@ -25,6 +25,7 @@ import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
@@ -81,11 +82,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         else
             holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
-        String timeAgo = null;
         if (dateStringToConvert != null && context != null) {
-            timeAgo = DateTimeHelper.getDateToInbox(dateStringToConvert, context);
-            if (timeAgo != null)
-            holder.date.setText(timeAgo);
+            dateStringToConvert = DatesHelper.getDateToInbox(dateStringToConvert);
+            holder.date.setText(dateStringToConvert);
         }
         //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
         // Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);

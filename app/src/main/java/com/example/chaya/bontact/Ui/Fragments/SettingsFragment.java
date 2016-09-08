@@ -90,12 +90,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             OkHttpRequests okHttpRequests = new OkHttpRequests(url, new ServerCallResponse() {
                 @Override
                 public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    if (getActivity() != null)
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                 }
             });
         }

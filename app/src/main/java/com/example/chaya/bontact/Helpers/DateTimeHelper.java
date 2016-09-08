@@ -7,7 +7,10 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.R;
 import com.google.android.exoplayer.util.NalUnitUtil;
 
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
@@ -147,12 +150,13 @@ public class DateTimeHelper {
         if (date == null)
             return null;
         date = date.replace('T', ' ').replace('Z', ' ');
-        final SimpleDateFormat sdf =
+
+      final SimpleDateFormat sdf =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         sdf.setTimeZone(TimeZone.getDefault());
-//        Date d= new Date(date);
-        // Log.d("GMT time: ", sdf.format(date));
-     //   return sdf.format(d);
+        //Date d = new Date();
+        //Log.d("GMT time: ", sdf.format(date));
+       // return sdf.format(d);
         return date;
     }
 
@@ -169,5 +173,6 @@ public class DateTimeHelper {
         return s;
     }
 
-    //
+
+
 }

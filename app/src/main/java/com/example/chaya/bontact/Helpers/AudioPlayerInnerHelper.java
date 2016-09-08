@@ -82,7 +82,7 @@ public class AudioPlayerInnerHelper {
     View.OnClickListener playListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(context, "on click", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context, "on click", Toast.LENGTH_SHORT).show();
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 stopRecord();
             } else {

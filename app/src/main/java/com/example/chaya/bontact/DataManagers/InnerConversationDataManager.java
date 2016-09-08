@@ -10,6 +10,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by chaya on 6/26/2016.
@@ -101,7 +103,8 @@ public class InnerConversationDataManager {
                     e.printStackTrace();
                 }
                 innerConversation = gson.fromJson(strObj, InnerConversation.class);
-                //delete all place holder
+                innerConversation.timeRequest = DatesHelper.convertDateToCurrentGmt(innerConversation.timeRequest)
+                ;                //delete all place holder
                 String selectionStr = Contract.InnerConversation.COLUMN_ID + "<0";
                 context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, null);
                 saveData(innerConversation);
@@ -136,8 +139,7 @@ public class InnerConversationDataManager {
             current_conversation.innerConversationData.add(innerConversation);
         }
         if (context != null && contentValues != null) {
-            contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,
-                    DateTimeHelper.convertDateStringToDbFormat(innerConversation.timeRequest));
+            //  contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,DateTimeHelper.convertDateStringToDbFormat(innerConversation.timeRequest));
             contentValues.put(Contract.InnerConversation.COLUMN_MESS,
                     DbToolsHelper.removeHtmlTags(contentValues.getAsString(Contract.InnerConversation.COLUMN_MESS)));
             //insert
@@ -204,8 +206,8 @@ public class InnerConversationDataManager {
         innerConversation.name = innerConversation.agentName;
         if (current_conversation != null)
             innerConversation.idSurfer = current_conversation.idSurfer;
-        innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
-        //innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
+        //innerConversation.timeRequest = DateTimeHelper.getCurrentStringDateInGmtZero();
+        innerConversation.timeRequest = DateTimeHelper.dateFullFormat.format(new Date());
         if (channelType != ChannelsTypes.callback && channelType != ChannelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = systemMsg;

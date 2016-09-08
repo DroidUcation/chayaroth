@@ -120,14 +120,15 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
                     recordHolder = ((InnerConversationRecordHolder) holder);
                     recordHolder.name.setText(getNameForVisitor(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_FROM)))));
                     recordHolder.chanelIcon.setText(ChannelsTypes.getIconByChanelType(actionType));
-                    recordHolder.date.setText(getDateToDisplay(date));
+                    // recordHolder.date.setText(getDateToDisplay(date));
+                    recordHolder.date.setText(date);
                     setRecordPlayer(recordHolder);
                     break;
                 case AGENT_RECORD_VH:
                     recordHolder = ((InnerConversationRecordHolder) holder);
                     recordHolder.name.setText(getNameForAgent(cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_AGENT_NAME))));
                     recordHolder.chanelIcon.setText(ChannelsTypes.getIconByChanelType(actionType));
-                    recordHolder.date.setText(getDateToDisplay(date));
+                    recordHolder.date.setText(date);
                     setRecordPlayer(recordHolder);
                     break;
             }

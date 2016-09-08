@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
+import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
 import com.example.chaya.bontact.Helpers.ErrorType;
 import com.example.chaya.bontact.Models.Conversation;
@@ -228,7 +229,7 @@ public class ConversationDataManager {
     }
 
     public boolean updateLastDate(int idSurfer, String lastDate) {
-        lastDate = DateTimeHelper.convertDateStringToDbFormat(lastDate);
+        //lastDate = DateTimeHelper.convertDateStringToDbFormat(lastDate);
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null)
             conversation.lastdate = lastDate;
@@ -319,14 +320,11 @@ public class ConversationDataManager {
             return false;
         Gson gson = new Gson();
         try {
-         /*   JSONObject jsonObject = null;
-            jsonObject = new JSONObject(data);
-            JSONArray jsonConversationArray = jsonObject.getJSONArray("data");*/
-
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
-                conversation.lastdate = DateTimeHelper.getDateInCurrentGmt(conversation.lastdate);
+                // conversation.lastdate = DateTimeHelper.getDateInCurrentGmt(conversation.lastdate);
+                conversation.lastdate = DatesHelper.convertDateToCurrentGmt(conversation.lastdate);
                 insertOrUpdate(conversation, true);
             }
             SocketManager.getInstance().refreshSelectConversation();
