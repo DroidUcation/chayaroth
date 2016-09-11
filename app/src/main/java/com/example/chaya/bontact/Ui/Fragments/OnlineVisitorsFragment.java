@@ -50,16 +50,7 @@ public class OnlineVisitorsFragment extends Fragment {
 
     }
 
-    /*  @Override
-      public void onCreateOptionsMenu(
-              Menu menu, MenuInflater inflater) {
-          inflater.inflate(R.menu.menu, menu);
-      }
-  */
     public OnlineVisitorsFragment() {
-        Log.d("now", "ONLINE");
-
-
     }
 
     public static OnlineVisitorsFragment newInstance() {
@@ -81,6 +72,7 @@ public class OnlineVisitorsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_online_visitors, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.online_visitors_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+      //  getActivity().setTitle(R.string.app_name);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -106,7 +98,7 @@ public class OnlineVisitorsFragment extends Fragment {
                 return;
             if (action == VisitorsDataManager.ACTION_NEW_VISITOR) {
                 adapter.notifyDataSetChanged();
-               // adapter.notifyItemInserted(position);
+                // adapter.notifyItemInserted(position);
             } else if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR) {
                 adapter.notifyDataSetChanged();
                 // adapter.notifyItemRemoved(position);

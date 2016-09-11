@@ -89,6 +89,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         this.container = container;
+      //  getActivity().setTitle(R.string.app_name);
         setProgressBarCenterState(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -168,6 +169,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             super.onScrolled(recyclerView, dx, dy);
             if (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 1 == adapter.getItemCount() && recyclerView.getVisibility() == View.VISIBLE)//end of data
             {
+                Log.d("scroll", "dx " + dx + " dy " + dy);
                 lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 getData(false);
                 progressBarBottom.setVisibility(View.VISIBLE);

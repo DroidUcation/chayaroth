@@ -77,7 +77,9 @@ public class EmailDialogActivity extends AppCompatActivity {
     }
 
     public void sendEmail() {
-        if(content_edit_text.getText().length()>0&&subject_edit_text.getText().length()>0) {
+        String content=content_edit_text.getText().toString().trim();
+        String subject=subject_edit_text.getText().toString().trim();
+        if(content.length()>0&&subject.length()>0) {
             onBackPressed();
             //BACKGROUND
             SendResponseHelper sendResponseHelper = new SendResponseHelper();

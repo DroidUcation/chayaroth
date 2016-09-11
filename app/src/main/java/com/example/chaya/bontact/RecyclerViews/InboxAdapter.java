@@ -14,16 +14,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
+import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.R;
 
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
+import com.squareup.picasso.Picasso;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 
@@ -52,14 +58,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if (!cursor.moveToPosition(position))
             return;
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
-       int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
+        int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
         int unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
-        int assign=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ASSIGN));
-        // String displayName=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
-        //   ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-        // Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
-        //  Conversation conversation= new Conversation();
-        // if (conversation != null) {
+        int assign = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ASSIGN));
+
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
         AvatarHelper.setAvatar(context, cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
                 cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
@@ -68,16 +70,15 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int icon = ChannelsTypes.getIconByChanelType(lastType);
         if (icon != 0)
             holder.chanelIcon.setText(icon);
-       /*if (cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)) == null)
+        if (cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)) == null)
             holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
-        else*/
-      //  if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
-       //     holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
-    //    else
-//            holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
+        else if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
+            holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
+        else
+            holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
         if (dateStringToConvert != null && context != null) {
-            dateStringToConvert = DatesHelper.getDateToDisplayInbox(context,dateStringToConvert);
+            dateStringToConvert = DatesHelper.getDateToDisplayInbox(context, dateStringToConvert);
             holder.date.setText(dateStringToConvert);
         }
         //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
@@ -101,21 +102,26 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.lastSentence.setTypeface(null, Typeface.NORMAL);
             holder.date.setTypeface(null, Typeface.NORMAL);
         }
+        String img = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_IMG));
+        if (img != null) {
+            Glide.with(context)
+                    .load(img)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-        /*int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
-        if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
-            holder.takenBy.setVisibility(View.VISIBLE);
-            //holder.takenBy.setText(String.valueOf(agentSelectedId));
-            holder.takenBy.setText("Linda");
-            holder.locked.setVisibility(View.VISIBLE);
-            holder.itemView.setEnabled(false);
-        } else {
-            holder.takenBy.setVisibility(View.GONE);
-            holder.locked.setVisibility(View.GONE);
-            holder.itemView.setEnabled(true);
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 
-        }*/
-
+                            return false;
+                        }
+                    })
+                    .into(holder.assign);
+            holder.assign.setVisibility(View.VISIBLE);
+        } else
+            holder.assign.setVisibility(View.GONE);
     }
 
 
@@ -143,7 +149,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar, online;
+        ImageView avatar, online, assign;
         TextView displayName, lastSentence, date, unread, takenBy;
         TextView chanelIcon, locked;
 
@@ -161,9 +167,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
             online = (ImageView) itemView.findViewById(R.id.online_point);
-            takenBy = (TextView) itemView.findViewById(R.id.taken_by_agent);
-            locked = (TextView) itemView.findViewById(R.id.locked);
-            locked.setTypeface(font);
+            assign = (ImageView) itemView.findViewById(R.id.assign);
             itemView.setOnClickListener(this);
         }
 

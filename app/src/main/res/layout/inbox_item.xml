@@ -65,29 +65,6 @@
         android:text="11:12"
         android:textSize="10sp" />
 
-    <TextView
-        android:id="@+id/taken_by_agent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="4dp"
-        android:layout_toLeftOf="@+id/locked"
-        android:layout_toStartOf="@+id/locked"
-        android:text="@string/taken_by_another_agent"
-        android:textSize="10sp"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/locked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="4dp"
-        android:layout_toLeftOf="@+id/date"
-        android:layout_toStartOf="@+id/date"
-        android:visibility="gone"
-        android:text="@string/lock_icon"
-        />
 
     <TextView
         android:id="@+id/unread"
@@ -99,7 +76,15 @@
         android:gravity="center_vertical|center_horizontal"
         android:text="20"
         android:textColor="@color/white"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 
+    <ImageView
+        android:id="@+id/assign"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/date"
+        android:src="@drawable/avatar1"
+        android:visibility="gone" />
 </RelativeLayout>

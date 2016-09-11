@@ -55,15 +55,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setProgressBarCenterState(View.VISIBLE);
         int resFirstTabTitle = 0;
-        Bundle args = getIntent().getExtras();
-        if (args != null) {
-            resFirstTabTitle = args.getInt(getString(R.string.first_tab_title_key));
+        if (savedInstanceState != null && savedInstanceState.getInt(getString(R.string.first_tab_title_key)) != 0) {
+            resFirstTabTitle = savedInstanceState.getInt(getString(R.string.first_tab_title_key));
             resCurrentTitle = resFirstTabTitle;
+        }
+        if (resFirstTabTitle == 0) {
+            Bundle args = getIntent().getExtras();
+            if (args != null) {
+                resFirstTabTitle = args.getInt(getString(R.string.first_tab_title_key));
+                resCurrentTitle = resFirstTabTitle;
+            }
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setTitle(R.string.app_name);
+        //setTitle(R.string.app_name);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager, resFirstTabTitle);
@@ -71,11 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
 
-        // Iterate over all tabs and set the custom view
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            //tab.setCustomView(adapter.getTabView(i));
-        }
         inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
         if (resFirstTabTitle == R.string.inbox_title)
             inbox_fab.setVisibility(View.VISIBLE);
@@ -90,9 +91,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initMenu();
         dashboard = (FrameLayout) findViewById(R.id.dashboard_fragment);
         getSupportFragmentManager().beginTransaction().add(R.id.dashboard_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
-        // if (resFirstTabTitle == R.string.dashboard_title)
         replaceViews(resCurrentTitle);
 
+    }
+
+    protected void onSaveInstanceState(Bundle onOrientChange) {
+        super.onSaveInstanceState(onOrientChange);
+        onOrientChange.putInt(getString(R.string.first_tab_title_key), resCurrentTitle);
     }
 
     @Override
@@ -152,16 +157,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean replaceViews(int resTitle) {
-   if (resTitle == R.string.inbox_title)
+        if (resTitle != 0)
+            setTitle(getTitleToDisplay(resTitle));
+        if (resTitle == R.string.inbox_title)
             inbox_fab.setVisibility(View.VISIBLE);
         else
             inbox_fab.setVisibility(View.GONE);
 
         resCurrentTitle = resTitle;
-        // Log.e("current", getResources().getString(resTitle));
         Intent intent;
         if (resTitle == R.string.dashboard_title) {
-            //startActivity(new Intent(this, MenuActivity.class));
             dashboard.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
             tabLayout.setVisibility(View.GONE);
@@ -172,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dashboard.setVisibility(View.GONE);
                 viewPager.setVisibility(View.VISIBLE);
                 tabLayout.setVisibility(View.VISIBLE);
-                setTitle(R.string.app_name);
                 return true;
             } else if (resTitle == R.string.settings_title) {
                 intent = new Intent(this, SettingsActivity.class);
@@ -184,6 +188,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         return false;
+    }
+
+    private int getTitleToDisplay(int resTitle) {
+        switch (resTitle) {
+            case R.string.dashboard_title:
+                return resTitle;
+            case R.string.onlinevisitors_title:
+            case R.string.inbox_title:
+                return R.string.app_name;
+        }
+        return R.string.dashboard_title;
     }
 
     private void setupViewPager(ViewPager viewPager, int resFirstTabTitle) {

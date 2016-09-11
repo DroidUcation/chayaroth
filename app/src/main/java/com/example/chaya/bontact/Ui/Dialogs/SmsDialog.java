@@ -64,7 +64,8 @@ public class SmsDialog {
     View.OnClickListener positiveListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (!input.getText().toString().equals("") && input.getText().toString() != null) {
+            String msg=input.getText().toString().trim();
+            if (!msg.equals("") && msg != null) {
                 sendResponseHelper.sendSms(context, input.getText().toString(), id_surfer);
                 //  innerConversationDataManager.addTextMsgToList(ChannelsTypes.sms, input.getText().toString(), false);
                 alert.dismiss();

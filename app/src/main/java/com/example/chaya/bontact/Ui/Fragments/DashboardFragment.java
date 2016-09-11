@@ -75,7 +75,7 @@ public class DashboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Inflate the layout for this fragment
         RootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        getActivity().setTitle(R.string.dashboard_title);
+       // getActivity().setTitle(R.string.dashboard_title);
         RelativeLayout request_v = (RelativeLayout) RootView.findViewById(R.id.requests_dashboard_layout);
         request_v.setOnClickListener((View.OnClickListener) getActivity());
         RelativeLayout online_v = (RelativeLayout) RootView.findViewById(R.id.onlineVisitors_dashboard_layout);

@@ -165,8 +165,8 @@ public class AgentDataManager {
                 OkHttpRequests requests = new OkHttpRequests(url, new ServerCallResponse() {
                     @Override
                     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-                        Log.d("unregister", isSuccsed ? "true" : "false");
-                        Log.d("unregister", response);
+                        //Log.d("unregister", isSuccsed ? "true" : "false");
+                      //  Log.d("unregister", response);
                     }
                 });
                 editor = Preferences.edit();

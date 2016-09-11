@@ -177,7 +177,7 @@ public class SocketManager {
     Emitter.Listener selectConversationListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.d("select", args.toString());
+            //Log.d("select", args.toString());
             JSONObject jsonObject = (JSONObject) args[0];
             try {
                 jsonObject = jsonObject.getJSONObject("visitor");
@@ -424,7 +424,7 @@ public class SocketManager {
         @Override
         public void call(Object... args) {
             String json = gson.toJson(args);
-            Log.d("select ", json);
+            //Log.d("select ", json);
         }
     };
 

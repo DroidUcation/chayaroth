@@ -76,8 +76,8 @@ public class callbackDialog {
     View.OnClickListener positiveListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (checkValidNumber(input.getText().toString()) == true) {
-                String num = input.getText().toString();
+            String num = input.getText().toString().trim();
+            if (checkValidNumber(num) == true) {
                 if (num != null) {
                     num = num.replace("+", "");
                     sendResponseHelper.sendCallBack(context, id_surfer, num);
