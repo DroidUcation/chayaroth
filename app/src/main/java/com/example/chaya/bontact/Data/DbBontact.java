@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chaya on 5/25/2016.
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class DbBontact extends SQLiteOpenHelper {
 
     public static final String DBName = "Bontact.db";
-    public static final int DBVersion = 2;
+    public static final int DBVersion = 4;
     public String CreateConversationTable = "CREATE TABLE " + Contract.Conversation.TABLE_NAME + " (" +
             Contract.Conversation.COLUMN_ID_SURFER + "  INTEGER PRIMARY KEY,  " +
             Contract.Conversation.COLUMN_NAME + " TEXT, " +
@@ -34,11 +35,10 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_UNREAD + " INT, " +
             Contract.Conversation.COLUMN_PHONE + " TEXT, " +
             Contract.Conversation.COLUMN_EMAIL + " TEXT, " +
-            Contract.Conversation.COLUMN_AGENT + " TEXT, " +
             Contract.Conversation.COLUMN_LAST_MESSAGE + " TEXT, " +
             Contract.Conversation.COLUMN_DISPLAY_NAME + " TEXT ," +
-            // Contract.Conversation.COLUMN_IS_ONLINE + " INT DEFAULT 0 , " +
-            Contract.Conversation.COLUMN_AGENT_SELECTED_ID + " INT DEFAULT 0" +
+            Contract.Conversation.COLUMN_ASSIGN + "  INTEGER ,  " +
+            "FOREIGN KEY(" +Contract.Conversation.COLUMN_ASSIGN + ") REFERENCES " + Contract.Agents.TABLE_NAME + "(" + Contract.Agents.COLUMN_ID_REP + ")" +
             " )";
     public String CreateInnerConversationTable = "CREATE TABLE " + Contract.InnerConversation.TABLE_NAME + "(" +
             Contract.InnerConversation.COLUMN_ID + "  INTEGER PRIMARY KEY,  " +
@@ -58,8 +58,17 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.InnerConversation.COLUMN_RECORD_URL + " TEXT ," +
             "FOREIGN KEY(" + Contract.InnerConversation.COLUMN_ID_SURFUR + ") REFERENCES " + Contract.Conversation.TABLE_NAME + "(" + Contract.Conversation.COLUMN_ID_SURFER + ")" +
             " )";
+    public String CreateAgentsTable = "CREATE TABLE " + Contract.Agents.TABLE_NAME + "(" +
+            Contract.Agents.COLUMN_ID_REP + "  INTEGER PRIMARY KEY,  " +
+            Contract.Agents.COLUMN_NAME + " TEXT,  " +
+            Contract.Agents.COLUMN_USERNAME + " TEXT, " +
+            Contract.Agents.COLUMN_IMG + " TEXT " +
+            " )";
+
+
     public String DropConversationTable = "DROP TABLE IF EXISTS " + Contract.Conversation.TABLE_NAME;
     public String DropInnerConversationTable = "DROP TABLE IF EXISTS " + Contract.InnerConversation.TABLE_NAME;
+    public String DropAgentsTable = "DROP TABLE IF EXISTS " + Contract.Agents.TABLE_NAME;
 
     public static ArrayList<String> getAllInnerConversationFields() {
         ArrayList<String> strings = new ArrayList<>();
@@ -81,7 +90,7 @@ public class DbBontact extends SQLiteOpenHelper {
         return strings;
     }
 
-    public static ArrayList<String> getAllConversationFields() {
+    public static String[] getAllConversationFields() {
         ArrayList<String> strings = new ArrayList<>();
         strings.add(Contract.Conversation.COLUMN_ID_SURFER);
         strings.add(Contract.Conversation.COLUMN_NAME);
@@ -100,12 +109,14 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add(Contract.Conversation.COLUMN_UNREAD);
         strings.add(Contract.Conversation.COLUMN_PHONE);
         strings.add(Contract.Conversation.COLUMN_EMAIL);
-        strings.add(Contract.Conversation.COLUMN_AGENT);
         strings.add(Contract.Conversation.COLUMN_DISPLAY_NAME);
         strings.add(Contract.Conversation.COLUMN_LAST_MESSAGE);
-        //strings.add(Contract.Conversation.COLUMN_IS_ONLINE);
-        strings.add(Contract.Conversation.COLUMN_AGENT_SELECTED_ID);
-        return strings;
+        strings.add(Contract.Conversation.COLUMN_ASSIGN);
+        //strings.add(Contract.Agents.COLUMN_ID_REP);
+        // strings.add(Contract.Conversation.COLUMN_AGENT_SELECTED_ID);
+        String[] arr=new String[strings.size()];
+        arr= strings.toArray(arr);
+        return arr;
     }
 
     public DbBontact(Context context) {
@@ -118,26 +129,27 @@ public class DbBontact extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CreateConversationTable);
         db.execSQL(CreateInnerConversationTable);
-
+        db.execSQL(CreateAgentsTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DropConversationTable);
         db.execSQL(DropInnerConversationTable);
+        db.execSQL(DropAgentsTable);
         onCreate(db);
     }
 
-    public long insert(String tableName, ContentValues values) {
-        database = getWritableDatabase();
-        long result = database.insert(tableName, null, values);
-        return result;
-    }
-
+    /*  public long insert(String tableName, ContentValues values) {
+          database = getWritableDatabase();
+          long result = database.insert(tableName, null, values);
+          return result;
+      }
+  */
     public long update(String table, ContentValues values, String selection, String[] selectionArgs) {
         database = getWritableDatabase();
         long res = database.update(table, values, selection, selectionArgs);
-        Log.e("UPDATE", "name " + values.get(Contract.Conversation.COLUMN_DISPLAY_NAME) + " UNREAD " + String.valueOf(values.get(Contract.Conversation.COLUMN_UNREAD)));
+        //Log.e("UPDATE", "name " + values.get(Contract.Conversation.COLUMN_DISPLAY_NAME) + " UNREAD " + String.valueOf(values.get(Contract.Conversation.COLUMN_UNREAD)));
         return res;
     }
 
@@ -154,8 +166,7 @@ public class DbBontact extends SQLiteOpenHelper {
         database = getWritableDatabase();
         try {
             long row_id = database.insertOrThrow(table, null, values);
-            Log.e("INSERT", "name " + values.get(Contract.Conversation.COLUMN_DISPLAY_NAME) + " UNREAD " + String.valueOf(values.get(Contract.Conversation.COLUMN_UNREAD)));
-
+            //  Log.e("INSERT", "name " + values.get(Contract.Conversation.COLUMN_DISPLAY_NAME) + " UNREAD " + String.valueOf(values.get(Contract.Conversation.COLUMN_UNREAD)));
             return row_id;
         } catch (SQLiteConstraintException e) {
             if (columns == null)

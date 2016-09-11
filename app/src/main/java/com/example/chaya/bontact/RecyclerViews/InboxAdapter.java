@@ -52,8 +52,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         if (!cursor.moveToPosition(position))
             return;
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
-        int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
+       int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
         int unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
+        int assign=cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ASSIGN));
         // String displayName=cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
         //   ConversationDataManager conversationDataManager = new ConversationDataManager(context);
         // Conversation conversation = conversationDataManager.convertCursorToConversation(cursor);
@@ -70,10 +71,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
        /*if (cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)) == null)
             holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
         else*/
-        if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
-            holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
-        else
-            holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
+      //  if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
+       //     holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
+    //    else
+//            holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
         if (dateStringToConvert != null && context != null) {
             dateStringToConvert = DatesHelper.getDateToDisplayInbox(context,dateStringToConvert);
@@ -101,7 +102,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.date.setTypeface(null, Typeface.NORMAL);
         }
 
-        int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
+        /*int agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         if (agentSelectedId != 0 && agentSelectedId != AgentDataManager.getAgentInstance().getIdRep()) {
             holder.takenBy.setVisibility(View.VISIBLE);
             //holder.takenBy.setText(String.valueOf(agentSelectedId));
@@ -113,7 +114,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.locked.setVisibility(View.GONE);
             holder.itemView.setEnabled(true);
 
-        }
+        }*/
 
     }
 

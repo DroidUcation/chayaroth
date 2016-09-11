@@ -34,7 +34,7 @@
     <!--text view messegaes -->
     <string name="welcome_name_msg">Hi</string>
     <string name="login">Log in</string>
-    <!--check if itis one or more v/r and change the string according to-->
+    <!--check if itis one or more v/  and change the string according to-->
     <string name="txt_online_v"><b>online site visitors</b>\n see who\'s in your site, and invite them for a chat</string>
     <string name="txt_request_v"><b>new visitors requests</b>\n
      manage all conversation with your visitors</string>
@@ -78,7 +78,7 @@
     <string name="base_dev_api">dev-api01-eus.azurewebsites.net</string>
     <string name="base_prd_api">prd-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
-    <string name="conversation_api">getConversations</string>
+    <string name="conversation_old_api">getConversations</string>
     <string name="contacts_rout_api">contacts</string>
     <string name="read_conversation_api">readconversation</string>
     <string name="conversation_by_id_api">conversationvisitor</string>
@@ -88,7 +88,9 @@
     <string name="update_settings_api">updatePushNotification</string>
     <string name="socket_url">https://dev-socket01-eus.azurewebsites.net/</string>
     <string name="unregister_notifications_api">removePushNotification</string>
-    <string name="forgot_pass_url">http://dashboard.bontact.com/html/login.aspx?func=getLostPassword</string>
+    <string name="forgot_pass_url">https://dashboard.bontact.com/html/login.aspx?func=getLostPassword</string>
+    <string name="agents_api">agents</string>
+    <string name="conversations_api">conversations</string>
 
     <!-- time strings-->
     <string name="minutes">min ago</string>
@@ -140,7 +142,7 @@
 
 
     <string name="gcm_token">gcm_token</string>
-    <string name="change_visitors_list_action">com.example.chaya.bontact.newVisitor</string>
+    <string name="change_visitors_list_action">com.example.chaya.bontact.changeInVisitors</string>
     <string name="count_number_action">count_number_action</string>
     <string name="change_visitor_online_state">change_visitor_online_state</string>
     <string name="online_state">online_state</string>

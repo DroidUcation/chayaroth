@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
@@ -117,6 +118,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public Loader onCreateLoader(int id, Bundle args) {
         // ((MenuActivity) getActivity()).setProgressBarCenterState(View.VISIBLE);
         lastVisibleItem = 0;
+
         String sortOrder = Contract.Conversation.COLUMN_LAST_DATE + " DESC"; //Sort by modified date as default
         CursorLoader cursorLoader = new CursorLoader(getContext(), Contract.Conversation.INBOX_URI, null, null, null, sortOrder);
         return cursorLoader;

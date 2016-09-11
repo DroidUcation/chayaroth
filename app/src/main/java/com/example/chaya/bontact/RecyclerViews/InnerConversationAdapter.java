@@ -91,6 +91,10 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             int actionType = cursor.getInt(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_ACTION_TYPE));
             String msg = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_MESS));
             String date = cursor.getString(cursor.getColumnIndex(Contract.InnerConversation.COLUMN_TIME_REQUEST));
+            if (date != null)
+                date = DatesHelper.getDateToDisplayInnerConversation(date);
+            else
+                date = DatesHelper.getCurrentStringDate();
             switch (getItemViewType(position)) {
                 case SYSTEM_MSG_VH:
                     innerConversationMsgHolder = (InnerConversationMsgHolder) holder;
@@ -171,11 +175,11 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         return true;
     }
 
-    private Spannable getMsgConcatWithDate(String strMsg, String timeRequest) {
+    private Spannable getMsgConcatWithDate(String strMsg, String date) {
         Spannable span = null;
         String msg = strMsg;
 
-        String date = DatesHelper.getDateToDisplayInnerConversation(timeRequest);
+        //String date = DatesHelper.getDateToDisplayInnerConversation(timeRequest);
         if (msg != null && date != null) {
             msg = msg.concat("   " + date);
             int index = msg.indexOf(date);

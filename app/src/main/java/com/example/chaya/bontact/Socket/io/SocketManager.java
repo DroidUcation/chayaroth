@@ -185,7 +185,7 @@ public class SocketManager {
                 int idAgent = jsonObject.getJSONObject("agentselected").optInt("id", 0);
                 if (idSurfer != 0) {
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, true);
+                   // conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, true);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -203,7 +203,7 @@ public class SocketManager {
                 int idAgent = jsonObject.optInt("agentselected", 0);
                 if (idSurfer != 0 && idAgent != AgentDataManager.getAgentInstance().getIdRep()) {
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, false);
+                    //conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, false);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -219,7 +219,7 @@ public class SocketManager {
                 int idAgent = jsonObject.getInt("id");
                 if (idAgent != 0) {
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    conversationDataManager.updateUnSelectedByAgentForAll(idAgent);
+                  //  conversationDataManager.updateUnSelectedByAgentForAll(idAgent);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -298,7 +298,6 @@ public class SocketManager {
         Conversation conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
         if (conversation == null)
             return;
-        //int actionType = ChannelsTypes.convertStringChannelToInt(type);
         conversationDataManager.updateLastType(id_surfer, innerConversation.actionType);//set last type
         conversationDataManager.updateLastDate(id_surfer, innerConversation.timeRequest);
         if (innerConversation.mess != null && (innerConversation.actionType != ChannelsTypes.callback || innerConversation.actionType != ChannelsTypes.webCall))

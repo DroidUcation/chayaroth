@@ -23,7 +23,7 @@
 
     <style name="MyCustomTabText" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/orange_medium</item>
+        <item name="android:textColor">@color/orange_light</item>
     </style>
 
     <!-- Define your custom dialog theme here extending from base -->

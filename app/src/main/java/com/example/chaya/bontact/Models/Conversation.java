@@ -25,6 +25,9 @@ public class Conversation {
     @SerializedName("returning")
     @Expose
     public boolean returning;
+    @SerializedName("contact_id")
+    @Expose
+    private int contactId;
     @SerializedName("closed")
     @Expose
     public boolean closed;
@@ -67,22 +70,22 @@ public class Conversation {
     @SerializedName("email")
     @Expose
     public String email;
-    @SerializedName("agent")
+    @SerializedName("assign")
     @Expose
-    public String agent;
+    public int assign;
     @SerializedName("displayname")
     @Expose
     public String displayname;
-
+    @SerializedName("currentChannel")
+    @Expose
+    private int currentChannel;
     @SerializedName("isOnline")
     @Expose
     public boolean isOnline;
     @SerializedName("data")
     @Expose
     public List<InnerConversation> innerConversationData;
-    @SerializedName("agentselected")
-    @Expose
-    public int agentSelectedId;
+
 
     public int getIdSurfer() {
         return idSurfer;
@@ -224,13 +227,6 @@ public class Conversation {
         this.email = email;
     }
 
-    public String getAgent() {
-        return agent;
-    }
-
-    public void setAgent(String agent) {
-        this.agent = agent;
-    }
 
     public String getDisplayname() {
         return displayname;

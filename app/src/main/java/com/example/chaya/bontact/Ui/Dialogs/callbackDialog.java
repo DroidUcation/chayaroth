@@ -77,7 +77,11 @@ public class callbackDialog {
         @Override
         public void onClick(View view) {
             if (checkValidNumber(input.getText().toString()) == true) {
-                sendResponseHelper.sendCallBack(context, id_surfer, input.getText().toString());
+                String num = input.getText().toString();
+                if (num != null) {
+                    num = num.replace("+", "");
+                    sendResponseHelper.sendCallBack(context, id_surfer, num);
+                }
                 alert.dismiss();
             } else {
                 textInputLayout.setError(context.getResources().getString(R.string.invalid_callback_phone_number));

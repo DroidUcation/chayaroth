@@ -7,6 +7,8 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.Conversation;
+import com.example.chaya.bontact.Models.Representative;
+import com.google.android.exoplayer.C;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -72,11 +74,23 @@ public class DbToolsHelper {
         contentValues.put(Contract.Conversation.COLUMN_UNREAD, conversation.unread);
         contentValues.put(Contract.Conversation.COLUMN_PHONE, conversation.phone);
         contentValues.put(Contract.Conversation.COLUMN_EMAIL, conversation.email);
-        contentValues.put(Contract.Conversation.COLUMN_AGENT, conversation.agent);
+     contentValues.put(Contract.Conversation.COLUMN_ASSIGN, conversation.assign);
         contentValues.put(Contract.Conversation.COLUMN_DISPLAY_NAME, conversation.displayname);
+       // ContentValues.put(Contract.Agents.COLUMN_ID_REP,)
         //contentValues.put(Contract.Conversation.COLUMN_IS_ONLINE, VisitorsDataManager.getVisitorByIdSurfer(conversation.idSurfer) != null ? 1 : 0);
-        contentValues.put(Contract.Conversation.COLUMN_AGENT_SELECTED_ID, conversation.agentSelectedId);
+        // contentValues.put(Contract.Conversation.COLUMN_AGENT_SELECTED_ID, conversation.agentSelectedId);
 
+        return contentValues;
+    }
+
+    public static ContentValues convertRepresentativeToContentValues(Representative representative) {
+        if (representative == null)
+            return null;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Contract.Agents.COLUMN_ID_REP, representative.idRepresentive);
+        contentValues.put(Contract.Agents.COLUMN_NAME, representative.name);
+        contentValues.put(Contract.Agents.COLUMN_USERNAME, representative.username);
+        contentValues.put(Contract.Agents.COLUMN_IMG, representative.img);
         return contentValues;
     }
 
@@ -94,7 +108,7 @@ public class DbToolsHelper {
         conversation.lasttype = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         conversation.actionId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ACTION_ID));
         conversation.reply = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_REPLY)) == 1 ? true : false;
-        conversation.lastMessage = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE));
+      //  conversation.lastMessage = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE));
         conversation.page = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_PAGE));
         conversation.ip = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_IP));
         conversation.browser = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_BROWSER));
@@ -102,10 +116,11 @@ public class DbToolsHelper {
         conversation.unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
         conversation.phone = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_PHONE));
         conversation.email = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_EMAIL));
-        conversation.agent = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT));
+       // conversation.agent = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT));
         conversation.displayname = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
+        conversation.assign=cursor.getInt(cursor.getColumnIndex(Contract.Agents.COLUMN_ID_REP));
         // conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
-        conversation.agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
+        // conversation.agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         return conversation;
        /* JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new Conversation(), cursor);
         if (jsonObject.length() > 0) {
@@ -116,34 +131,17 @@ public class DbToolsHelper {
         return null;*/
     }
 
-  /*  public static JSONObject convertCursorToJsonObject(Cursor cursor) {
+    public static Representative convertCursorToRepresentative(Cursor cursor) {
         if (cursor == null)
             return null;
+        Representative representative = new Representative();
+        representative.idRepresentive = cursor.getInt(cursor.getColumnIndex(Contract.Agents.COLUMN_ID_REP));
+        representative.name = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_NAME));
+        representative.username = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_USERNAME));
+        representative.img = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_IMG));
+        return representative;
 
-        JSONObject jsonObject = new JSONObject();
-        String resStr = null;
-        int resInt;
-
-        for (String column : cursor.getColumnNames()) {
-            try {
-                if (cursor.isNull(cursor.getColumnIndex(column))) {
-                    jsonObject.put(column, null);
-                } else {
-                    resStr = cursor.getString(cursor.getColumnIndex(column));
-                    if (resStr == null) {
-                        resInt = cursor.getInt(cursor.getColumnIndex(column));
-                        jsonObject.put(column, resInt);
-                    } else
-                        jsonObject.put(column, resStr);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        return jsonObject;
-    }*/
+    }
 
     public static JSONObject convertCursorToJsonObject(Object obj, Cursor cursor) {
         if (cursor == null || obj == null)

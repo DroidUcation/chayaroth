@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Created by chaya on 6/12/2016.
  */
@@ -30,10 +32,15 @@ public class InboxProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
-        sqLiteQueryBuilder.setTables(Contract.Conversation.TABLE_NAME);
+        sqLiteQueryBuilder.setTables(Contract.Conversation.TABLE_NAME + " as c LEFT JOIN " + Contract.Agents.TABLE_NAME + " as r"
+                + " ON c." + Contract.Conversation.COLUMN_ASSIGN + " = r." + Contract.Agents.COLUMN_ID_REP);
         if (!TextUtils.isEmpty(sortOrder)) {
             sortOrder = Contract.Conversation.COLUMN_LAST_DATE + " DESC"; //Sort by modified date as default
         }
+    /*    projection = DbBontact.getAllConversationFields();
+        projection[projection.length - 1] = "c." + Contract.Agents.COLUMN_ID_REP;*/
+       // allConversationFields.add("c." + Contract.Agents.COLUMN_ID_REP);
+       // projection = (String[]) allConversationFields.toArray();
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;

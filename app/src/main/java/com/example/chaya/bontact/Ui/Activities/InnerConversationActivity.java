@@ -396,7 +396,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    conversationDataManager.setSelectedIdConversation(id_surfer);
+                   // conversationDataManager.setSelectedIdConversation(id_surfer);
                 }
             });
     }
@@ -410,8 +410,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (current_conversation != null) {
             conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         }
-        if (!isConversationBusy)
-            conversationDataManager.setUnSelectedIdConversation();
+       // if (!isConversationBusy)
+          //  conversationDataManager.setUnSelectedIdConversation();
     }
 
     /* public void setProgressBarState(int state) {

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.chaya.bontact.Data.Contract;
+import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Helpers.DbToolsHelper;
@@ -48,7 +49,7 @@ public class ConversationDataManager {
             fillConversationList(context);
     }
 
-    public void setSelectedIdConversation(int idSurfer) {
+ /*   public void setSelectedIdConversation(int idSurfer) {
         selectedIdConversation = idSurfer;
         Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
         if (conversation != null) {
@@ -69,7 +70,7 @@ public class ConversationDataManager {
 
     }
 
-    public boolean updateSelectedByAgent(int idSurfer, int idAgent, boolean state) {
+     public boolean updateSelectedByAgent(int idSurfer, int idAgent, boolean state) {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
         if (conversation != null)
             if (state)
@@ -81,7 +82,7 @@ public class ConversationDataManager {
         return false;
     }
 
-    public boolean updateUnSelectedByAgentForAll(int idAgent) {
+   public boolean updateUnSelectedByAgentForAll(int idAgent) {
         if (idAgent == 0)
             return false;
         for (Conversation conversation : conversationList) {
@@ -92,7 +93,7 @@ public class ConversationDataManager {
         }
         return true;
 
-    }
+    }*/
 
     //--mange functions
     public void fillConversationList(Context context) {
@@ -100,10 +101,11 @@ public class ConversationDataManager {
             return;
         } //todo: do in async task
         Cursor cursor = context.getContentResolver().query(Contract.Conversation.INBOX_URI, null, null, null, null);
-        while (cursor.moveToNext()) {
-            Conversation conversation = DbToolsHelper.convertCursorToConversation(cursor);
-            insertOrUpdate(conversation, false);
-        }
+        if (cursor != null && cursor.moveToFirst())
+            do {
+                Conversation conversation = DbToolsHelper.convertCursorToConversation(cursor);
+                insertOrUpdate(conversation, false);
+            } while (cursor.moveToNext());
         cursor.close();
 
     }
@@ -192,11 +194,11 @@ public class ConversationDataManager {
         if (conversation != null) {
             conversation.isOnline = state;
             //  if (update(conversation) != null) {
-            Intent intent = new Intent(context.getResources().getString(R.string.change_visitor_online_state));
-            intent.setType("*/*");
+            /*Intent intent = new Intent(context.getResources().getString(R.string.change_visitor_online_state));
+            intent.setType("");
             intent.putExtra(context.getResources().getString(R.string.online_state), state);
             intent.putExtra(context.getResources().getString(R.string.id_surfer), idSurfer);
-            context.sendBroadcast(intent);
+            context.sendBroadcast(intent);*/
             return true;
             //  }
         }
@@ -258,8 +260,9 @@ public class ConversationDataManager {
 
     public boolean updateLastMessage(int idSurfer, String lastMsg) {
         Conversation conversation = getConversationByIdSurfer(idSurfer);
-        if (conversation != null)
+        if (conversation != null) {
             conversation.lastMessage = lastMsg;
+        }
         if (update(conversation) != null)
             return true;
         return false;
@@ -300,14 +303,15 @@ public class ConversationDataManager {
     public void getDataFromServer(Context context, String token, int current_page) {
         if (token != null) {
             this.context = context;
-
+//api/contacts/conversations/:token/:page
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
                     .authority(context.getResources().getString(R.string.base_dev_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
-                    .appendPath(context.getResources().getString(R.string.conversation_api))
+                    .appendPath(context.getResources().getString(R.string.contacts_rout_api))
+                    .appendPath(context.getResources().getString(R.string.conversations_api))
                     .appendPath(token)
-                    .appendQueryParameter("page", current_page + "");
+                    .appendPath(String.valueOf(current_page));
 
             String url = builder.build().toString();
 

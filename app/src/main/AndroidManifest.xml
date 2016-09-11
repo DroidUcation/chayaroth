@@ -54,7 +54,9 @@
         <provider
             android:name=".Data.InnerConversationProvider"
             android:authorities="com.example.chaya.bontact.Data.InnerConversationProvider" />
-
+        <provider
+            android:name=".Data.RepresentativeProvider"
+            android:authorities="com.example.chaya.bontact.Data.RepresentativeProvider" />
         <service
             android:name=".Services.RegisterGcmService"
             android:exported="false">

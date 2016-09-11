@@ -7,6 +7,7 @@ import android.os.Environment;
 
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.AgentListDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Services.RegisterGcmService;
@@ -42,8 +43,9 @@ public class InitData {
             ConversationDataManager conversationDataManager = new ConversationDataManager(context);
             conversationDataManager.getAllUnreadFromServer(context);
             conversationDataManager.getFirstDataFromServer(context, token);
+            AgentListDataManager.getAllAgents(context);
         }
-        exportDB();
+      //  exportDB();
 
     }
 

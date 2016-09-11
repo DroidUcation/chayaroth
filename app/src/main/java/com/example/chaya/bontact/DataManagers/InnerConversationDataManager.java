@@ -36,9 +36,10 @@ public class InnerConversationDataManager {
     //private List<InnerConversation> innerConversationsList;
     public static int idPlaceHolder = -1;
     public ServerCallResponse callbackEmptyData;
+    public ConversationDataManager conversationDataManager;
 
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
-
+        conversationDataManager = new ConversationDataManager(context);
         this.current_conversation = current_conversation;
         this.context = context;
         // innerConversationsList = new ArrayList<>();
@@ -48,7 +49,7 @@ public class InnerConversationDataManager {
 
     public InnerConversationDataManager(Context context, int currentIdSurfer) {
         this(context, null);
-        ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+
         this.current_conversation = conversationDataManager.getConversationByIdSurfer(currentIdSurfer);
         idSurfer = currentIdSurfer;
     }
@@ -108,7 +109,6 @@ public class InnerConversationDataManager {
             }
 
             if (innerConversation != null && innerConversation.getMess() != null) {//check type
-                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 conversationDataManager.updateLastMessage(current_conversation.idSurfer, innerConversation.getMess());
             }
             return true;
@@ -127,7 +127,6 @@ public class InnerConversationDataManager {
 
         ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(innerConversation, DbBontact.getAllInnerConversationFields());
         if (current_conversation == null) {
-            ConversationDataManager conversationDataManager = new ConversationDataManager(context);
             current_conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
         }
         if (current_conversation != null) {
@@ -208,7 +207,7 @@ public class InnerConversationDataManager {
         if (channelType != ChannelsTypes.callback && channelType != ChannelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = systemMsg;
-        //Toast.makeText(InnerConversationActivity.this, "ADD MSG " + innerConversation.toString(), Toast.LENGTH_SHORT).show();
+       conversationDataManager.updateLastMessage(innerConversation.idSurfer, innerConversation.mess);
         saveData(innerConversation);
     }
 
