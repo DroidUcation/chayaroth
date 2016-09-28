@@ -83,12 +83,11 @@ public class GCMPushReceiverService extends GcmListenerService {
                     .setSmallIcon(R.mipmap.bontact_launcher)
                     .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
                     .setContentText(message)
-                    .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
 
-            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().msgPushNotificationVibrate)
+            if ( AgentDataManager.getNewMessagesNotificationSettings()!=null&&AgentDataManager.getNewMessagesNotificationSettings().vibrate)
                 noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().msgPushNotificationSound)
+            if (AgentDataManager.getNewMessagesNotificationSettings()!=null&&AgentDataManager.getNewMessagesNotificationSettings().sound)
                 noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
             notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
         } else {
@@ -97,9 +96,9 @@ public class GCMPushReceiverService extends GcmListenerService {
                     .setContentTitle("new visitor on your website")
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
-            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().visitorPushNotificationVibrate)
+            if (AgentDataManager.getNewVisitorsNotificationSettings()!=null&&AgentDataManager.getNewVisitorsNotificationSettings().vibrate)
                 noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            if (AgentDataManager.isLoggedIn(this) && AgentDataManager.getAgentInstance().getSettings().visitorPushNotificationSound)
+            if (AgentDataManager.getNewVisitorsNotificationSettings()!=null&&AgentDataManager.getNewVisitorsNotificationSettings().sound)
                 noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
             notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
         }

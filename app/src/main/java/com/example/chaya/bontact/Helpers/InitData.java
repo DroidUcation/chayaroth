@@ -45,7 +45,8 @@ public class InitData {
             conversationDataManager.getFirstDataFromServer(context, token);
             AgentListDataManager.getAllAgents(context);
         }
-      //  exportDB();
+
+        exportDB();
 
     }
 

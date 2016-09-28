@@ -38,6 +38,7 @@ public class InnerConversationDataManager {
     public ServerCallResponse callbackEmptyData;
     public ConversationDataManager conversationDataManager;
 
+
     public InnerConversationDataManager(Context context, Conversation current_conversation) {
         conversationDataManager = new ConversationDataManager(context);
         this.current_conversation = current_conversation;

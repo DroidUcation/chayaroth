@@ -41,6 +41,13 @@ public class DatesHelper {
         return formatDate.format(date);
     }
 
+    public static String getCurrentStringDateInGmtZero() {
+        Date date = new Date();
+
+        final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        formatDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return formatDate.format(date);
+    }
 
     public static String getDateToDisplayInbox(Context context, String createdDateString) {
         if (createdDateString == null)

@@ -10,6 +10,7 @@ public class Agent {
     public Agent() {
         rep = new Rep();
         settings = new Settings();
+
     }
 
     @SerializedName("token")
@@ -60,6 +61,12 @@ public class Agent {
 
     @Generated("org.jsonschema2pojo")
     public class Settings {
+        public Settings() {
+            newMessagesNotifications = new Notification();
+            newVisitorsNotifications = new Notification();
+            allowAllNewMessages();
+            cancelAllNewVisitor();
+        }
 
         @SerializedName("gender")
         @Expose
@@ -76,16 +83,45 @@ public class Agent {
         @SerializedName("online")
         @Expose
         public boolean online;
-        @SerializedName("msgPushNotification")
-        @Expose
-        public boolean msgPushNotification;
-        @SerializedName("visitorPushNotification")
-        @Expose
-        public boolean visitorPushNotification;
-        public boolean msgPushNotificationSound;
-        public boolean visitorPushNotificationSound;
-        public boolean msgPushNotificationVibrate;
-        public boolean visitorPushNotificationVibrate;
+        public Notification newMessagesNotifications;
+        public Notification newVisitorsNotifications;
+
+        public void cancelAllNewVisitor() {
+            if (newVisitorsNotifications == null)
+                newVisitorsNotifications = new Notification();
+            newVisitorsNotifications.cancelAll();
+        }
+        public void allowAllNewVisitor() {
+            if (newVisitorsNotifications == null)
+                newVisitorsNotifications = new Notification();
+            newVisitorsNotifications.allowAll();
+        } public void cancelAllNewMessages() {
+            if (newMessagesNotifications == null)
+                newMessagesNotifications = new Notification();
+            newMessagesNotifications.cancelAll();
+        } public void allowAllNewMessages() {
+            if (newMessagesNotifications == null)
+                newMessagesNotifications = new Notification();
+            newMessagesNotifications.allowAll();
+        }
+        public class Notification {
+
+            public boolean isEnabled;
+            public boolean sound;
+            public boolean vibrate;
+
+            public void cancelAll() {
+                isEnabled = false;
+                sound = false;
+                vibrate = false;
+            }
+
+            public void allowAll() {
+                isEnabled = true;
+                sound = true;
+                vibrate = true;
+            }
+        }
     }
 
     public String getToken() {

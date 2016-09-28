@@ -31,6 +31,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
     }
 
     @Override
@@ -38,10 +39,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         View view = super.onCreateView(inflater, container, savedInstanceState);
         Preference logout = (Preference) findPreference(getString(R.string.disconnect_account_key));
         logout.setOnPreferenceClickListener(this);
-        SwitchPreferenceCompat new_msg_push = (SwitchPreferenceCompat) findPreference(getResources().getString(R.string.new_message_push_key));
-        new_msg_push.setChecked(AgentDataManager.getMsgPushNotification());
-        SwitchPreferenceCompat new_visitor_push = (SwitchPreferenceCompat) findPreference(getResources().getString(R.string.new_visitor_push_key));
-        new_visitor_push.setChecked(AgentDataManager.getVisitorPushNotification());
         return view;
     }
 
@@ -65,47 +62,62 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     public void updateSettings(String key, SharedPreferences preferences) {
+        if (key.equals(getResources().getString(R.string.new_message_push_key)))
+            AgentDataManager.getAgentInstance().getSettings().newMessagesNotifications.isEnabled = preferences.getBoolean(key, true);
+        if (key.equals(getResources().getString(R.string.new_visitor_push_key)))
+            AgentDataManager.getAgentInstance().getSettings().newVisitorsNotifications.isEnabled = preferences.getBoolean(key, false);
         if (key.equals(getResources().getString(R.string.new_message_sound_key)))
-            AgentDataManager.getAgentInstance().getSettings().msgPushNotificationSound = preferences.getBoolean(key, true);
+            AgentDataManager.getAgentInstance().getSettings().newMessagesNotifications.sound = preferences.getBoolean(key, true);
         if (key.equals(getResources().getString(R.string.new_visitor_sound_key)))
-            AgentDataManager.getAgentInstance().getSettings().msgPushNotificationSound = preferences.getBoolean(key, false);
+            AgentDataManager.getAgentInstance().getSettings().newVisitorsNotifications.sound = preferences.getBoolean(key, false);
+        if (key.equals(getResources().getString(R.string.new_message_vibrate_key)))
+            AgentDataManager.getAgentInstance().getSettings().newMessagesNotifications.vibrate = preferences.getBoolean(key, true);
+        if (key.equals(getResources().getString(R.string.new_visitor_vibrate_key)))
+            AgentDataManager.getAgentInstance().getSettings().newVisitorsNotifications.vibrate = preferences.getBoolean(key, false);
 
         if (key.equals(getResources().getString(R.string.new_visitor_push_key)) ||
                 key.equals(getResources().getString(R.string.new_message_push_key))) {
-            AgentDataManager.getAgentInstance().getSettings().visitorPushNotification = preferences.
-                    getBoolean(getResources().getString(R.string.new_visitor_push_key), false);
-            AgentDataManager.getAgentInstance().getSettings().msgPushNotification = preferences.
-                    getBoolean(getResources().getString(R.string.new_message_push_key), true);
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(getResources().getString(R.string.gcm_token), getContext().MODE_PRIVATE);
+            String gcmToken = sharedPreferences.getString(getContext().getResources().getString(R.string.token), null);
 
-            Uri.Builder builder = new Uri.Builder();
-            builder.scheme("https")
-                    .authority(getResources().getString(R.string.base_dev_api))
-                    .appendPath(getResources().getString(R.string.rout_api))
-                    .appendPath(getResources().getString(R.string.update_settings_api))
-                    .appendPath(AgentDataManager.getAgentInstance().getToken())
-                    .appendQueryParameter("visitorpush", AgentDataManager.getAgentInstance().getSettings().visitorPushNotification + "")
-                    .appendQueryParameter("messagepush", AgentDataManager.getAgentInstance().getSettings().msgPushNotification + "");
+            if (gcmToken != null && AgentDataManager.getNewVisitorsNotificationSettings() != null && AgentDataManager.getNewMessagesNotificationSettings() != null) {
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("https")
+                        .authority(getResources().getString(R.string.base_dev_api))
+                        .appendPath(getResources().getString(R.string.rout_api))
+                        .appendPath(getResources().getString(R.string.update_settings_api))
+                        .appendPath(AgentDataManager.getAgentInstance().getToken())
+                        .appendQueryParameter("visitorpush", AgentDataManager.getNewVisitorsNotificationSettings().isEnabled + "")
+                        .appendQueryParameter("messagepush", AgentDataManager.getNewMessagesNotificationSettings().isEnabled + "")
+                        .appendQueryParameter("tokendevice", gcmToken);
 
-            String url = builder.build().toString();
-            OkHttpRequests okHttpRequests = new OkHttpRequests(url, new ServerCallResponse() {
-                @Override
-                public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-                    if (getActivity() != null)
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                }
-            });
+                String url = builder.build().toString();
+                OkHttpRequests okHttpRequests = new OkHttpRequests(url, new ServerCallResponse() {
+                    @Override
+                    public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
+                        if (getActivity() != null)
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    }
+                });
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(), "your settings are saved", Toast.LENGTH_SHORT).show();
+
         }
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference.getKey().equals(getResources().getString(R.string.disconnect_account_key)))
-            if (AgentDataManager.logOut(getContext())) {
+            if (AgentDataManager.logOut(getContext(),preference.getSharedPreferences())) {
+
                 Intent intent = new Intent(getContext(), SplashActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

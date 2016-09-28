@@ -1,7 +1,10 @@
 package com.example.chaya.bontact.Helpers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Base64;
 import android.widget.ImageView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -58,45 +61,12 @@ public class AvatarHelper {
         }
     }
 
-/*
-
-    public static int avatarPosition=0;
-    public static List<Integer> avatars;
-    public static int getAvatarPosition()
+    public static Bitmap decodeAvatarBase64(String avatar)
     {
-
-    if(avatarPosition>=9) {
-        avatarPosition = 0;
+        avatar=avatar.substring(avatar.indexOf(",")+1,avatar.length());
+        byte[] decodedString = Base64.decode(avatar, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//        agentPicture.setImageBitmap(decodedByte);
+        return decodedByte;
     }
-    else
-    avatarPosition++;
-
-
-        return avatarPosition;
-    }
-    public static List<Integer> getAvatarsList()
-    {
-        if(avatars==null) {
-            avatars = new ArrayList<Integer>();
-        }
-
-        avatars.add(R.drawable.avatar1);
-        avatars.add(R.drawable.avatar2);
-        avatars.add(R.drawable.avatar3);
-        avatars.add(R.drawable.avatar4);
-        avatars.add(R.drawable.avatar5);
-        avatars.add(R.drawable.avatar6);
-        avatars.add(R.drawable.avatar7);
-        avatars.add(R.drawable.avatar8);
-        avatars.add(R.drawable.avatar9);
-        avatars.add(R.drawable.avatar10);
-        return avatars;
-    }
-    public static int getNextAvatar()
-    {
-        getAvatarsList();
-       return avatars.get(getAvatarPosition());
-    }
-*/
-
 }

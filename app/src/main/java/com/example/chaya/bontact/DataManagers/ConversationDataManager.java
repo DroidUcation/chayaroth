@@ -49,52 +49,6 @@ public class ConversationDataManager {
             fillConversationList(context);
     }
 
- /*   public void setSelectedIdConversation(int idSurfer) {
-        selectedIdConversation = idSurfer;
-        Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
-        if (conversation != null) {
-            conversation.agentSelectedId = AgentDataManager.getAgentInstance().getIdRep();
-            update(conversation);
-            SocketManager.getInstance().emitSelectConversationState(conversation, true);
-        }
-    }
-
-    public void setUnSelectedIdConversation() {
-        Conversation conversation = getConversationByIdSurfer(selectedIdConversation);
-        if (conversation != null) {
-            SocketManager.getInstance().emitSelectConversationState(conversation, false);
-            selectedIdConversation = 0;
-            conversation.agentSelectedId = 0;
-            update(conversation);
-        }
-
-    }
-
-     public boolean updateSelectedByAgent(int idSurfer, int idAgent, boolean state) {
-        Conversation conversation = getConversationByIdSurfer(idSurfer);
-        if (conversation != null)
-            if (state)
-                conversation.agentSelectedId = idAgent;
-            else
-                conversation.agentSelectedId = 0;
-        if (update(conversation) != null)
-            return true;
-        return false;
-    }
-
-   public boolean updateUnSelectedByAgentForAll(int idAgent) {
-        if (idAgent == 0)
-            return false;
-        for (Conversation conversation : conversationList) {
-            if (conversation.agentSelectedId == idAgent) {
-                conversation.agentSelectedId = 0;
-                update(conversation);
-            }
-        }
-        return true;
-
-    }*/
-
     //--mange functions
     public void fillConversationList(Context context) {
         if (conversationList.size() > 0) {
@@ -121,8 +75,8 @@ public class ConversationDataManager {
         return null;
     }
 
-
     public Conversation insertOrUpdate(Conversation conversation, boolean insertToDb) {
+
         if (conversation == null)
             return null;
         if (conversationList == null)
@@ -327,8 +281,8 @@ public class ConversationDataManager {
             for (int i = 0; i < jsonConversationArray.length(); i++) {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
-                // conversation.lastdate = DateTimeHelper.getDateInCurrentGmt(conversation.lastdate);
                 conversation.lastdate = DatesHelper.convertDateToCurrentGmt(conversation.lastdate);
+                Log.d("save",strObj);
                 insertOrUpdate(conversation, true);
             }
             SocketManager.getInstance().refreshSelectConversation();

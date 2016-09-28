@@ -42,16 +42,16 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/inbox_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@android:drawable/ic_input_add"
-        android:tint="@android:color/white"
-        android:visibility="visible" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/inbox_fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="end|bottom"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:src="@android:drawable/ic_input_add"-->
+        <!--android:tint="@android:color/white"-->
+        <!--android:visibility="gone" />-->
 
     <ProgressBar
         android:id="@+id/progress_bar_center"

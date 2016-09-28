@@ -2,18 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:id="@+id/inner_conversation_menu">
         <item
-            android:id="@+id/send_email"
-            android:title="send email" />
+            android:id="@+id/un_assign"
+            android:title="unassign" />
 
         <item
-            android:id="@+id/open_ticket"
-            android:title="open ticket" />
+            android:id="@+id/assign_to_me"
+            android:title="assign to me" />
 
-        <!--<item
-            android:id="@+id/chat_channel"
-            android:icon="@drawable/ic_chat_bubble_black_18dp"
-            android:title="@string/chat"
-            app:showAsAction="always" />-->
         <item
             android:id="@+id/phone_call_channel"
             android:icon="@drawable/phone_channel"

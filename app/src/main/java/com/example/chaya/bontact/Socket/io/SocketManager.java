@@ -185,7 +185,7 @@ public class SocketManager {
                 int idAgent = jsonObject.getJSONObject("agentselected").optInt("id", 0);
                 if (idSurfer != 0) {
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                   // conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, true);
+                    // conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, true);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -219,7 +219,7 @@ public class SocketManager {
                 int idAgent = jsonObject.getInt("id");
                 if (idAgent != 0) {
                     ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                  //  conversationDataManager.updateUnSelectedByAgentForAll(idAgent);
+                    //  conversationDataManager.updateUnSelectedByAgentForAll(idAgent);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -326,7 +326,7 @@ public class SocketManager {
                 jsonObject.put("allow", true);
                 jsonObject.put("device", "android");
                 jsonObject.put("allServices", true);
-                jsonObject.put("lastconnect", DateTimeHelper.getCurrentStringDateInGmtZero());
+                jsonObject.put("lastconnect", DatesHelper.getCurrentStringDateInGmtZero());
                 jsonObject.put("pushversion", 3);
                 if (socket != null) {
                     Log.d("emit", jsonObject.toString());

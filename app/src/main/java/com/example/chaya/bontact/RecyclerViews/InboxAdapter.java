@@ -104,21 +104,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         }
         String img = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_IMG));
         if (img != null) {
-            Glide.with(context)
-                    .load(img)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-
-                            return false;
-                        }
-                    })
-                    .into(holder.assign);
+            holder.assign.setImageBitmap(AvatarHelper.decodeAvatarBase64(img));
             holder.assign.setVisibility(View.VISIBLE);
         } else
             holder.assign.setVisibility(View.GONE);

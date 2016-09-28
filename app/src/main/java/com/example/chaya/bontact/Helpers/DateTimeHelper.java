@@ -60,7 +60,7 @@ public class DateTimeHelper {
         if (stringDateFullFormat == null)
             return null;
         Date date1 = convertFullFormatStringToDate(stringDateFullFormat);
-        Date date2 = convertFullFormatStringToDate(DateTimeHelper.getCurrentStringDateInGmtZero());
+        Date date2 = convertFullFormatStringToDate(getCurrentStringDateInGmtZero());
         Interval interval = new Interval(date1.getTime(), date2.getTime());
         PeriodFormatter minutesAndSeconds = new PeriodFormatterBuilder()
                 .printZeroAlways()

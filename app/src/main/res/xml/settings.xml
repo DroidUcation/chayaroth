@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="settings_preferencescreen">
 
     <android.support.v7.preference.PreferenceCategory
         android:layout="@layout/settings_title"
-        android:title="@string/new_message_header">
+        android:title="@string/new_message_header"
+        android:key="@string/new_msg_category">
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
@@ -22,7 +25,8 @@
 
     <android.support.v7.preference.PreferenceCategory
         android:layout="@layout/settings_title"
-        android:title="@string/new_visitor_header">
+        android:title="@string/new_visitor_header"
+        android:key="@string/new_visitor_category">
 
         <SwitchPreferenceCompat
             android:defaultValue="false"

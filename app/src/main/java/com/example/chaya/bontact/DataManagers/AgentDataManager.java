@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.util.Log;
+import android.preference.PreferenceScreen;
 import android.util.Patterns;
 
 import com.example.chaya.bontact.Data.Contract;
@@ -50,18 +50,19 @@ public class AgentDataManager {
         agent = new Agent();
     }
 
-    public static boolean getMsgPushNotification() {
-
-        return getAgentInstance().settings.msgPushNotification;
-    }
-
-    public static boolean getVisitorPushNotification() {
-        return getAgentInstance().settings.visitorPushNotification;
-    }
-
     public AgentDataManager() {
         agent = getAgentInstance();
+//        SharedPreferences agentPref = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
+//
+//        if (agent.token == null && agentPref.getString(context.getResources().getString(R.string.token), null) != null)//has to bring data from prefernces
+//        {
+//            Gson gson = new Gson();
+//            agent.token = agentPref.getString(context.getResources().getString(R.string.token), null);
+//            agent.rep = gson.fromJson(agentPref.getString(context.getResources().getString(R.string.agent), null), Agent.Rep.class);
+//            agent.settings = gson.fromJson(agentPref.getString(context.getResources().getString(R.string.settings), null), Agent.Settings.class);
+//        }
         setContext(null);
+
     }
 
     public void getDataFromServer(String userName, String password, Context context) {
@@ -90,8 +91,8 @@ public class AgentDataManager {
         agent.rep = agentFromJson.rep;
         agent.token = agentFromJson.token;
         agent.settings = agentFromJson.settings;
-        agent.settings.msgPushNotification = true;
-        agent.settings.visitorPushNotification = false;
+        agent.settings.allowAllNewMessages();
+        agent.settings.cancelAllNewVisitor();
         if (agent != null && context != null) {
             // String agent_str= gson.toJson(getAgentInstance());
             SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
@@ -123,6 +124,18 @@ public class AgentDataManager {
         return null;
     }
 
+    public static Agent.Settings.Notification getNewMessagesNotificationSettings() {
+        if (agent != null)
+            return agent.settings.newMessagesNotifications;
+        return null;
+    }
+
+    public static Agent.Settings.Notification getNewVisitorsNotificationSettings() {
+        if (agent != null)
+            return agent.settings.newVisitorsNotifications;
+        return null;
+    }
+
     public int getAgentId(Context context) {
         if (isLoggedIn(context) == true)
             if (agent != null && getAgentInstance().getRep() != null)
@@ -147,7 +160,7 @@ public class AgentDataManager {
         return false;
     }
 
-    public static boolean logOut(Context context) {
+    public static boolean logOut(Context context, SharedPreferences settingsPref) {
         //clear agent details
         SharedPreferences.Editor editor;
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_token), context.MODE_PRIVATE);
@@ -166,7 +179,7 @@ public class AgentDataManager {
                     @Override
                     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
                         //Log.d("unregister", isSuccsed ? "true" : "false");
-                      //  Log.d("unregister", response);
+                        //  Log.d("unregister", response);
                     }
                 });
                 editor = Preferences.edit();
@@ -179,7 +192,12 @@ public class AgentDataManager {
         editor = Preferences.edit();
         editor.clear().commit();
         editor.apply();
-        setNewAgent();
+        if (settingsPref != null) {
+            editor = settingsPref.edit();
+            editor.clear().commit();
+            editor.apply();
+        }
+
         //claer db
         context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
         context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, null, null);
@@ -241,7 +259,7 @@ public class AgentDataManager {
             return;
         //http://dashboard.bontact.com/html/login.aspx?func=getLostPassword&email=[email]
         String forgot_pass_url = context.getResources().getString(R.string.forgot_pass_url) + "&email=" + email;
-        OkHttpRequests requests = new OkHttpRequests(forgot_pass_url,callback);
+        OkHttpRequests requests = new OkHttpRequests(forgot_pass_url, callback);
 
     }
 }

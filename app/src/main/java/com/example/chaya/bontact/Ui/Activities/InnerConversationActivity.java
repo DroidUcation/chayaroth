@@ -423,6 +423,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
  */
     @Override
     public void onBackPressed() {
+        //adapter.closeallmediaplayers()
         super.onBackPressed();
     }
 

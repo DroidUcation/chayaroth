@@ -249,8 +249,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void run() {
                             progressBar.setVisibility(View.GONE);
-                            //  InitData initData = new InitData();
-                            // initData.start(LoginActivity.this);
                             startActivity(new Intent(LoginActivity.this, SplashActivity.class));
                         }
                     });

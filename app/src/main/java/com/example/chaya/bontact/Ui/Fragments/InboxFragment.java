@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -45,6 +46,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     ViewGroup container;
     ConversationDataManager conversationDataManager;
     OnlineStatesChangesReceiver onlineStatesChangesReceiver;
+    private FloatingActionButton inbox_fab;
 
     public InboxFragment() {
         Log.d("now", "INBOX");
@@ -89,7 +91,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         this.container = container;
-      //  getActivity().setTitle(R.string.app_name);
+        //  getActivity().setTitle(R.string.app_name);
         setProgressBarCenterState(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -106,6 +108,8 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setOnRefreshListener(refreshListener);
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.orange_dark));
+        inbox_fab = (FloatingActionButton) rootView.findViewById(R.id.inbox_fab);
+        inbox_fab.setOnClickListener((View.OnClickListener) getActivity());
         initLoader();
         return rootView;
 
@@ -187,9 +191,9 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     private void getData(boolean isFirst) {
         AgentDataManager agentDataManager = new AgentDataManager();
         conversationDataManager = new ConversationDataManager(getContext());
-        if (!isFirst)
+        if (!isFirst && progressBarBottom.getVisibility() != View.VISIBLE) {
             conversationDataManager.getNextDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
-        else
+        } else
             conversationDataManager.getFirstDataFromServer(getContext(), agentDataManager.getAgentToken(getContext()));
 
     }

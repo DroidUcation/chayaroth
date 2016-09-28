@@ -1,6 +1,8 @@
 package com.example.chaya.bontact.Ui.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -9,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,11 +31,13 @@ import java.util.List;
 
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Fragments.DashboardFragment;
 import com.example.chaya.bontact.Ui.Fragments.InboxFragment;
 import com.example.chaya.bontact.Ui.Fragments.OnlineVisitorsFragment;
+import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -40,10 +45,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FloatingActionButton inbox_fab;
     private ViewPagerAdapter adapter;
     ProgressBar progressBarCenter;
-    ImageView agentPicture;
+    CircularImageView agentPicture;
     FrameLayout dashboard;
     int resCurrentTitle;
 
@@ -77,17 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
 
-        inbox_fab = (FloatingActionButton) findViewById(R.id.inbox_fab);
-        if (resFirstTabTitle == R.string.inbox_title)
-            inbox_fab.setVisibility(View.VISIBLE);
-        else
-            inbox_fab.setVisibility(View.GONE);
-        inbox_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
-            }
-        });
         initMenu();
         dashboard = (FrameLayout) findViewById(R.id.dashboard_fragment);
         getSupportFragmentManager().beginTransaction().add(R.id.dashboard_fragment, DashboardFragment.newInstance()).addToBackStack(null).commit();
@@ -114,19 +107,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
-        agentPicture = (ImageView) header.findViewById(R.id.agent_pic);
+        agentPicture = (CircularImageView ) header.findViewById(R.id.agent_pic);
         TextView loggedInAs = (TextView) header.findViewById(R.id.loggedInAsTxt);
         if (loggedInAs != null)
             loggedInAs.append(" " + AgentDataManager.getAgentInstance().getName());
         String avatar = AgentDataManager.getAgentAvatarUrl();
         if (avatar != null) {
-            avatar = avatar.replace("https", "http");
-            Picasso.with(this)
-                    .load(avatar)
-                    .placeholder(R.mipmap.bontact_launcher) // optional
-                    .transform(new CircleTransform())
-                    .error(R.mipmap.bontact_launcher)         // optional
-                    .into(agentPicture);
+            agentPicture.setImageBitmap(AvatarHelper.decodeAvatarBase64(avatar));
         }
     }
 
@@ -159,10 +146,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean replaceViews(int resTitle) {
         if (resTitle != 0)
             setTitle(getTitleToDisplay(resTitle));
-        if (resTitle == R.string.inbox_title)
-            inbox_fab.setVisibility(View.VISIBLE);
-        else
-            inbox_fab.setVisibility(View.GONE);
 
         resCurrentTitle = resTitle;
         Intent intent;
@@ -214,12 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageSelected(int position) {
-                if (adapter.getPageTitle(position) == getResources().getString(R.string.inbox_title))
-                    inbox_fab.setVisibility(View.VISIBLE);
-                else
-                    inbox_fab.setVisibility(View.GONE);
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
             }
@@ -254,10 +232,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.requests_dashboard_layout)
+        if (v.getId() == R.id.requests_dashboard_layout) {
             replaceViews(R.string.inbox_title);
-        if (v.getId() == R.id.onlineVisitors_dashboard_layout)
+            return;
+        }
+        if (v.getId() == R.id.onlineVisitors_dashboard_layout) {
             replaceViews(R.string.onlinevisitors_title);
+            return;
+        }
+        if (v.getId() == R.id.inbox_fab) {
+            viewPager.setCurrentItem(adapter.getPosition(getResources().getString(R.string.onlinevisitors_title)), true);
+            return;
+        }
     }
 
     public void setProgressBarCenterState(int state) {

@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.View;
@@ -40,19 +41,22 @@ public class AudioPlayerInnerHelper {
         initPlayerComponent(itemView);
     }
 
-    public boolean preparePlayer(Uri recordUrl) {
+    public void preparePlayer(final Uri recordUrl) {
+     /*   AsyncTask.execute(new Runnable() {
+                              @Override
+                              public void run() {*/
         setRecordUrl(recordUrl);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(completionListener);
         try {
             mediaPlayer.setDataSource(context, recordUrl);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.prepare();
+            mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
+       /*                       }               }
+        );*/
     }
 
     public void preparePlayer(int resourcePlayer) {
@@ -66,9 +70,9 @@ public class AudioPlayerInnerHelper {
         pauseBtn = (ImageView) itemView.findViewById(R.id.pause_btn);
         seekBar = (AppCompatSeekBar) itemView.findViewById(R.id.seekbar_visitor_record);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
-       // playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+        // playBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
         playBtn.setOnClickListener(playListener);
-       // pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
+        // pauseBtn.setTypeface(SpecialFontsHelper.getFont(context, R.string.font_awesome));
         seekHandler = new Handler();
     }
 
@@ -82,7 +86,7 @@ public class AudioPlayerInnerHelper {
     View.OnClickListener playListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-           // Toast.makeText(context, "on click", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(context, "on click", Toast.LENGTH_SHORT).show();
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 stopRecord();
             } else {
@@ -116,29 +120,29 @@ public class AudioPlayerInnerHelper {
     };
 
     public void playRecord() {
-      playRecord(0);
+        playRecord(0);
     }
+
     public void playRecord(int newStartTime) {
         if (mediaPlayer == null)
             return;
-       // playBtn.setText(R.string.pause_btn_icon);
+        // playBtn.setText(R.string.pause_btn_icon);
         playBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.pause_btn));
         mediaPlayer.start();
         seekHandler.postDelayed(UpdateSongTime, 100);
         finalTime = mediaPlayer.getDuration();
         if (mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration())
             startTime = 0;
-        else
-        if(newStartTime==0)
+        else if (newStartTime == 0)
             startTime = mediaPlayer.getCurrentPosition();
         else
-        startTime=newStartTime;
+            startTime = newStartTime;
         seekBar.setMax((int) finalTime);
         seekBar.setProgress((int) startTime);
     }
 
     public void stopRecord() {
-       // playBtn.setText(R.string.play_btn_icon);
+        // playBtn.setText(R.string.play_btn_icon);
         playBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.play_btn));
         if (mediaPlayer != null && mediaPlayer.isPlaying())
             mediaPlayer.pause();

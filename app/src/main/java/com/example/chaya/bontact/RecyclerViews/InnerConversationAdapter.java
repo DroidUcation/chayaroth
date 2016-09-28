@@ -166,8 +166,8 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
             url = builder.build().toString();
             Uri recordUri = Uri.parse(url);
 
-            if (!recordHolder.player.preparePlayer(recordUri))
-                return false;
+            recordHolder.player.preparePlayer(recordUri);
+            return true;
         } else if (actionType == ChannelsTypes.callback && record == true)
             recordHolder.player.audioPlayerProblematicPrepare(R.string.short_record);
         else if (actionType == ChannelsTypes.callback)
