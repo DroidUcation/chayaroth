@@ -40,7 +40,6 @@ public class SendResponseHelper {
 
         OkHttpRequests okHttpRequests = new OkHttpRequests(url, null);
 
-//todo:handel a case that a call back don't succsess
 
     }
 

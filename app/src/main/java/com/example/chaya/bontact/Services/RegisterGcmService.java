@@ -32,9 +32,9 @@ public class RegisterGcmService extends IntentService {
             // Toast.makeText(RegisterGcmService.this, "THE TOKEN IS= " + token, Toast.LENGTH_SHORT).show();
             // Log.d("TOKEN", token);
 
-            SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.gcm_token), MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.gcm_pref), MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(getResources().getString(R.string.token), token);
+            editor.putString(getResources().getString(R.string.gcm_token), token);
             editor.apply();
             if (token != null)
                 SocketManager.getInstance().emitNotificationRegister(token);

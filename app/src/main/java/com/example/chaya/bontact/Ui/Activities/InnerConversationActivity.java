@@ -142,28 +142,14 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     private void initFooter() {
         sendResponseHelper = new SendResponseHelper();
-        //bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
         btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_chat_response);
         chat_response_edittext = (EditText) findViewById(R.id.chat_response_edittext);
-        // chat_response_edittext.addTextChangedListener(textWatcher);
         btn_send_mess.setOnClickListener(this);
         if (current_conversation != null)
-            if (!current_conversation.isOnline)
+            if (!VisitorsDataManager.isOnline(id_surfer))
                 setEnableFooter(false);
             else
                 setEnableFooter(true);
-        /*if (!isNew) {
-            btn_send_mess.setEnabled(true);
-            if (current_conversation != null) {
-                if (!current_conversation.isOnline) {
-                    setFooter();
-                } else {
-                    chat_response_edittext.setEnabled(true);
-                    chat_response_edittext.setBackgroundColor(getResources().getColor(R.color.white));
-                }
-            }
-        } else {
-        }*/
     }
 
     ServerCallResponse callResponse = new ServerCallResponse() {
@@ -230,7 +216,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             load_animations(false);
             no_msg_image.setVisibility(View.VISIBLE);
             no_msg_title.setVisibility(View.VISIBLE);
-            no_msg_text.setVisibility(View.VISIBLE);
+            no_msg_text.setVisibility(View.GONE);
             invite_btn.setVisibility(View.VISIBLE);
             invite_btn.setOnClickListener(inviteListener);
             //  bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
@@ -393,12 +379,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         conversationChangedReceiver = new CurrentConversationChangedReceiver();
         registerReceiver(conversationChangedReceiver, intentFilter);
         if (id_surfer != 0)
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                   // conversationDataManager.setSelectedIdConversation(id_surfer);
-                }
-            });
+            conversationDataManager.selectedIdConversation = id_surfer;
+
     }
 
     @Override
@@ -410,8 +392,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (current_conversation != null) {
             conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         }
-       // if (!isConversationBusy)
-          //  conversationDataManager.setUnSelectedIdConversation();
+        if (id_surfer != 0)
+            conversationDataManager.selectedIdConversation = id_surfer;
     }
 
     /* public void setProgressBarState(int state) {

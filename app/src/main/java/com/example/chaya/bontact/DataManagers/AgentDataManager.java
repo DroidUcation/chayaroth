@@ -94,13 +94,13 @@ public class AgentDataManager {
         agent.settings.allowAllNewMessages();
         agent.settings.cancelAllNewVisitor();
         if (agent != null && context != null) {
-            // String agent_str= gson.toJson(getAgentInstance());
             SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
             SharedPreferences.Editor editor = Preferences.edit();
             editor.clear();
             editor.putString(context.getResources().getString(R.string.agent), gson.toJson(getAgentInstance().getRep()));
             editor.putString(context.getResources().getString(R.string.settings), gson.toJson(getAgentInstance().getSettings()));
             editor.putString(context.getResources().getString(R.string.token), getAgentInstance().getToken());
+            editor.putInt(context.getResources().getString(R.string.current_page),0);
             editor.apply();
            /* gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null),Agent.Rep.class);
             gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null),Agent.Settings.class);*/
@@ -163,8 +163,8 @@ public class AgentDataManager {
     public static boolean logOut(Context context, SharedPreferences settingsPref) {
         //clear agent details
         SharedPreferences.Editor editor;
-        SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_token), context.MODE_PRIVATE);
-        String gcmToken = Preferences.getString(context.getResources().getString(R.string.token), null);
+        SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_pref), context.MODE_PRIVATE);
+        String gcmToken = Preferences.getString(context.getResources().getString(R.string.gcm_token), null);
         if (gcmToken != null) {
             if (getAgentInstance().getToken() != null) {
                 Uri.Builder builder = new Uri.Builder();
@@ -201,6 +201,7 @@ public class AgentDataManager {
         //claer db
         context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);
         context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, null, null);
+        context.getContentResolver().delete(Contract.Agents.AGENTS_URI, null, null);
         ConversationDataManager.conversationList = null;
         ConversationDataManager.unread_conversations = 0;
         VisitorsDataManager.visitorsList = null;

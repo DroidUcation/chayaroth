@@ -37,10 +37,7 @@ public class InboxProvider extends ContentProvider {
         if (!TextUtils.isEmpty(sortOrder)) {
             sortOrder = Contract.Conversation.COLUMN_LAST_DATE + " DESC"; //Sort by modified date as default
         }
-    /*    projection = DbBontact.getAllConversationFields();
-        projection[projection.length - 1] = "c." + Contract.Agents.COLUMN_ID_REP;*/
-       // allConversationFields.add("c." + Contract.Agents.COLUMN_ID_REP);
-       // projection = (String[]) allConversationFields.toArray();
+
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
@@ -60,7 +57,7 @@ public class InboxProvider extends ContentProvider {
 
         long rowID = dbBontact.insertOrUpdateById(Contract.Conversation.TABLE_NAME, values, new String[]{Contract.Conversation.COLUMN_ID_SURFER});
         // if (rowID > 0) {
-        // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
+       // Uri _uri = ContentUris.withAppendedId(Contract.Conversation.INBOX_URI, rowID);
         getContext().getContentResolver().notifyChange(uri, null);
         // checkDb();
         return uri;

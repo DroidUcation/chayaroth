@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class DbBontact extends SQLiteOpenHelper {
             Contract.Conversation.COLUMN_LAST_MESSAGE + " TEXT, " +
             Contract.Conversation.COLUMN_DISPLAY_NAME + " TEXT ," +
             Contract.Conversation.COLUMN_ASSIGN + "  INTEGER ,  " +
-            "FOREIGN KEY(" +Contract.Conversation.COLUMN_ASSIGN + ") REFERENCES " + Contract.Agents.TABLE_NAME + "(" + Contract.Agents.COLUMN_ID_REP + ")" +
+            "FOREIGN KEY(" + Contract.Conversation.COLUMN_ASSIGN + ") REFERENCES " + Contract.Agents.TABLE_NAME + "(" + Contract.Agents.COLUMN_ID_REP + ")" +
             " )";
     public String CreateInnerConversationTable = "CREATE TABLE " + Contract.InnerConversation.TABLE_NAME + "(" +
             Contract.InnerConversation.COLUMN_ID + "  INTEGER PRIMARY KEY,  " +
@@ -114,8 +116,8 @@ public class DbBontact extends SQLiteOpenHelper {
         strings.add(Contract.Conversation.COLUMN_ASSIGN);
         //strings.add(Contract.Agents.COLUMN_ID_REP);
         // strings.add(Contract.Conversation.COLUMN_AGENT_SELECTED_ID);
-        String[] arr=new String[strings.size()];
-        arr= strings.toArray(arr);
+        String[] arr = new String[strings.size()];
+        arr = strings.toArray(arr);
         return arr;
     }
 
@@ -149,7 +151,6 @@ public class DbBontact extends SQLiteOpenHelper {
     public long update(String table, ContentValues values, String selection, String[] selectionArgs) {
         database = getWritableDatabase();
         long res = database.update(table, values, selection, selectionArgs);
-        //Log.e("UPDATE", "name " + values.get(Contract.Conversation.COLUMN_DISPLAY_NAME) + " UNREAD " + String.valueOf(values.get(Contract.Conversation.COLUMN_UNREAD)));
         return res;
     }
 
@@ -166,25 +167,19 @@ public class DbBontact extends SQLiteOpenHelper {
         database = getWritableDatabase();
         try {
             long row_id = database.insertOrThrow(table, null, values);
-            //  Log.e("INSERT", "name " + values.get(Contract.Conversation.COLUMN_DISPLAY_NAME) + " UNREAD " + String.valueOf(values.get(Contract.Conversation.COLUMN_UNREAD)));
             return row_id;
         } catch (SQLiteConstraintException e) {
             if (columns == null)
                 return 0;
             String whereColumnsStr = "";
             String[] whereColumnsArgs = new String[columns.length];
-
             for (int i = 0; i < columns.length; i++) {
                 if (i > 0)
                     whereColumnsStr += " AND ";
                 whereColumnsStr += columns[i] + "=?";
                 whereColumnsArgs[i] = values.getAsString(columns[i]);
             }
-
             long result = update(table, values, whereColumnsStr, whereColumnsArgs);
-           /* if (result == 0)
-                throw e;
-            else*/
             return result;
         }
 

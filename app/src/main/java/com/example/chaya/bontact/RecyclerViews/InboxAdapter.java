@@ -55,7 +55,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     @Override
     public void onBindViewHolder(InboxHolder holder, int position) {
 
-        if (!cursor.moveToPosition(position))
+        if (cursor==null||!cursor.moveToPosition(position))
             return;
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));

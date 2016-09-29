@@ -5,10 +5,13 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.example.chaya.bontact"
+//        applicationId "com.example.chaya.bontact"
+        applicationId "com.bontact.app"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
+//        versionCode 1
+//        versionName "1.0"
+        versionCode 3180
         versionName "1.0"
     }
     buildTypes {
@@ -24,9 +27,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    //compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile('io.socket:socket.io-client:0.7.0') {
-        // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
 

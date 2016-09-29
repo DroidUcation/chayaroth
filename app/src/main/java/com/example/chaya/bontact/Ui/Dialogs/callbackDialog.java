@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
@@ -77,12 +78,11 @@ public class callbackDialog {
         @Override
         public void onClick(View view) {
             String num = input.getText().toString().trim();
-            if (checkValidNumber(num) == true) {
-                if (num != null) {
-                    num = num.replace("+", "");
-                    sendResponseHelper.sendCallBack(context, id_surfer, num);
-                }
+            if (checkValidNumber(num) == true && num != null) {
+                num = num.replace("+", "");
+                sendResponseHelper.sendCallBack(context, id_surfer, num);
                 alert.dismiss();
+                Toast.makeText(context, R.string.dialingMsg, Toast.LENGTH_LONG).show();
             } else {
                 textInputLayout.setError(context.getResources().getString(R.string.invalid_callback_phone_number));
             }

@@ -77,8 +77,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         if (key.equals(getResources().getString(R.string.new_visitor_push_key)) ||
                 key.equals(getResources().getString(R.string.new_message_push_key))) {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences(getResources().getString(R.string.gcm_token), getContext().MODE_PRIVATE);
-            String gcmToken = sharedPreferences.getString(getContext().getResources().getString(R.string.token), null);
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(getResources().getString(R.string.gcm_pref), getContext().MODE_PRIVATE);
+            String gcmToken = sharedPreferences.getString(getContext().getResources().getString(R.string.gcm_token), null);
 
             if (gcmToken != null && AgentDataManager.getNewVisitorsNotificationSettings() != null && AgentDataManager.getNewMessagesNotificationSettings() != null) {
                 Uri.Builder builder = new Uri.Builder();

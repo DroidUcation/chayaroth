@@ -83,6 +83,7 @@ public class GCMPushReceiverService extends GcmListenerService {
                     .setSmallIcon(R.mipmap.bontact_launcher)
                     .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
                     .setContentText(message)
+                    .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
 
             if ( AgentDataManager.getNewMessagesNotificationSettings()!=null&&AgentDataManager.getNewMessagesNotificationSettings().vibrate)
@@ -104,6 +105,4 @@ public class GCMPushReceiverService extends GcmListenerService {
         }
 
     }
-
-
 }

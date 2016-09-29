@@ -29,9 +29,12 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/no_msg_img"
         android:layout_centerHorizontal="true"
-        android:text="No messages yet"
-        android:textColor="@color/gray_very_dark"
-        android:visibility="gone" />
+        android:text="@string/no_msg_title"
+        android:textColor="@color/gray_medium"
+        android:visibility="gone"
+        android:textSize="20dp"
+        android:layout_marginTop="3dp"
+      />
 
     <TextView
         android:id="@+id/no_msg_txt"
@@ -65,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="JOIN CHATS"
+        android:text="@string/invite_for_chat"
         android:visibility="gone" />
 
     <!--<LinearLayout

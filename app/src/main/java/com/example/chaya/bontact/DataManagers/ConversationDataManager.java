@@ -45,8 +45,11 @@ public class ConversationDataManager {
         if (conversationList == null)
             conversationList = new ArrayList<>();
         this.context = context;
-        if (context != null)
+        if (context != null && conversationList.size() == 0) {
             fillConversationList(context);
+            SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
+            current_page = preferences.getInt(context.getResources().getString(R.string.current_page), 0);
+        }
     }
 
     //--mange functions
@@ -96,6 +99,7 @@ public class ConversationDataManager {
                 ContentValues contentValues = DbToolsHelper.convertConversationToContentValues(conversation);
                 if (contentValues != null && context != null) {
                     context.getContentResolver().insert(Contract.Conversation.INBOX_URI, contentValues);
+
                     notifyListChanged(conversation.idSurfer);
                     return conversation;
                 }
@@ -282,7 +286,6 @@ public class ConversationDataManager {
                 String strObj = jsonConversationArray.getJSONObject(i).toString();
                 Conversation conversation = gson.fromJson(strObj, Conversation.class);
                 conversation.lastdate = DatesHelper.convertDateToCurrentGmt(conversation.lastdate);
-                Log.d("save",strObj);
                 insertOrUpdate(conversation, true);
             }
             SocketManager.getInstance().refreshSelectConversation();
