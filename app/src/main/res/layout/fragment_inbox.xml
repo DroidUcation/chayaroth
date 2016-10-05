@@ -22,7 +22,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-
     <ProgressBar
         android:id="@+id/progress_bar_bottom"
         android:layout_width="wrap_content"
@@ -33,7 +32,26 @@
         android:foregroundGravity="fill"
         android:padding="5dp"
         android:visibility="invisible" />
+    <ImageView
+        android:id="@+id/no_conversations_img"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/sad_icon"
+        android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/no_conversations_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/no_conversations_img"
+        android:layout_centerHorizontal="true"
+        android:text="@string/no_conversations_title"
+        android:textColor="@color/gray_medium"
+        android:visibility="gone"
+        android:textSize="17dp"
+        android:layout_marginTop="3dp"
+        />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/inbox_fab"
         android:layout_width="wrap_content"

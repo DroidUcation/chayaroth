@@ -18,6 +18,9 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
+
 /**
  * Created by chaya on 6/22/2016.
  */
@@ -87,12 +90,16 @@ public class AgentDataManager {
         this.context = context;
         Gson gson = new Gson();
         Agent agentFromJson = gson.fromJson(response, Agent.class);
+        if (agentFromJson == null)
+            return false;
+
         agentFromJson.token = agentFromJson.token.replace('/', '+');
         agent.rep = agentFromJson.rep;
         agent.token = agentFromJson.token;
         agent.settings = agentFromJson.settings;
         agent.settings.allowAllNewMessages();
         agent.settings.cancelAllNewVisitor();
+        registerToIntercom(agent.getRep().username);
         if (agent != null && context != null) {
             SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
             SharedPreferences.Editor editor = Preferences.edit();
@@ -100,13 +107,19 @@ public class AgentDataManager {
             editor.putString(context.getResources().getString(R.string.agent), gson.toJson(getAgentInstance().getRep()));
             editor.putString(context.getResources().getString(R.string.settings), gson.toJson(getAgentInstance().getSettings()));
             editor.putString(context.getResources().getString(R.string.token), getAgentInstance().getToken());
-            editor.putInt(context.getResources().getString(R.string.current_page),0);
+            editor.putInt(context.getResources().getString(R.string.current_page), 0);
             editor.apply();
-           /* gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent),null),Agent.Rep.class);
-            gson.fromJson(Preferences.getString(context.getResources().getString(R.string.settings),null),Agent.Settings.class);*/
             return true;
         }
         return false;
+    }
+
+    public static void registerToIntercom(String username) {
+        Intercom.client().registerIdentifiedUser(Registration.create()
+                .withEmail(username));
+    }
+    public static void unregisterToIntercom() {
+        Intercom.client().reset();
     }
 
     public String getAgentToken(Context context) {
@@ -205,7 +218,7 @@ public class AgentDataManager {
         ConversationDataManager.conversationList = null;
         ConversationDataManager.unread_conversations = 0;
         VisitorsDataManager.visitorsList = null;
-
+        unregisterToIntercom();
 
         return true;
     }

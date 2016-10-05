@@ -127,5 +127,8 @@ public class VisitorsDataManager {
         }
     }
 
+    public static int getCount() {
+        return visitorsList != null ? visitorsList.size() : 0;
+    }
 
 }

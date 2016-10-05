@@ -17,8 +17,8 @@
 
     <uses-permission android:name="com.example.chaya.bontact.permission.C2D_MESSAGE" />
 
-
     <application
+        android:name=".CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/bontact_launcher"
         android:label="@string/app_name"
@@ -28,12 +28,6 @@
             android:name=".Ui.Activities.LoginActivity"
             android:label="@string/login_title"
             android:noHistory="true" />
-        <!--
-              <activity
-              android:name=".Ui.Activities.MenuActivity"
-              android:label="@string/title_activity_menu"
-              android:theme="@style/AppTheme.NoActionBar" />
-        -->
         <activity
             android:name=".Ui.Activities.SplashActivity"
             android:noHistory="true">
@@ -46,6 +40,11 @@
         <activity
             android:name=".Ui.Activities.InnerConversationActivity"
             android:label="@string/title_inner_conversation" />
+        <activity
+            android:name=".Ui.Activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Ui.Dialogs.EmailDialogActivity" />
+        <activity android:name=".Ui.Activities.SettingsActivity" />
 
         <provider
             android:name=".Data.InboxProvider"
@@ -56,6 +55,7 @@
         <provider
             android:name=".Data.RepresentativeProvider"
             android:authorities="com.example.chaya.bontact.Data.RepresentativeProvider" />
+
         <service
             android:name=".Services.RegisterGcmService"
             android:exported="false">
@@ -82,11 +82,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".Ui.Activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Ui.Dialogs.EmailDialogActivity" />
-        <activity android:name=".Ui.Activities.SettingsActivity" />
     </application>
 
 </manifest>

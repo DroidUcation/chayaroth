@@ -31,6 +31,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
 
+        compile 'io.intercom.android:intercom-sdk-base:3.+'
     compile 'com.google.android.gms:play-services-gcm:9.2.1'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:support-v4:24.1.1'
@@ -49,6 +50,7 @@ dependencies {
     compile 'com.android.support:preference-v7:24.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.pkmmte.view:circularimageview:1.1'
+
 
 }
 

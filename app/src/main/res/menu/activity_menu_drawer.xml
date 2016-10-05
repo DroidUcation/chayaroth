@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <!-- <group android:checkableBehavior="single">-->
+
         <item android:title="Navigate" android:id="@+id/title_navigation">
             <menu>
         <item
@@ -19,7 +19,6 @@
             android:title="@string/inbox_title" />
             </menu>
         </item>
-   <!-- </group>-->
 
     <item android:title="Options" android:id="@+id/title_options">
         <menu>

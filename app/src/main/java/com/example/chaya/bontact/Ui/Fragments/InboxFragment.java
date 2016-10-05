@@ -19,7 +19,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
@@ -46,7 +48,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     ViewGroup container;
     ConversationDataManager conversationDataManager;
     OnlineStatesChangesReceiver onlineStatesChangesReceiver;
+    EmptyDataReceiver emptyDataReceiver;
     private FloatingActionButton inbox_fab;
+    ImageView noConversationsImg;
+    TextView noConversationsTitle;
+
 
     public InboxFragment() {
         Log.d("now", "INBOX");
@@ -61,7 +67,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onCreate(Bundle savedInstanceState) {
         //getActivity().setTitle(R.string.inbox_title);
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -70,12 +75,16 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
         onlineStatesChangesReceiver = new OnlineStatesChangesReceiver();
         getContext().registerReceiver(onlineStatesChangesReceiver, intentFilter);
+        intentFilter = IntentFilter.create(getResources().getString(R.string.empty_conversation_data_action), "*/*");
+        emptyDataReceiver = new EmptyDataReceiver();
+        getContext().registerReceiver(emptyDataReceiver, intentFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getContext().unregisterReceiver(onlineStatesChangesReceiver);
+        getContext().unregisterReceiver(emptyDataReceiver);
     }
 
     public void setProgressBarCenterState(int state) {
@@ -91,7 +100,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         this.container = container;
-        //  getActivity().setTitle(R.string.app_name);
+        setNoConversationsMessages();
         setProgressBarCenterState(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.inbox_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -115,6 +124,23 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
+    public void setNoConversationsMessages() {
+        if (rootView == null)
+            return;
+        if (noConversationsImg == null)
+            noConversationsImg = (ImageView) rootView.findViewById(R.id.no_conversations_img);
+        if (noConversationsTitle == null)
+            noConversationsTitle = (TextView) rootView.findViewById(R.id.no_conversations_title);
+
+        if (adapter != null && adapter.getItemCount() == 0) {
+            noConversationsImg.setVisibility(View.VISIBLE);
+            noConversationsTitle.setVisibility(View.VISIBLE);
+        } else {
+            noConversationsImg.setVisibility(View.GONE);
+            noConversationsTitle.setVisibility(View.GONE);
+        }
+    }
+
     public void initLoader() {
         getActivity().getSupportLoaderManager().initLoader(INBOX_LOADER, null, this);
     }
@@ -136,11 +162,11 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
         refreshLayout.setRefreshing(false);
         adapter.swapCursor(cursor);
+        setNoConversationsMessages();
         if (cursor != null) {
             progressBarBottom.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             setProgressBarCenterState(View.GONE);
-
         } else
             setProgressBarCenterState(View.VISIBLE);
     }
@@ -218,6 +244,18 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                 // adapter.notifyDataSetChanged();
                 //adapter.notifyItemChanged(position);
             }
+        }
+    }
+
+    public class EmptyDataReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (refreshLayout == null)
+                refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
+            refreshLayout.setRefreshing(false);
+            setNoConversationsMessages();
         }
     }
 

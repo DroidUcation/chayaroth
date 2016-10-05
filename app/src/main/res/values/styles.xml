@@ -80,5 +80,10 @@
         <!--<item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>-->
     </style>
 
-
+    <style name="SwitchTheme">
+        <item name="colorControlActivated">@color/gray_medium</item>
+        <item name="colorControlNormal">@color/gray_medium</item>
+        <item name="colorControlHighlight">@color/gray_medium</item>
+        <item name="colorSwitchThumbNormal">@color/gray_medium</item>
+    </style>
 </resources>

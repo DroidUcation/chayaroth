@@ -243,8 +243,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.inner_conversation_menu, menu);
-        if (isNew)
-            menu.setGroupVisible(R.id.inner_conversation_menu, false);
+//        if (isNew)
+//            menu.setGroupVisible(R.id.inner_conversation_menu, false);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -309,7 +309,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             onBackPressed();
             return true;
         }
-        if (loading != null && loading.getVisibility() != View.VISIBLE) {//DONT WORKING IN BACKGROUND
+        if (loading != null && loading.getVisibility() != View.VISIBLE && !isNew) {//DONT WORKING IN BACKGROUND
             switch (id) {
                 case R.id.sms_channel:
                     SendResponse(ChannelsTypes.sms);

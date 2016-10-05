@@ -55,10 +55,11 @@
     <string name="invite_for_chat">Invite for chat</string>
     <string name="no_msg_title">No messages yet</string>
     <string name="dialingMsg">Please wait while we connect you, our system will be calling you shortly</string>
+    <string name="no_visitors_title">There aren\'t online visitors in your site.</string>
+    <string name="no_conversations_title">No messages yet</string>
 
 
     <!--place holders-->
-
     <string name="email_place_holder">reply to email </string>
     <string name="chat_place_holder">reply to chat </string>
     <string name="sms_place_holder"> reply to sms</string>
@@ -203,6 +204,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="current_page">current_page</string>
     <string name="gcm_pref">gcm_pref</string>
+    <string name="empty_conversation_data_action">empty_conversation_data_action</string>
 
 
 </resources>

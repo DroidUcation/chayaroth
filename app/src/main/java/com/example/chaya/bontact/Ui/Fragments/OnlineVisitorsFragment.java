@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
@@ -33,7 +34,8 @@ public class OnlineVisitorsFragment extends Fragment {
     RecyclerView recyclerView;
     OnlineVisitorsAdapter adapter;
     BroadcastReceiver broadcastReceiver;
-
+    ImageView noVisitorsImg;
+    TextView noVisitorsTitle;
 
     @Override
     public void onResume() {
@@ -70,21 +72,35 @@ public class OnlineVisitorsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_online_visitors, container, false);
+        setNoVisitorsMessages();
         recyclerView = (RecyclerView) rootView.findViewById(R.id.online_visitors_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-      //  getActivity().setTitle(R.string.app_name);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             adapter = new OnlineVisitorsAdapter(getContext());
             recyclerView.setAdapter(adapter);
-
         }
-
         return rootView;
     }
 
+    public void setNoVisitorsMessages() {
+        if (rootView == null)
+            return;
+        if (noVisitorsImg == null)
+            noVisitorsImg = (ImageView) rootView.findViewById(R.id.no_visitors_img);
+        if (noVisitorsTitle == null)
+            noVisitorsTitle = (TextView) rootView.findViewById(R.id.no_visitors_title);
+
+        if (VisitorsDataManager.getCount() == 0) {
+            noVisitorsImg.setVisibility(View.VISIBLE);
+            noVisitorsTitle.setVisibility(View.VISIBLE);
+        } else {
+            noVisitorsImg.setVisibility(View.GONE);
+            noVisitorsTitle.setVisibility(View.GONE);
+        }
+    }
 
     public class VisitorsListChangesReciver extends BroadcastReceiver {
 
@@ -93,7 +109,7 @@ public class OnlineVisitorsFragment extends Fragment {
 
             int position = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_item_postion), -1);
             int action = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_action), -1);
-
+            setNoVisitorsMessages();
             if (position == -1 || action == -1)
                 return;
             if (action == VisitorsDataManager.ACTION_NEW_VISITOR) {

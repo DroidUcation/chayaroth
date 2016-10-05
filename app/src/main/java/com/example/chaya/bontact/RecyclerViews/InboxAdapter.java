@@ -81,8 +81,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             dateStringToConvert = DatesHelper.getDateToDisplayInbox(context, dateStringToConvert);
             holder.date.setText(dateStringToConvert);
         }
-        //if (cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1) {
-        // Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
         if (VisitorsDataManager.isOnline(idSurfer))
             holder.online.setVisibility(View.VISIBLE);
         else
@@ -91,13 +89,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         holder.unread.setText(String.valueOf(unread));
         if (unread > 0) {
             holder.unread.setVisibility(View.VISIBLE);
-            // holder.unread.setBackground(context.getDrawable(R.drawable.online_point));
             holder.displayName.setTypeface(null, Typeface.BOLD);
             holder.lastSentence.setTypeface(null, Typeface.BOLD);
             holder.date.setTypeface(null, Typeface.BOLD);
         } else {
-            // holder.unread.setBackground(null);
-            holder.unread.setVisibility(View.GONE);
+            holder.unread.setVisibility(View.INVISIBLE);
             holder.displayName.setTypeface(null, Typeface.NORMAL);
             holder.lastSentence.setTypeface(null, Typeface.NORMAL);
             holder.date.setTypeface(null, Typeface.NORMAL);
@@ -107,7 +103,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.assign.setImageBitmap(AvatarHelper.decodeAvatarBase64(img));
             holder.assign.setVisibility(View.VISIBLE);
         } else
-            holder.assign.setVisibility(View.GONE);
+            holder.assign.setVisibility(View.INVISIBLE);
     }
 
 

@@ -26,13 +26,10 @@ import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
  */
 public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAdapter.OnlineVisitorsHolder> {
 
-    //List<Visitor> visitorsList;
     Context context;
-
 
     public OnlineVisitorsAdapter(Context context) {
         this.context = context;
-        // visitorsList = VisitorsDataManager.visitorsList;
     }
 
 

@@ -1,13 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:id="@+id/inner_conversation_menu">
-        <item
-            android:id="@+id/un_assign"
-            android:title="unassign" />
+        <!--<item-->
+            <!--android:id="@+id/un_assign"-->
+            <!--android:title="unassign" />-->
 
-        <item
-            android:id="@+id/assign_to_me"
-            android:title="assign to me" />
+        <!--<item-->
+            <!--android:id="@+id/assign_to_me"-->
+            <!--android:title="assign to me" />-->
 
         <item
             android:id="@+id/phone_call_channel"

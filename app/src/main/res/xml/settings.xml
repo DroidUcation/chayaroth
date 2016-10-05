@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="settings_preferencescreen">
 
     <android.support.v7.preference.PreferenceCategory
@@ -12,15 +13,18 @@
             android:defaultValue="true"
             android:key="@string/new_message_push_key"
             android:summary="@string/new_message_description"
-            android:title="@string/push_notification" />
+            android:title="@string/push_notification"
+            app:theme="@style/SwitchTheme"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="@string/new_message_sound_key"
-            android:title="@string/push_notification_sound" />
+            android:title="@string/push_notification_sound"
+            app:theme="@style/SwitchTheme" />
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="@string/new_message_vibrate_key"
-            android:title="@string/push_notification_vibrate" />
+            android:title="@string/push_notification_vibrate"
+            app:theme="@style/SwitchTheme"/>
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory

@@ -80,7 +80,7 @@ public class GCMPushReceiverService extends GcmListenerService {
 
             newMsgNotificationsCount++;
             NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.bontact_launcher)
+                    .setSmallIcon(getNotificationIcon())
                     .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
                     .setContentText(message)
                     .setAutoCancel(true)
@@ -93,7 +93,7 @@ public class GCMPushReceiverService extends GcmListenerService {
             notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
         } else {
             NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.bontact_launcher)
+                    .setSmallIcon(getNotificationIcon())
                     .setContentTitle("new visitor on your website")
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
@@ -104,5 +104,9 @@ public class GCMPushReceiverService extends GcmListenerService {
             notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
         }
 
+    }
+    private int getNotificationIcon() {
+        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
+        return useWhiteIcon ?   R.mipmap.bontact_launcher:  R.mipmap.bontact_launcher;
     }
 }

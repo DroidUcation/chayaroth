@@ -234,6 +234,13 @@ public class ConversationDataManager {
             context.sendBroadcast(intent);
     }
 
+    public void notifyEmptyData() {
+        Intent intent = new Intent(context.getResources().getString(R.string.empty_conversation_data_action));
+        intent.setType("*/*");
+        if (context != null)
+            context.sendBroadcast(intent);
+    }
+
     public static int getAllUnreadConversations(Context context) {
         return unread_conversations;
     }
@@ -280,6 +287,9 @@ public class ConversationDataManager {
     public boolean saveData(JSONArray jsonConversationArray) {
         if (jsonConversationArray == null)
             return false;
+        if (jsonConversationArray.equals("[]") || jsonConversationArray.length() == 0) {
+            notifyEmptyData();
+        }
         Gson gson = new Gson();
         try {
             for (int i = 0; i < jsonConversationArray.length(); i++) {
@@ -294,17 +304,15 @@ public class ConversationDataManager {
             e.printStackTrace();
             return false;
         }
+
     }
 
     ServerCallResponse getAllDataCallback = new ServerCallResponse() {
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
             if (isSuccsed == true && response != null) {
-                // JSONObject resObj = null;
                 try {
-                    //resObj = new JSONObject(response);
                     JSONArray array = new JSONObject(response).getJSONObject("conversations").getJSONArray("data");
-                    //  Log.e("response conversation", resObj.toString());
                     saveData(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
