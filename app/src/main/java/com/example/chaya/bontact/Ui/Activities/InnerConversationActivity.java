@@ -396,16 +396,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             conversationDataManager.selectedIdConversation = id_surfer;
     }
 
-    /* public void setProgressBarState(int state) {
-         if (loading == null)
-             loading = (ProgressBar) findViewById(R.id.loading_inner_conversation);
-         // if(state== View.VISIBLE&&loading.getVisibility()== View.GONE)
-         loading.setVisibility(state);
-     }
- */
+
     @Override
     public void onBackPressed() {
-        //adapter.closeallmediaplayers()
         super.onBackPressed();
     }
 
@@ -434,26 +427,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
-
-    /*TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (charSequence.length() > 0) {
-                btn_send_mess.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
-            } else {
-                btn_send_mess.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray_light)));
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };*/
 
     public class onlineStateChangesReceiver extends BroadcastReceiver {
         @Override
@@ -545,9 +518,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
 
         private void retryCallGetConversationByIdFromServer() {
-            if (tryCount < 3) {
-                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
+            if (tryCount < 4) {
                 tryCount++;
+                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
+            }
+            else
+            {
 
             }
 

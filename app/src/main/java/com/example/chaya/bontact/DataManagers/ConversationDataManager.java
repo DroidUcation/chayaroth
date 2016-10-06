@@ -48,8 +48,16 @@ public class ConversationDataManager {
         if (context != null && conversationList.size() == 0) {
             fillConversationList(context);
             SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
-            current_page = preferences.getInt(context.getResources().getString(R.string.current_page), 0);
+            setCurrentPage(preferences.getInt(context.getResources().getString(R.string.current_page), 0)-1, context);
         }
+    }
+
+    public static void setCurrentPage(int value, Context context) {
+        current_page = value < 0 ? 0 : value;
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(context.getResources().getString(R.string.current_page), current_page);
+        editor.apply();
     }
 
     //--mange functions
@@ -254,21 +262,19 @@ public class ConversationDataManager {
 
     //--server functions
     public void getFirstDataFromServer(Context context, String token) {
-        current_page = 0;
         this.context = context;
-        getDataFromServer(context, token, current_page);
+        getDataFromServer(context, token, 0);
     }
 
     public void getNextDataFromServer(Context context, String token) {
-        current_page++;
         this.context = context;
+        setCurrentPage(current_page+1,context);
         getDataFromServer(context, token, current_page);
     }
 
     public void getDataFromServer(Context context, String token, int current_page) {
         if (token != null) {
             this.context = context;
-//api/contacts/conversations/:token/:page
             Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
                     .authority(context.getResources().getString(R.string.base_dev_api))

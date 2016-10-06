@@ -26,10 +26,14 @@ import org.json.JSONObject;
  */
 public class GCMPushReceiverService extends GcmListenerService {
     public static int NEW_MESSAGE = 0;
-    public static int newMsgNotificationsCount = 0;
-    public static int newMsgId = 0;
     public static int NEW_VISITOR = 1;
-    public static int newVisitorId = 1;
+    public static int newMsgNotificationsCount = 0;
+    public static int newMsgId = 1;
+    public static int newVisitorId = 0;
+    public static int UNIQUE_INT_PER_CALL = 0;
+    private Intent messagesIntent;
+    private Intent visitorsIntent;
+
     //public static int newVisitorNotificationsCount = 0;
     // public static int id = 0;
 
@@ -67,46 +71,65 @@ public class GCMPushReceiverService extends GcmListenerService {
     }
 
     private void sendNotification(String message, int id_surfer, int push_type) {
-        Intent intent = new Intent(this, SplashActivity.class);
-        Bundle b = new Bundle();
-        b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
-        b.putInt(getResources().getString(R.string.push_notification_type), push_type);
-        intent.putExtras(b);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        int requestCode = 0;
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (push_type == NEW_MESSAGE) {
-
-            newMsgNotificationsCount++;
-            NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(getNotificationIcon())
-                    .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
-                    .setContentText(message)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent);
-
-            if ( AgentDataManager.getNewMessagesNotificationSettings()!=null&&AgentDataManager.getNewMessagesNotificationSettings().vibrate)
-                noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            if (AgentDataManager.getNewMessagesNotificationSettings()!=null&&AgentDataManager.getNewMessagesNotificationSettings().sound)
-                noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-            notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
+            sendNewMsgNotification(id_surfer, message);
         } else {
-            NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(getNotificationIcon())
-                    .setContentTitle("new visitor on your website")
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent);
-            if (AgentDataManager.getNewVisitorsNotificationSettings()!=null&&AgentDataManager.getNewVisitorsNotificationSettings().vibrate)
-                noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            if (AgentDataManager.getNewVisitorsNotificationSettings()!=null&&AgentDataManager.getNewVisitorsNotificationSettings().sound)
-                noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-            notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
+            sendNewVisitorNotification(id_surfer);
         }
 
     }
+
+    private void sendNewVisitorNotification(int id_surfer) {
+        visitorsIntent = new Intent(this, SplashActivity.class);
+        Bundle b = new Bundle();
+        b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
+        b.putInt(getResources().getString(R.string.push_notification_type), NEW_VISITOR);
+        visitorsIntent.putExtras(b);
+        visitorsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        int requestCode = 0;
+        PendingIntent pendingIntentVisitors = PendingIntent.getActivity(this, UNIQUE_INT_PER_CALL++, visitorsIntent, PendingIntent.FLAG_ONE_SHOT);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(getNotificationIcon())
+                .setContentTitle("new visitor on your website")
+                .setContentText("new visitor on your website")
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntentVisitors);
+        if (AgentDataManager.getNewVisitorsNotificationSettings() != null && AgentDataManager.getNewVisitorsNotificationSettings().vibrate)
+            noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        if (AgentDataManager.getNewVisitorsNotificationSettings() != null && AgentDataManager.getNewVisitorsNotificationSettings().sound)
+            noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
+    }
+
+    private void sendNewMsgNotification(int id_surfer, String message) {
+        messagesIntent = new Intent(this, SplashActivity.class);
+        Bundle b = new Bundle();
+        b.putInt(Contract.InnerConversation.COLUMN_ID_SURFUR, id_surfer); //Your id
+        b.putInt(getResources().getString(R.string.push_notification_type), NEW_MESSAGE);
+        messagesIntent.putExtras(b);
+        messagesIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        int requestCode = 0;
+        PendingIntent pendingIntentMsgs = PendingIntent.getActivity(this, UNIQUE_INT_PER_CALL++, messagesIntent, PendingIntent.FLAG_ONE_SHOT);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        newMsgNotificationsCount++;
+        NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(getNotificationIcon())
+                .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntentMsgs);
+
+        if (AgentDataManager.getNewMessagesNotificationSettings() != null && AgentDataManager.getNewMessagesNotificationSettings().vibrate)
+            noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        if (AgentDataManager.getNewMessagesNotificationSettings() != null && AgentDataManager.getNewMessagesNotificationSettings().sound)
+            noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
+    }
+
     private int getNotificationIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ?   R.mipmap.bontact_launcher:  R.mipmap.bontact_launcher;
+        return useWhiteIcon ? R.mipmap.bontact_launcher : R.mipmap.bontact_launcher;
     }
 }

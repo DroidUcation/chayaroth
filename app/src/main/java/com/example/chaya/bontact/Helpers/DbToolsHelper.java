@@ -7,6 +7,7 @@ import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.Data.DbBontact;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.Conversation;
+import com.example.chaya.bontact.Models.InnerConversation;
 import com.example.chaya.bontact.Models.Representative;
 import com.google.android.exoplayer.C;
 import com.google.gson.Gson;
@@ -25,29 +26,25 @@ import java.util.List;
  */
 public class DbToolsHelper {
 
-    public static ContentValues convertObjectToContentValues(Object obj, ArrayList<String> tableFields) {
-        if (obj == null)
+    public static ContentValues convertInnerToContentValues(InnerConversation innerConversation) {
+        if (innerConversation == null)
             return null;
         ContentValues contentValues = new ContentValues();
-        for (Field field : obj.getClass().getDeclaredFields()) {
-            String key = field.getName();
-            if (tableFields.contains(key)) {
-                Object value = null;
-                try {
-                    value = field.get(obj);
-                    if (value instanceof Integer)
-                        contentValues.put(key, (Integer) value);
-                    else if (value instanceof String)
-                        contentValues.put(key, (String) value);
-                    else if (value instanceof Boolean)
-                        contentValues.put(key, (Boolean) value);
-              /*  else if(value==null)
-                    contentValues.put(key, (byte[]) null);*/
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        contentValues.put(Contract.InnerConversation.COLUMN_ID_SURFUR,innerConversation.idSurfer);
+        contentValues.put(Contract.InnerConversation.COLUMN_ID,innerConversation.id);
+        contentValues.put(Contract.InnerConversation.COLUMN_CONVERSATION_PAGE,innerConversation.conversationPage);
+        contentValues.put(Contract.InnerConversation.COLUMN_ACTION_TYPE,innerConversation.actionType);
+        contentValues.put(Contract.InnerConversation.COLUMN_TIME_REQUEST,innerConversation.timeRequest);
+        contentValues.put(Contract.InnerConversation.COLUMN_FROM,innerConversation.from_s);
+        contentValues.put(Contract.InnerConversation.COLUMN_MESS,innerConversation.mess);
+        contentValues.put(Contract.InnerConversation.COLUMN_REQ_ID,innerConversation.req_id);
+        contentValues.put(Contract.InnerConversation.COLUMN_REP_REQUEST,innerConversation.rep_request);
+        contentValues.put(Contract.InnerConversation.COLUMN_RECORD,innerConversation.record);
+        contentValues.put(Contract.InnerConversation.COLUMN_AGENT_NAME,innerConversation.agentName);
+        contentValues.put(Contract.InnerConversation.COLUMN_DATA_TYPE,innerConversation.datatype);
+        contentValues.put(Contract.InnerConversation.COLUMN_NAME,innerConversation.name);
+        contentValues.put(Contract.InnerConversation.COLUMN_SYSTEM_MSG,innerConversation.systemMsg );
+        contentValues.put(Contract.InnerConversation.COLUMN_RECORD_URL,innerConversation.recordUrl);
         return contentValues;
     }
 

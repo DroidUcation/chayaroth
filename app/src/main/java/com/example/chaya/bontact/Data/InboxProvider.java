@@ -41,7 +41,6 @@ public class InboxProvider extends ContentProvider {
         Cursor cursor = sqLiteQueryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
-
     }
 
     @Nullable

@@ -2,6 +2,7 @@ package com.example.chaya.bontact.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -150,6 +151,8 @@ public class DbBontact extends SQLiteOpenHelper {
   */
     public long update(String table, ContentValues values, String selection, String[] selectionArgs) {
         database = getWritableDatabase();
+        Cursor cursor = database.query(table, null, selection, selectionArgs, null, null, null);
+
         long res = database.update(table, values, selection, selectionArgs);
         return res;
     }

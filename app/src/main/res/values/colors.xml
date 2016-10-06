@@ -4,9 +4,12 @@
      <color name="colorPrimaryDark">@color/purple_dark</color>
      <color name="colorAccent">@color/orange_dark</color>
      <color name="colorRequierd">#ee1010</color>-->
-    <color name="colorPrimary">#f2a71c</color>
-    <color name="colorPrimaryDark">#f2a71c</color>
-    <color name="colorAccent">#462445</color>
+    <!--<color name="colorPrimary">#f2a71c</color>-->
+    <color name="colorPrimary">@color/purple</color>
+    <color name="colorPrimaryDark">@color/purple</color>
+    <color name="colorAccent">#f2a71c</color>
+    <!--<color name="colorPrimaryDark">#f2a71c</color>-->
+    <!--<color name="colorAccent">#462445</color>-->
     <color name="colorRequierd">#ee1010</color>
     <!--example chat-->
     <color name="actionbar">#3cb879</color>
@@ -25,8 +28,9 @@
 
 
     <!--************* new colors ******************* -->
-    <color name="purple_light">#b472b1</color>
+    <color name="purple_light">#80687f</color>
     <color name="purple_meduim">#7a4478</color>
+
     <color name="purple_dark">#241323</color>
     <color name="purple">#462445</color>
     <!--  <color name="orange_dark">#f2a71c</color>-->

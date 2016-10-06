@@ -180,11 +180,16 @@ public class InnerConversationAdapter extends RecyclerView.Adapter<RecyclerView.
         String msg = strMsg;
 
         //String date = DatesHelper.getDateToDisplayInnerConversation(timeRequest);
-        if (msg != null && date != null) {
-            msg = msg.concat("   " + date);
-            int index = msg.indexOf(date);
+        if (msg != null) {
+            int index = 0;
+            if (date != null) {
+                msg = msg.concat("   " + date);
+                index = msg.indexOf(date);
+            }
             span = new SpannableString(msg);
-            span.setSpan(new RelativeSizeSpan(0.7f), index, msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (index != 0)
+                span.setSpan(new RelativeSizeSpan(0.7f), index, msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
             return span;
         }
         return null;

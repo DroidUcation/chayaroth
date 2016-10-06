@@ -123,10 +123,8 @@ public class InnerConversationDataManager {
 
         if (innerConversation == null)
             return false;
-/*        if (innerConversation.id == 0)//inserted from send response agent
-            innerConversation.id = getIdAsPlaceHolder();*/
 
-        ContentValues contentValues = DbToolsHelper.convertObjectToContentValues(innerConversation, DbBontact.getAllInnerConversationFields());
+        ContentValues contentValues = DbToolsHelper.convertInnerToContentValues(innerConversation);
         if (current_conversation == null) {
             current_conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
         }
