@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
+import com.example.chaya.bontact.DataManagers.AgentListDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
@@ -61,6 +62,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     private onlineStateChangesReceiver onlineStateBroadcastReceiver;
     private InviteReceiver inviteReceiver;
     private CurrentConversationChangedReceiver conversationChangedReceiver;
+    private TypingReceiver typingReceiver;
     private boolean isNew;
     int id_surfer;
     android.view.Menu menu;
@@ -75,6 +77,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     Animation.AnimationListener animationListener;
     private boolean isConversationBusy;
     int tryRequestCount;
+    String assigned = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         Bundle args = getIntent().getExtras();
         if (args != null)
             id_surfer = args.getInt(Contract.InnerConversation.COLUMN_ID_SURFUR);
+
+        if (id_surfer == 0)
+            onBackPressed();
 
         initData();//open conversation and update current conversation
         drawHeader();
@@ -126,6 +132,16 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             setTitle(current_conversation.displayname);
         else
             setTitle("#" + id_surfer);
+        if (current_conversation != null) {
+            assigned = AgentListDataManager.getAgentName(current_conversation.assign);
+            if (assigned != null)
+                getSupportActionBar().setSubtitle(getString(R.string.assign_to) + " " + assigned);
+            else
+                getSupportActionBar().setSubtitle("");
+
+        }
+
+
     }
 
     private void initContent() {
@@ -145,11 +161,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_chat_response);
         chat_response_edittext = (EditText) findViewById(R.id.chat_response_edittext);
         btn_send_mess.setOnClickListener(this);
-        if (current_conversation != null)
-            if (!VisitorsDataManager.isOnline(id_surfer))
-                setEnableFooter(false);
-            else
-                setEnableFooter(true);
+//        if (current_conversation != null)
+        if (!VisitorsDataManager.isOnline(id_surfer))
+            setEnableFooter(false);
+        else
+            setEnableFooter(true);
     }
 
     ServerCallResponse callResponse = new ServerCallResponse() {
@@ -217,19 +233,18 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             no_msg_image.setVisibility(View.VISIBLE);
             no_msg_title.setVisibility(View.VISIBLE);
             no_msg_text.setVisibility(View.GONE);
-            invite_btn.setVisibility(View.VISIBLE);
-            invite_btn.setOnClickListener(inviteListener);
-            //  bottom_layout = (LinearLayout) findViewById(R.id.bottom_layout);
+            if (VisitorsDataManager.isOnline(id_surfer)) {
+                invite_btn.setVisibility(View.VISIBLE);
+                invite_btn.setOnClickListener(inviteListener);
+            }
             btn_send_mess.setVisibility(View.GONE);
             chat_response_edittext.setVisibility(View.GONE);
-            //bottom_layout.setVisibility(View.GONE);
         }
     }
 
     View.OnClickListener inviteListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //setProgressBarState(View.VISIBLE);
             load_animations(true);
             setEmptyDetails(false);
             SocketManager.getInstance().inviteToChat(id_surfer);
@@ -357,10 +372,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     public void sendChatResponse(String msg) {
         if (current_conversation != null) {
-            if (current_conversation.isOnline)
+            if (VisitorsDataManager.isOnline(id_surfer))
                 sendResponseHelper.sendChat(this, msg, current_conversation.idSurfer);
-            else
-                setEnableFooter(false);
+//            else
+//                setEnableFooter(false);
         }
 
     }
@@ -369,7 +384,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     public void onResume() {
         super.onResume();
         isConversationBusy = false;
-        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitor_online_state), "*/*");
+        IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
         onlineStateBroadcastReceiver = new onlineStateChangesReceiver();
         registerReceiver(onlineStateBroadcastReceiver, intentFilter);
         intentFilter = IntentFilter.create(getResources().getString(R.string.invite_complete_action), "*/*");
@@ -378,6 +393,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         intentFilter = IntentFilter.create(getResources().getString(R.string.change_conversation_list_action), "*/*");
         conversationChangedReceiver = new CurrentConversationChangedReceiver();
         registerReceiver(conversationChangedReceiver, intentFilter);
+        intentFilter = IntentFilter.create(getResources().getString(R.string.action_typing), "*/*");
+        typingReceiver = new TypingReceiver();
+        registerReceiver(typingReceiver, intentFilter);
         if (id_surfer != 0)
             conversationDataManager.selectedIdConversation = id_surfer;
 
@@ -389,13 +407,13 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         unregisterReceiver(onlineStateBroadcastReceiver);
         unregisterReceiver(inviteReceiver);
         unregisterReceiver(conversationChangedReceiver);
+        unregisterReceiver(typingReceiver);
         if (current_conversation != null) {
             conversationDataManager.updateUnread(current_conversation.idSurfer, 0);
         }
         if (id_surfer != 0)
-            conversationDataManager.selectedIdConversation = id_surfer;
+            conversationDataManager.selectedIdConversation = 0;
     }
-
 
     @Override
     public void onBackPressed() {
@@ -427,21 +445,15 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
     }
 
-
     public class onlineStateChangesReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            int state = intent.getIntExtra(getResources().getString(R.string.online_state), -1);
-            int changed_id_surfer = intent.getIntExtra(getResources().getString(R.string.id_surfer), -1);
+            int action = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_action), -1);
+            int changed_id_surfer = intent.getIntExtra(getResources().getString(R.string.notify_adapter_key_id_surfer), -1);
+
             if (id_surfer == changed_id_surfer) {
-               /* if (current_conversation != null) {
-                    if (state == 0)
-                        current_conversation.isOnline = false;
-                    else if (state == 1)
-                        current_conversation.isOnline = true;
-                }*/
-                if (state == 0)
+                if (action == VisitorsDataManager.ACTION_REMOVE_VISITOR)
                     setEnableFooter(false);
                 else
                     setEnableFooter(true);
@@ -467,6 +479,27 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             } else {
                 load_animations(false);
             }
+        }
+    }
+
+    public class TypingReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int idSurfer = intent.getIntExtra(getString(R.string.id_surfer), 0);
+            if (idSurfer == id_surfer) {
+                String name = intent.getStringExtra(getString(R.string.typing_name_key));
+                boolean state = intent.getBooleanExtra(getString(R.string.typing_state_key), false);
+                if (name != null && state)
+                    getSupportActionBar().setSubtitle(name + " is typing...");
+                else {
+                    if (assigned != null)
+                        getSupportActionBar().setSubtitle(getString(R.string.assign_to) + " " + assigned);
+                    else
+                        getSupportActionBar().setSubtitle("");
+                }
+            }
+
+
         }
     }
 
@@ -521,9 +554,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             if (tryCount < 4) {
                 tryCount++;
                 conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
-            }
-            else
-            {
+            } else {
 
             }
 

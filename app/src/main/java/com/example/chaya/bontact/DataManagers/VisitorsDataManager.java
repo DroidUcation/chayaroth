@@ -34,10 +34,6 @@ public class VisitorsDataManager {
         return visitorsList;
     }
 
-    public static void setAllVisitorsList(List<Visitor> visitorsList) {
-        initVisitorsList();
-        VisitorsDataManager.visitorsList = visitorsList;
-    }
 
     public static void initVisitorsList() {
         if (visitorsList == null)
@@ -49,7 +45,7 @@ public class VisitorsDataManager {
         Visitor visitor = getVisitorByIdSurfer(id_surfer);
         visitor.isNew = state;
         int position = getVisitorsList().indexOf(visitor);
-        notifyAdapter(context, ACTION_UPDATE_VISITOR, position);
+        notifyAdapter(context, ACTION_UPDATE_VISITOR, position,visitor.idSurfer);
     }
 
     public static Visitor getVisitorByIdSurfer(int id_surfer) {
@@ -71,7 +67,7 @@ public class VisitorsDataManager {
             newVisitor.timeConnect = DatesHelper.convertDateToCurrentGmt(newVisitor.timeConnect);
             getVisitorsList().add(newVisitor);
             int position = getVisitorsList().indexOf(newVisitor);
-            notifyAdapter(context, ACTION_NEW_VISITOR, position);
+            notifyAdapter(context, ACTION_NEW_VISITOR, position,newVisitor.idSurfer);
         }
     }
 
@@ -80,18 +76,18 @@ public class VisitorsDataManager {
         if (visitor != null) {
             int position = getVisitorsList().indexOf(visitor);
             getVisitorsList().remove(visitor);
-            notifyAdapter(context, ACTION_REMOVE_VISITOR, position);
+            notifyAdapter(context, ACTION_REMOVE_VISITOR, position,visitor.idSurfer);
         }
     }
 
-    private static void notifyAdapter(Context context, int action, int position) {
+    private static void notifyAdapter(Context context, int action, int position,int id_surfer) {
 
         //Toast.makeText(context, String.valueOf(action), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context.getResources().getString(R.string.change_visitors_list_action));
         intent.setType("*/*");
         intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_action), action);
         intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_item_postion), position);
-
+        intent.putExtra(context.getResources().getString(R.string.notify_adapter_key_id_surfer),id_surfer );
         if (context != null)
             context.sendBroadcast(intent);
         else if (contextStatic != null)

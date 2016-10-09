@@ -112,7 +112,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (loggedInAs != null)
             loggedInAs.append(" " + AgentDataManager.getAgentInstance().getName());
         String avatar = AgentDataManager.getAgentAvatarUrl();
-        if (avatar != null) {
+        if (AgentDataManager.getAgentInstance().getRep().default_avatar) {
+            agentPicture.setBackground(getResources().getDrawable(R.drawable.avatar_bg));
+            agentPicture.setImageResource(R.drawable.default_avatar);
+
+        } else if (avatar != null) {
             agentPicture.setImageBitmap(AvatarHelper.decodeAvatarBase64(avatar));
         }
     }

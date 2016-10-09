@@ -29,7 +29,8 @@
     <string name="sp_count_numbers">sp_count_numbers</string>
     <string name="count_unread_conversation">count_unread_conversation</string>
     <string name="notify_adapter_key_action">action</string>
-    <string name="notify_adapter_key_item_postion">id_surfer</string>
+    <string name="notify_adapter_key_item_postion">position</string>
+    <string name="notify_adapter_key_id_surfer">id_surfer</string>
 
     <!--text view messegaes -->
     <string name="welcome_name_msg">Hi</string>
@@ -151,6 +152,7 @@
     <string name="gcm_token">gcm_token</string>
     <string name="change_visitors_list_action">com.example.chaya.bontact.changeInVisitors</string>
     <string name="count_number_action">count_number_action</string>
+    <string name="action_typing">action_typing</string>
     <string name="change_visitor_online_state">change_visitor_online_state</string>
     <string name="online_state">online_state</string>
     <string name="id_surfer">id_surfer</string>
@@ -205,6 +207,9 @@
     <string name="current_page">current_page</string>
     <string name="gcm_pref">gcm_pref</string>
     <string name="empty_conversation_data_action">empty_conversation_data_action</string>
+    <string name="assign_to">assigned to</string>
+    <string name="typing_name_key">typing_name_key</string>
+    <string name="typing_state_key">typing_state_key</string>
 
 
 </resources>

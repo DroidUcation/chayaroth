@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,15 +42,14 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
 
     @Override
     public void onBindViewHolder(OnlineVisitorsHolder holder, int position) {
-        // if (visitorsList == null)
-        //   return;
         final Visitor current_visitor = VisitorsDataManager.getVisitorsList().get(position);
         if (current_visitor != null) {
+            Log.d("bind", current_visitor.isNew ? "true" : "false");
+
             if (current_visitor.timeConnect != null)
                 holder.connect_time.setText("since " + DatesHelper.getDateToDisplayInbox(context, current_visitor.timeConnect));
             holder.page_title.setText(current_visitor.title);
             AvatarHelper.setAvatar(context, current_visitor.avatar, current_visitor.displayName, holder.avatar);
-            //holder.avatar.setImageResource(AvatarHelper.getNextAvatar());
             holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
             holder.displayName.setText(current_visitor.displayName);
             holder.country_flag.setImageResource(context.getResources().getIdentifier("country_" + current_visitor.country.toLowerCase(), "drawable", context.getPackageName()));

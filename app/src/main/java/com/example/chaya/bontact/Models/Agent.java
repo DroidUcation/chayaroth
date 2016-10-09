@@ -50,6 +50,9 @@ public class Agent {
         @SerializedName("avatar")
         @Expose
         public String avatar;
+        @SerializedName("default_avatar")
+        @Expose
+        public boolean default_avatar;
 
         public String getName() {
             if (name == null)

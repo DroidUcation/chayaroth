@@ -102,16 +102,16 @@ public class InnerConversationDataManager {
                     e.printStackTrace();
                 }
                 innerConversation = gson.fromJson(strObj, InnerConversation.class);
-                innerConversation.timeRequest = DatesHelper.convertDateToCurrentGmt(innerConversation.timeRequest)
-                ;                //delete all place holder
+                innerConversation.timeRequest = DatesHelper.convertDateToCurrentGmt(innerConversation.timeRequest);                //delete all place holder
                 String selectionStr = Contract.InnerConversation.COLUMN_ID + "<0";
                 context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, null);
                 saveData(innerConversation);
+//                if(innerConversation.getMess())
             }
 
-            if (innerConversation != null && innerConversation.getMess() != null) {//check type
-                conversationDataManager.updateLastMessage(current_conversation.idSurfer, innerConversation.getMess());
-            }
+//            if (innerConversation != null && innerConversation.getMess() != null) {//check type
+//                conversationDataManager.updateLastMessage(current_conversation.idSurfer, innerConversation.getMess());
+//            }
             return true;
 
         } catch (JSONException e) {

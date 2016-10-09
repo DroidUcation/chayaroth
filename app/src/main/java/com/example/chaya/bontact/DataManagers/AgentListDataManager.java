@@ -144,5 +144,14 @@ public class AgentListDataManager {
         }
     }
 
+    public static String getAgentName(int idRep) {
+        if (representativeList == null)
+            return null;
+        for (Representative representative : representativeList)
+            if (representative.idRepresentive == idRep)
+                return representative.name;
+
+        return null;
+    }
 
 }

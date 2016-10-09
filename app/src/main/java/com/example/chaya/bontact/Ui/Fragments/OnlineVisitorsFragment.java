@@ -36,6 +36,7 @@ public class OnlineVisitorsFragment extends Fragment {
     BroadcastReceiver broadcastReceiver;
     ImageView noVisitorsImg;
     TextView noVisitorsTitle;
+    LinearLayoutManager linearLayoutManager;
 
     @Override
     public void onResume() {
@@ -72,9 +73,9 @@ public class OnlineVisitorsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_online_visitors, container, false);
-        setNoVisitorsMessages();
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.online_visitors_recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         if (recyclerView != null) {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -82,6 +83,7 @@ public class OnlineVisitorsFragment extends Fragment {
             adapter = new OnlineVisitorsAdapter(getContext());
             recyclerView.setAdapter(adapter);
         }
+        setNoVisitorsMessages();
         return rootView;
     }
 
@@ -93,12 +95,12 @@ public class OnlineVisitorsFragment extends Fragment {
         if (noVisitorsTitle == null)
             noVisitorsTitle = (TextView) rootView.findViewById(R.id.no_visitors_title);
 
-        if (VisitorsDataManager.getCount() == 0) {
-            noVisitorsImg.setVisibility(View.VISIBLE);
-            noVisitorsTitle.setVisibility(View.VISIBLE);
-        } else {
+        if (VisitorsDataManager.getCount() > 0 && linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > -1) {
             noVisitorsImg.setVisibility(View.GONE);
             noVisitorsTitle.setVisibility(View.GONE);
+        } else {
+            noVisitorsImg.setVisibility(View.VISIBLE);
+            noVisitorsTitle.setVisibility(View.VISIBLE);
         }
     }
 

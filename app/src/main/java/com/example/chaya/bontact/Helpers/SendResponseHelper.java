@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
+import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.NetworkCalls.OkHttpRequests;
@@ -115,7 +116,7 @@ public class SendResponseHelper {
             case ChannelsTypes.sms:
                 return conversation.phone == null ? false : true;
             case ChannelsTypes.chat:
-                return conversation.isOnline == false ? false : true;
+                return VisitorsDataManager.isOnline(conversation.idSurfer) == false ? false : true;
             case ChannelsTypes.email:
                 return conversation.email == null ? false : true;
         }

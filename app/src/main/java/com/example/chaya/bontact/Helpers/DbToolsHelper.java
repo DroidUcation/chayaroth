@@ -105,7 +105,7 @@ public class DbToolsHelper {
         conversation.lasttype = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         conversation.actionId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ACTION_ID));
         conversation.reply = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_REPLY)) == 1 ? true : false;
-      //  conversation.lastMessage = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE));
+        conversation.lastMessage = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE));
         conversation.page = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_PAGE));
         conversation.ip = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_IP));
         conversation.browser = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_BROWSER));
@@ -116,16 +116,7 @@ public class DbToolsHelper {
        // conversation.agent = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT));
         conversation.displayname = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME));
         conversation.assign=cursor.getInt(cursor.getColumnIndex(Contract.Agents.COLUMN_ID_REP));
-        // conversation.isOnline = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_IS_ONLINE)) == 1 ? true : false;
-        // conversation.agentSelectedId = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_AGENT_SELECTED_ID));
         return conversation;
-       /* JSONObject jsonObject = DbToolsHelper.convertCursorToJsonObject(new Conversation(), cursor);
-        if (jsonObject.length() > 0) {
-            Gson gson = new Gson();
-            Conversation conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
-            return conversation;
-        }
-        return null;*/
     }
 
     public static Representative convertCursorToRepresentative(Cursor cursor) {

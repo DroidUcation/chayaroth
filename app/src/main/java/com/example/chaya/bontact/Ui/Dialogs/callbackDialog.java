@@ -82,7 +82,7 @@ public class callbackDialog {
                 num = num.replace("+", "");
                 sendResponseHelper.sendCallBack(context, id_surfer, num);
                 alert.dismiss();
-                Toast.makeText(context, R.string.dialingMsg, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.dialingMsg,Toast.LENGTH_LONG).show();
             } else {
                 textInputLayout.setError(context.getResources().getString(R.string.invalid_callback_phone_number));
             }

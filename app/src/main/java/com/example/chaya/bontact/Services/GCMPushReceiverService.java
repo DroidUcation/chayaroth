@@ -88,7 +88,7 @@ public class GCMPushReceiverService extends GcmListenerService {
         visitorsIntent.putExtras(b);
         visitorsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         int requestCode = 0;
-        PendingIntent pendingIntentVisitors = PendingIntent.getActivity(this, UNIQUE_INT_PER_CALL++, visitorsIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntentVisitors = PendingIntent.getActivity(this, UNIQUE_INT_PER_CALL++, visitorsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(getNotificationIcon())
@@ -111,7 +111,7 @@ public class GCMPushReceiverService extends GcmListenerService {
         messagesIntent.putExtras(b);
         messagesIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         int requestCode = 0;
-        PendingIntent pendingIntentMsgs = PendingIntent.getActivity(this, UNIQUE_INT_PER_CALL++, messagesIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntentMsgs = PendingIntent.getActivity(this, UNIQUE_INT_PER_CALL++, messagesIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         newMsgNotificationsCount++;
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)

@@ -60,7 +60,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
         int unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
-        int assign = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ASSIGN));
+//        int assign = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ASSIGN));
 
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
         AvatarHelper.setAvatar(context, cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
@@ -98,12 +98,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.lastSentence.setTypeface(null, Typeface.NORMAL);
             holder.date.setTypeface(null, Typeface.NORMAL);
         }
-        String img = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_IMG));
-        if (img != null) {
-            holder.assign.setImageBitmap(AvatarHelper.decodeAvatarBase64(img));
-            holder.assign.setVisibility(View.VISIBLE);
-        } else
-            holder.assign.setVisibility(View.INVISIBLE);
+//        String img = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_IMG));
+//        if (img != null) {
+//            holder.assign.setImageBitmap(AvatarHelper.decodeAvatarBase64(img));
+//            holder.assign.setVisibility(View.VISIBLE);
+//        } else
+//            holder.assign.setVisibility(View.INVISIBLE);
     }
 
 
@@ -131,9 +131,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
 
     class InboxHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView avatar, online, assign;
+        ImageView avatar, online;
         TextView displayName, lastSentence, date, unread, takenBy;
-        TextView chanelIcon, locked;
+        TextView chanelIcon;
 
 
         public InboxHolder(View itemView) {
@@ -149,7 +149,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             Typeface font = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
             chanelIcon.setTypeface(font);
             online = (ImageView) itemView.findViewById(R.id.online_point);
-            assign = (ImageView) itemView.findViewById(R.id.assign);
+//            assign = (ImageView) itemView.findViewById(R.id.assign);
             itemView.setOnClickListener(this);
         }
 

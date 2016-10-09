@@ -10,7 +10,6 @@ import com.example.chaya.bontact.DataManagers.ConversationDataManager;
 import com.example.chaya.bontact.DataManagers.InnerConversationDataManager;
 import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
-import com.example.chaya.bontact.Helpers.DateTimeHelper;
 import com.example.chaya.bontact.Helpers.DatesHelper;
 import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.Models.Conversation;
@@ -71,7 +70,8 @@ public class SocketManager {
                     .on("selectConversation", selectConversationListener)
                     .on("unselectConversation", unSelectConversationListener)
                     .on("unselectConversationRep", unSelectConversationRepListener)
-                    .on("refreshSelectConversation", refreshSelectListener);
+                    .on("refreshSelectConversation", refreshSelectListener)
+                    .on("typing", typingListener);
             socket.connect();
         } catch (URISyntaxException e) {
             int x = 0;
@@ -442,6 +442,39 @@ public class SocketManager {
                 ConversationDataManager conversationDataManager = new ConversationDataManager(context);
                 emitSelectConversationState(conversationDataManager.getConversationByIdSurfer(id), true);
             }
+        }
+    };
+    public Emitter.Listener typingListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONObject data = (JSONObject) args[0];
+            String name = null;
+            int id_surfer = 0;
+            boolean state;
+            boolean isVisitor;
+
+            JSONObject jsonObject = data.optJSONObject("agent");
+            isVisitor = data.optBoolean("isVisitor");
+            if (jsonObject != null && !isVisitor)
+                name = jsonObject.optString("name");
+
+            JSONObject surfer = data.optJSONObject("surfer");
+            if (surfer != null) {
+                id_surfer = surfer.optInt("idSurfer");
+            }
+            state = data.optBoolean("mode");
+            if (name == null && isVisitor)
+                name = "visitor";
+            if (id_surfer != 0 && context != null && (name != null || !state)) {
+                Intent intent = new Intent(context.getResources().getString(R.string.action_typing));
+                intent.setType("*/*");
+                intent.putExtra(context.getString(R.string.typing_name_key), name);
+                intent.putExtra(context.getString(R.string.id_surfer), id_surfer);
+                intent.putExtra(context.getString(R.string.typing_state_key), state);
+                context.sendBroadcast(intent);
+            }
+
+            Log.d("typing", "klkl");
         }
     };
 }
