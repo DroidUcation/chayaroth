@@ -466,15 +466,17 @@ public class SocketManager {
             if (name == null && isVisitor)
                 name = "visitor";
             if (id_surfer != 0 && context != null && (name != null || !state)) {
-                Intent intent = new Intent(context.getResources().getString(R.string.action_typing));
-                intent.setType("*/*");
-                intent.putExtra(context.getString(R.string.typing_name_key), name);
-                intent.putExtra(context.getString(R.string.id_surfer), id_surfer);
-                intent.putExtra(context.getString(R.string.typing_state_key), state);
-                context.sendBroadcast(intent);
+                ConversationDataManager conversationDataManager=new ConversationDataManager(context);
+                conversationDataManager.updateTyping(id_surfer,state,name);
+
+//                Intent intent = new Intent(context.getResources().getString(R.string.action_typing));
+//                intent.setType("*/*");
+//                intent.putExtra(context.getString(R.string.typing_name_key), name);
+//                intent.putExtra(context.getString(R.string.id_surfer), id_surfer);
+//                intent.putExtra(context.getString(R.string.typing_state_key), state);
+//                context.sendBroadcast(intent);
             }
 
-            Log.d("typing", "klkl");
         }
     };
 }

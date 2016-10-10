@@ -49,10 +49,6 @@ public class AgentDataManager {
         return null;
     }
 
-    private static void setNewAgent() {
-        agent = new Agent();
-    }
-
     public AgentDataManager() {
         agent = getAgentInstance();
 //        SharedPreferences agentPref = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
@@ -118,6 +114,7 @@ public class AgentDataManager {
         Intercom.client().registerIdentifiedUser(Registration.create()
                 .withEmail(username));
     }
+
     public static void unregisterToIntercom() {
         Intercom.client().reset();
     }
@@ -139,7 +136,7 @@ public class AgentDataManager {
 
     public static Agent.Settings.Notification getNewMessagesNotificationSettings() {
         if (agent != null)
-            return agent.settings.newMessagesNotifications;
+            return agent.getSettings().newMessagesNotifications;
         return null;
     }
 
@@ -157,12 +154,13 @@ public class AgentDataManager {
     }
 
     public static boolean isLoggedIn(Context context) {
+        agent = getAgentInstance();
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
         String token = Preferences.getString(context.getResources().getString(R.string.token), null);
         if (token != null)//user is logged in
         {
             //set the agent object
-            if (agent.getToken() == null) {
+            if (agent == null || agent.getToken() == null) {
                 Gson gson = new Gson();
                 agent.token = token;
                 agent.rep = gson.fromJson(Preferences.getString(context.getResources().getString(R.string.agent), null), Agent.Rep.class);
@@ -173,7 +171,7 @@ public class AgentDataManager {
         return false;
     }
 
-    public static boolean logOut(Context context, SharedPreferences settingsPref) {
+    public static boolean logOut(Context context) {
         //clear agent details
         SharedPreferences.Editor editor;
         SharedPreferences Preferences = context.getSharedPreferences(context.getResources().getString(R.string.gcm_pref), context.MODE_PRIVATE);
@@ -191,8 +189,6 @@ public class AgentDataManager {
                 OkHttpRequests requests = new OkHttpRequests(url, new ServerCallResponse() {
                     @Override
                     public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
-                        //Log.d("unregister", isSuccsed ? "true" : "false");
-                        //  Log.d("unregister", response);
                     }
                 });
                 editor = Preferences.edit();
@@ -205,11 +201,11 @@ public class AgentDataManager {
         editor = Preferences.edit();
         editor.clear().commit();
         editor.apply();
-        if (settingsPref != null) {
-            editor = settingsPref.edit();
-            editor.clear().commit();
-            editor.apply();
-        }
+//        if (settingsPref != null) {
+//            editor = settingsPref.edit();
+//            editor.clear().commit();
+//            editor.apply();
+//        }
 
         //claer db
         context.getContentResolver().delete(Contract.Conversation.INBOX_URI, null, null);

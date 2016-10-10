@@ -58,7 +58,8 @@
     <string name="dialingMsg">Please wait while we connect you, our system will be calling you shortly</string>
     <string name="no_visitors_title">There aren\'t online visitors in your site.</string>
     <string name="no_conversations_title">No messages yet</string>
-
+<string name="saving">saving...</string>
+    <string name="saved">saved</string>
 
     <!--place holders-->
     <string name="email_place_holder">reply to email </string>

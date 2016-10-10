@@ -48,7 +48,7 @@ public class ConversationDataManager {
         if (context != null && conversationList.size() == 0) {
             fillConversationList(context);
             SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.sp_user_details), context.MODE_PRIVATE);
-            setCurrentPage(preferences.getInt(context.getResources().getString(R.string.current_page), 0)-1, context);
+            setCurrentPage(preferences.getInt(context.getResources().getString(R.string.current_page), 0) - 1, context);
         }
     }
 
@@ -169,8 +169,23 @@ public class ConversationDataManager {
             //  }
         }
         return false;
+    }
 
-
+    public boolean updateTyping(int idSurfer, boolean state, String name) {
+        Conversation conversation = getConversationByIdSurfer(idSurfer);
+        if (conversation != null) {
+            Log.d("change type", state ? "true" : "false");
+            conversation.typingName = state ? name : null;
+            Intent intent = new Intent(context.getResources().getString(R.string.action_typing));
+            intent.setType("*/*");
+            intent.putExtra(context.getString(R.string.typing_name_key), name);
+            intent.putExtra(context.getString(R.string.id_surfer), idSurfer);
+            intent.putExtra(context.getString(R.string.typing_state_key), state);
+            if (context != null)
+                context.sendBroadcast(intent);
+            return true;
+        }
+        return false;
     }
 
     public boolean updateUnread(int idSurfer, int newUnreadCount) {
@@ -268,7 +283,7 @@ public class ConversationDataManager {
 
     public void getNextDataFromServer(Context context, String token) {
         this.context = context;
-        setCurrentPage(current_page+1,context);
+        setCurrentPage(current_page + 1, context);
         getDataFromServer(context, token, current_page);
     }
 

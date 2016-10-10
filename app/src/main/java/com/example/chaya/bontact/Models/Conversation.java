@@ -79,9 +79,8 @@ public class Conversation {
     @SerializedName("currentChannel")
     @Expose
     private int currentChannel;
-    @SerializedName("isOnline")
-    @Expose
     public boolean isOnline;
+    public String typingName;
     @SerializedName("data")
     @Expose
     public List<InnerConversation> innerConversationData;

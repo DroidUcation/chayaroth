@@ -68,7 +68,7 @@ public class DashboardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RootView = null;
-        unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext());
+        unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext()) < 0 ? 0 : ConversationDataManager.getAllUnreadConversations(getContext());
 
     }
 
@@ -112,7 +112,7 @@ public class DashboardFragment extends Fragment {
     public class NewRequestsCountReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext());
+            unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext()) < 0 ? 0 : ConversationDataManager.getAllUnreadConversations(getContext());
             new_requests_count.setText(String.valueOf(unread_conversation));
         }
     }

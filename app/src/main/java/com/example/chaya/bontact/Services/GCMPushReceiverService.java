@@ -14,6 +14,7 @@ import android.util.Log;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.ConversationDataManager;
+import com.example.chaya.bontact.Models.Agent;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.Ui.Activities.SplashActivity;
 import com.google.android.gms.gcm.GcmListenerService;
@@ -95,12 +96,16 @@ public class GCMPushReceiverService extends GcmListenerService {
                 .setContentTitle("new visitor on your website")
                 .setContentText("new visitor on your website")
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntentVisitors);
-        if (AgentDataManager.getNewVisitorsNotificationSettings() != null && AgentDataManager.getNewVisitorsNotificationSettings().vibrate)
-            noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-        if (AgentDataManager.getNewVisitorsNotificationSettings() != null && AgentDataManager.getNewVisitorsNotificationSettings().sound)
+                .setContentIntent(pendingIntentVisitors)
+                .setColor(getResources().getColor(R.color.purple));
+        AgentDataManager.isLoggedIn(this);
+        Agent.Settings.Notification newVisitor = AgentDataManager.getAgentInstance().getSettings().newVisitorsNotifications;
+        if (newVisitor.vibrate)
+            noBuilder.setVibrate(new long[]{1000, 1000, 1000, 0, 0});
+        if (newVisitor.sound)
             noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
+        if (newVisitor.isEnabled)
+            notificationManager.notify(newVisitorId, noBuilder.build()); //1 = ID of notification
     }
 
     private void sendNewMsgNotification(int id_surfer, String message) {
@@ -119,17 +124,21 @@ public class GCMPushReceiverService extends GcmListenerService {
                 .setContentTitle("you have " + newMsgNotificationsCount + " new messages")
                 .setContentText(message)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntentMsgs);
+                .setContentIntent(pendingIntentMsgs)
+                .setColor(getResources().getColor(R.color.purple));
 
-        if (AgentDataManager.getNewMessagesNotificationSettings() != null && AgentDataManager.getNewMessagesNotificationSettings().vibrate)
-            noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-        if (AgentDataManager.getNewMessagesNotificationSettings() != null && AgentDataManager.getNewMessagesNotificationSettings().sound)
+        AgentDataManager.isLoggedIn(this);
+        Agent.Settings.Notification newMessages = AgentDataManager.getAgentInstance().getSettings().newMessagesNotifications;
+        if (newMessages.vibrate)
+            noBuilder.setVibrate(new long[]{1000, 1000, 1000, 0, 0});
+        if (newMessages.sound)
             noBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
+        if (newMessages.isEnabled)
+            notificationManager.notify(newMsgId, noBuilder.build()); //0 = ID of notification
     }
 
     private int getNotificationIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ? R.mipmap.bontact_launcher : R.mipmap.bontact_launcher;
+        return useWhiteIcon ? R.drawable.logooo : R.mipmap.bontact_launcher;
     }
 }

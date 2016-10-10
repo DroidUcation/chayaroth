@@ -1,5 +1,6 @@
 package com.example.chaya.bontact.Ui.Fragments;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import com.example.chaya.bontact.DataManagers.VisitorsDataManager;
 import com.example.chaya.bontact.R;
 import com.example.chaya.bontact.RecyclerViews.DividerItemDecoration;
 import com.example.chaya.bontact.RecyclerViews.OnlineVisitorsAdapter;
+import com.example.chaya.bontact.Services.GCMPushReceiverService;
 
 public class OnlineVisitorsFragment extends Fragment {
 
@@ -44,6 +46,8 @@ public class OnlineVisitorsFragment extends Fragment {
         IntentFilter intentFilter = IntentFilter.create(getResources().getString(R.string.change_visitors_list_action), "*/*");
         broadcastReceiver = new VisitorsListChangesReciver();
         getContext().registerReceiver(broadcastReceiver, intentFilter);
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(GCMPushReceiverService.newVisitorId);
     }
 
     @Override
@@ -95,7 +99,7 @@ public class OnlineVisitorsFragment extends Fragment {
         if (noVisitorsTitle == null)
             noVisitorsTitle = (TextView) rootView.findViewById(R.id.no_visitors_title);
 
-        if (VisitorsDataManager.getCount() > 0 && linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > -1) {
+        if (VisitorsDataManager.visitorsList.size() > 0 || (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > -1)) {
             noVisitorsImg.setVisibility(View.GONE);
             noVisitorsTitle.setVisibility(View.GONE);
         } else {

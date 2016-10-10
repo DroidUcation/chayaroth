@@ -46,7 +46,7 @@ public class InitData {
             AgentListDataManager.getAllAgents(context);
         }
 
-        exportDB();
+//        exportDB();
 
     }
 

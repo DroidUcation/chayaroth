@@ -127,7 +127,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
         if (current_conversation != null && current_conversation.displayname != null)
             setTitle(current_conversation.displayname);
         else
@@ -276,9 +275,9 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor != null && cursor.moveToFirst() && cursor.getCount() > 0) {
+
             adapter.swapCursor(cursor);
             recyclerView.smoothScrollToPosition(cursor.getCount());
-            //setProgressBarState(View.GONE);
             load_animations(false);
             recyclerView.setVisibility(View.VISIBLE);
             isNew = false;
@@ -288,8 +287,11 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             {
                 current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
             }
+            if(no_msg_title!=null&&no_msg_title.getVisibility()==View.VISIBLE) {
+                setEmptyDetails(false);
+                setEnableFooter(VisitorsDataManager.isOnline(id_surfer));
+            }
         } else {
-            //setProgressBarState(View.VISIBLE);
             load_animations(true);
         }
     }
@@ -540,7 +542,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     @Override
                     public void run() {
                         isNew = false;
-                        drawHeader();
+//                        drawHeader();
                         load_animations(false);
                         setEnableFooter(true);
                     }

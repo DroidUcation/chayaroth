@@ -48,6 +48,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     ViewGroup container;
     ConversationDataManager conversationDataManager;
     OnlineStatesChangesReceiver onlineStatesChangesReceiver;
+    TypingReceiver typingReceiver;
     EmptyDataReceiver emptyDataReceiver;
     private FloatingActionButton inbox_fab;
     ImageView noConversationsImg;
@@ -78,6 +79,10 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         intentFilter = IntentFilter.create(getResources().getString(R.string.empty_conversation_data_action), "*/*");
         emptyDataReceiver = new EmptyDataReceiver();
         getContext().registerReceiver(emptyDataReceiver, intentFilter);
+        intentFilter = IntentFilter.create(getResources().getString(R.string.action_typing), "*/*");
+        typingReceiver = new TypingReceiver();
+        getContext().registerReceiver(typingReceiver, intentFilter);
+
     }
 
     @Override
@@ -85,6 +90,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onPause();
         getContext().unregisterReceiver(onlineStatesChangesReceiver);
         getContext().unregisterReceiver(emptyDataReceiver);
+        getContext().unregisterReceiver(typingReceiver);
     }
 
     public void setProgressBarCenterState(int state) {
@@ -256,6 +262,13 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
                 refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.inbox_swipe_refresh);
             refreshLayout.setRefreshing(false);
             setNoConversationsMessages();
+        }
+    }
+
+    public class TypingReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            adapter.notifyDataSetChanged();
         }
     }
 

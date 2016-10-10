@@ -26,6 +26,7 @@ import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.ChannelsTypes;
 import com.example.chaya.bontact.Helpers.CircleTransform;
 import com.example.chaya.bontact.Helpers.DatesHelper;
+import com.example.chaya.bontact.Models.Conversation;
 import com.example.chaya.bontact.R;
 
 import com.example.chaya.bontact.Ui.Activities.InnerConversationActivity;
@@ -55,27 +56,35 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     @Override
     public void onBindViewHolder(InboxHolder holder, int position) {
 
-        if (cursor==null||!cursor.moveToPosition(position))
+        if (cursor == null || !cursor.moveToPosition(position))
             return;
         int lastType = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE));
         int idSurfer = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ID_SURFER));
         int unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
-//        int assign = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_ASSIGN));
 
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
         AvatarHelper.setAvatar(context, cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
                 cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
                 , holder.avatar);
-        //holder.avatar.setImageResource(Integer.parseInt(conversation.avatar));
         int icon = ChannelsTypes.getIconByChanelType(lastType);
         if (icon != 0)
             holder.chanelIcon.setText(icon);
-        if (cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)) == null)
-            holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
-        else if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
-            holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
-        else
-            holder.lastSentence.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE)));
+        Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
+        if (conversation != null && conversation.typingName != null) {
+            holder.lastSentence.setText(conversation.typingName + " is typing... ");
+            holder.lastSentence.setTextColor(context.getResources().getColor(R.color.green));;
+            holder.lastSentence.setTypeface(null, Typeface.BOLD);
+
+        } else {
+            String lastMsg = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE));
+            if (lastMsg == null)
+                holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_TYPE))));
+            else if (lastType == ChannelsTypes.webCall || lastType == ChannelsTypes.callback)
+                holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
+            else
+                holder.lastSentence.setText(lastMsg);
+        }
+
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));
         if (dateStringToConvert != null && context != null) {
             dateStringToConvert = DatesHelper.getDateToDisplayInbox(context, dateStringToConvert);
@@ -98,12 +107,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.lastSentence.setTypeface(null, Typeface.NORMAL);
             holder.date.setTypeface(null, Typeface.NORMAL);
         }
-//        String img = cursor.getString(cursor.getColumnIndex(Contract.Agents.COLUMN_IMG));
-//        if (img != null) {
-//            holder.assign.setImageBitmap(AvatarHelper.decodeAvatarBase64(img));
-//            holder.assign.setVisibility(View.VISIBLE);
-//        } else
-//            holder.assign.setVisibility(View.INVISIBLE);
     }
 
 
