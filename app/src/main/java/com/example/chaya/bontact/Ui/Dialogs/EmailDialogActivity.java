@@ -15,7 +15,7 @@ import com.example.chaya.bontact.R;
 public class EmailDialogActivity extends AppCompatActivity {
     EditText addressee_edit_text;
    /* EditText from_edit_text;*/
-    EditText subject_edit_text;
+//    EditText subject_edit_text;
     EditText content_edit_text;
     int id_surfer;
     String email_address;
@@ -40,7 +40,7 @@ public class EmailDialogActivity extends AppCompatActivity {
 
         addressee_edit_text = (EditText) findViewById(R.id.edit_text_addressee);
        /* from_edit_text = (EditText) findViewById(R.id.edit_text_from);*/
-        subject_edit_text = (EditText) findViewById(R.id.edit_text_subject);
+//        subject_edit_text = (EditText) findViewById(R.id.edit_text_subject);
         content_edit_text = (EditText) findViewById(R.id.edit_text_content);
         if (email_address != null)
             addressee_edit_text.setText(email_address);
@@ -78,8 +78,8 @@ public class EmailDialogActivity extends AppCompatActivity {
 
     public void sendEmail() {
         String content=content_edit_text.getText().toString().trim();
-        String subject=subject_edit_text.getText().toString().trim();
-        if(content.length()>0&&subject.length()>0) {
+//        String subject=subject_edit_text.getText().toString().trim();
+        if(content.length()>0) {
             onBackPressed();
             //BACKGROUND
             SendResponseHelper sendResponseHelper = new SendResponseHelper();

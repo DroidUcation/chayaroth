@@ -3,6 +3,7 @@ package com.example.chaya.bontact.Socket.io;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.os.Handler;
 
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
@@ -37,10 +38,12 @@ public class SocketManager {
     public static Socket socket = null;
     public static Context context;
     private Gson gson = null;
+    private Handler handler;
 
     public static SocketManager getInstance() {
         if (socketManager == null)
             socketManager = new SocketManager();
+
         return socketManager;
     }
 
@@ -54,8 +57,10 @@ public class SocketManager {
     public void initSocketManager(Context context) {
         this.context = context;
         gson = new Gson();
-        if (socket == null)
+        if (socket == null) {
             connectSocket();
+            handler = new Handler();
+        }
     }
 
     public void connectSocket() {
@@ -64,7 +69,8 @@ public class SocketManager {
             socket.on(Socket.EVENT_CONNECT, connectListener)
                     .on(Socket.EVENT_DISCONNECT, disconnectListener)
                     .on(Socket.EVENT_RECONNECT, reconnectListener)
-                    .on("pushmessage", pushMessListener)
+                    .on("pushmessage", visitorPushMessListener)
+                    .on("pushmessageagent", agentPushMessListener)
                     .on("surferUpdate", surferUpdatedListener)
                     .on("surferLeaved", surferLeavedListener)
                     .on("selectConversation", selectConversationListener)
@@ -226,39 +232,51 @@ public class SocketManager {
             }
         }
     };
-    Emitter.Listener pushMessListener = new Emitter.Listener() {
+    Emitter.Listener visitorPushMessListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             JSONObject data = (JSONObject) args[0];
-            int id_surfer = 0;
-            try {
-                id_surfer = data.getInt(Contract.Conversation.COLUMN_ID_SURFER);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-            final Conversation current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
+            onPushMessages(data, false);
+        }
+    };
+    Emitter.Listener agentPushMessListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONObject data = (JSONObject) args[0];
+            onPushMessages(data, true);
+        }
+    };
 
-            if (current_conversation != null) {
-                InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
-                final InnerConversation innerConversation = buildObjectFromJsonData(data, conversationDataManager);
-                if (innerConversationDataManager.saveData(innerConversation) == true) {
-                    updateConversationDetails(conversationDataManager, id_surfer, innerConversation);
-                }
-            } else {
-                if (AgentDataManager.getAgentInstance() != null) {
-                    conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstance().getToken());
-                    //todo: use new api
-                }
+    public void onPushMessages(JSONObject data, boolean isAgent) {
+        int id_surfer = 0;
+        try {
+            id_surfer = data.getInt(Contract.Conversation.COLUMN_ID_SURFER);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+        final Conversation current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
+
+        if (current_conversation != null) {
+            InnerConversationDataManager innerConversationDataManager = new InnerConversationDataManager(context, current_conversation);
+            final InnerConversation innerConversation = buildObjectFromJsonData(data, conversationDataManager, isAgent);
+            if (innerConversationDataManager.saveData(innerConversation) == true) {
+                updateConversationDetails(conversationDataManager, id_surfer, innerConversation, isAgent);
             }
+        } else {
+            if (AgentDataManager.getAgentInstance() != null) {
+                conversationDataManager.getFirstDataFromServer(context, AgentDataManager.getAgentInstance().getToken());
+                //todo: use new api
+            }
+        }
 
           /*  if (id_surfer != ConversationDataManager.selectedIdConversation && current_conversation != null && current_conversation.unread == 0)
             {
                 int current_unread_conversation_count = ConversationDataManager.getAllUnreadConversations(context);
                 ConversationDataManager.setAllUnreadConversations(context, current_unread_conversation_count + 1);
             }*/
-        }
-    };
+    }
+
     Ack sendChatEmitCallBack = new Ack() {
         @Override
         public void call(Object... args) {
@@ -267,7 +285,7 @@ public class SocketManager {
         }
     };
 
-    private InnerConversation buildObjectFromJsonData(JSONObject data, ConversationDataManager conversationDataManager) {
+    private InnerConversation buildObjectFromJsonData(JSONObject data, ConversationDataManager conversationDataManager, boolean isAgent) {
         InnerConversation innerConversation = new InnerConversation();
         try {
             innerConversation.id = InnerConversationDataManager.getIdAsPlaceHolder();
@@ -275,14 +293,22 @@ public class SocketManager {
             int type = ChannelsTypes.convertStringChannelToInt(data.optString("type", null));
             innerConversation.actionType = type;
             innerConversation.mess = data.optString("message", ChannelsTypes.getDeafultMsgByChanelType(context, type));
-            innerConversation.rep_request = false;
-            if (AgentDataManager.getAgentInstance() != null)
-                innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
+            innerConversation.rep_request = isAgent;
+            Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
+            if (!isAgent) {
+                if (AgentDataManager.getAgentInstance() != null) {
+                    innerConversation.agentName = AgentDataManager.getAgentInstance().getName();
+                    innerConversation.name = conversation.getVisitor_name();
+                }
+            } else {
+                innerConversation.name = data.getString("name");
+                innerConversation.agentName = innerConversation.name;
+            }
             innerConversation.timeRequest = DatesHelper.getCurrentStringDate();
             innerConversation.datatype = data.optInt("datatype", 1);
             innerConversation.from_s = data.optString("from_s", "visitor");
-            Conversation conversation = conversationDataManager.getConversationByIdSurfer(innerConversation.idSurfer);
-            innerConversation.name = conversation.getVisitor_name();
+
+
             //TODO:update in conversation new data and last type etc.
 
             return innerConversation;
@@ -292,7 +318,7 @@ public class SocketManager {
         return null;
     }
 
-    private void updateConversationDetails(ConversationDataManager conversationDataManager, int id_surfer, InnerConversation innerConversation) {
+    private void updateConversationDetails(ConversationDataManager conversationDataManager, int id_surfer, InnerConversation innerConversation, boolean isAgent) {
         if (conversationDataManager == null)
             return;
         Conversation conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
@@ -302,16 +328,18 @@ public class SocketManager {
         conversationDataManager.updateLastDate(id_surfer, innerConversation.timeRequest);
         if (innerConversation.mess != null && (innerConversation.actionType != ChannelsTypes.callback || innerConversation.actionType != ChannelsTypes.webCall))
             conversationDataManager.updateLastMessage(id_surfer, innerConversation.mess);
-        if (innerConversation.actionType == ChannelsTypes.sms && (conversation.phone == null || !conversation.phone.equals(innerConversation.from_s)))
-            conversationDataManager.updatePhoneNumber(id_surfer, innerConversation.from_s);//set phone
-        if (innerConversation.actionType == ChannelsTypes.email && (conversation.email == null || !conversation.email.equals(innerConversation.from_s)))
-            conversationDataManager.updateEmail(id_surfer, innerConversation.from_s);//set phone
-        if (conversation.idSurfer != ConversationDataManager.selectedIdConversation) {
-            conversationDataManager.updateUnread(id_surfer, conversation.unread + 1);//set unread
-        } else {
-            conversationDataManager.syncUnreadConversation(conversation);
+
+        if (!isAgent) {
+            if (innerConversation.actionType == ChannelsTypes.sms && (conversation.phone == null || !conversation.phone.equals(innerConversation.from_s)))
+                conversationDataManager.updatePhoneNumber(id_surfer, innerConversation.from_s);//set phone
+            if (innerConversation.actionType == ChannelsTypes.email && (conversation.email == null || !conversation.email.equals(innerConversation.from_s)))
+                conversationDataManager.updateEmail(id_surfer, innerConversation.from_s);//set phone
+            if (conversation.idSurfer != ConversationDataManager.selectedIdConversation) {
+                conversationDataManager.updateUnread(id_surfer, conversation.unread + 1);//set unread
+            } else {
+                conversationDataManager.syncUnreadConversation(conversation);
+            }
         }
-        Log.d("from_s", innerConversation.from_s);
     }
 
     public void emitNotificationRegister(String token) {
@@ -444,6 +472,41 @@ public class SocketManager {
             }
         }
     };
+
+    public void emitAgentTyping(final Conversation conversation) {
+        if (conversation == null)
+            return;
+        if (handler != null)
+            handler.removeCallbacksAndMessages(null);
+        JSONObject writing_data = new JSONObject();
+        final JSONObject stop_writing_data = new JSONObject();
+        int idRep = AgentDataManager.getAgentInstance().getRep().idRepresentive;
+        String name = AgentDataManager.getAgentInstance().getName();
+
+        try {
+            JSONObject agent = new JSONObject();
+            agent.put("id_Representive", idRep).put("name", name);
+            JSONObject surfer = new JSONObject(gson.toJson(conversation));
+            writing_data.put("surfer", surfer)
+                    .put("mode", true)
+                    .put("agent", agent);
+            stop_writing_data.put("surfer", surfer).put("mode", false);
+            if (socket != null) {
+                socket.emit("Rep_Writing", writing_data);
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        socket.emit("Rep_Writing", stop_writing_data);
+                    }
+                }, 600);
+            }
+        } catch (JSONException e) {
+
+        }
+
+    }
+
     public Emitter.Listener typingListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -466,8 +529,8 @@ public class SocketManager {
             if (name == null && isVisitor)
                 name = "visitor";
             if (id_surfer != 0 && context != null && (name != null || !state)) {
-                ConversationDataManager conversationDataManager=new ConversationDataManager(context);
-                conversationDataManager.updateTyping(id_surfer,state,name);
+                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+                conversationDataManager.updateTyping(id_surfer, state, name);
 
 //                Intent intent = new Intent(context.getResources().getString(R.string.action_typing));
 //                intent.setType("*/*");

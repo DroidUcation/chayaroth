@@ -74,7 +74,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.lastSentence.setText(conversation.typingName + " is typing... ");
             holder.lastSentence.setTextColor(context.getResources().getColor(R.color.green));;
             holder.lastSentence.setTypeface(null, Typeface.BOLD);
-
         } else {
             String lastMsg = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_MESSAGE));
             if (lastMsg == null)
@@ -83,6 +82,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
                 holder.lastSentence.setText(ChannelsTypes.getDeafultMsgByChanelType(context, lastType));
             else
                 holder.lastSentence.setText(lastMsg);
+            holder.lastSentence.setTextColor(context.getResources().getColor(R.color.gray_dark));;
         }
 
         String dateStringToConvert = cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_LAST_DATE));

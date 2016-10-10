@@ -82,9 +82,9 @@
 
 
     <!--URLS to api -->
-    <string name="dev_domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
-    <string name="domain_api">https://dev-api01-eus.azurewebsites.net/api/</string>
-    <string name="base_dev_api">dev-api01-eus.azurewebsites.net</string>
+    <string name="dev_domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
+    <string name="domain_api">https://prd-api01-eus.azurewebsites.net/api/</string>
+    <string name="base_dev_api">prd-api01-eus.azurewebsites.net</string>
     <string name="base_prd_api">prd-api01-eus.azurewebsites.net</string>
     <string name="rout_api">api</string>
     <string name="conversation_old_api">getConversations</string>
@@ -95,7 +95,7 @@
     <string name="inner_conversation_api">openconversation</string>
     <string name="login_api">login</string>
     <string name="update_settings_api">updatePushNotification</string>
-    <string name="socket_url">https://dev-socket01-eus.azurewebsites.net/</string>
+    <string name="socket_url">https://prd-socket01-eus.azurewebsites.net/</string>
     <string name="unregister_notifications_api">removePushNotification</string>
     <string name="forgot_pass_url">https://dashboard.bontact.com/html/login.aspx?func=getLostPassword</string>
     <string name="agents_api">agents</string>
@@ -199,7 +199,7 @@
     <string name="first_fragment">first_fragment</string>
     <string name="push_notification_type">push_notification_type</string>
     <string name="about_us_title">about us</string>
-    <string name="disconnect_account_title">disconnect account</string>
+    <string name="disconnect_account_title">log out</string>
     <string name="disconnect_account_key">disconnect_account_key</string>
     <string name="app_version_title">app version: V3.0</string>
     <string name="invalid_callback_phone_number">Invaild phone number</string>

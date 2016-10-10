@@ -11,7 +11,6 @@
         <item name="colorControlHighlight">@color/purple</item>
         <item name="colorSwitchThumbNormal">@color/orange_dark</item>
         <item name="actionButtonStyle">@style/CustomActionBar</item>
-        <item name="actionBarStyle">@style/CustomActionBar</item>
         <item name="android:actionButtonStyle">@style/CustomActionBar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:alertDialogTheme">@style/AppAlertTheme</item>
@@ -56,16 +55,7 @@
 
     <style name="CustomActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:padding">7dp</item>
-        <item name="android:subtitleTextAppearance">@style/ToolbarTitleAppearance</item>
-        <item name="android:subtitleTextColor">@color/green</item>
     </style>
-
-
-    <style name="ToolbarTitleAppearance" parent="">
-        <item name="android:textSize">5dp</item>
-        <!-- include other attributes you want to change: textColor, textStyle, etc -->
-    </style>
-
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

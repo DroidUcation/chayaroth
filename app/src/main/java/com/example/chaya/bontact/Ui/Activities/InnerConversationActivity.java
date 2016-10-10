@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +52,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
@@ -159,6 +162,25 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         sendResponseHelper = new SendResponseHelper();
         btn_send_mess = (FloatingActionButton) findViewById(R.id.btn_send_chat_response);
         chat_response_edittext = (EditText) findViewById(R.id.chat_response_edittext);
+        chat_response_edittext.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+               if(count>0)
+                   SocketManager.getInstance().emitAgentTyping(current_conversation);
+
+            }
+
+        });
+
         btn_send_mess.setOnClickListener(this);
 //        if (current_conversation != null)
         if (!VisitorsDataManager.isOnline(id_surfer))
@@ -287,7 +309,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             {
                 current_conversation = conversationDataManager.getConversationByIdSurfer(id_surfer);
             }
-            if(no_msg_title!=null&&no_msg_title.getVisibility()==View.VISIBLE) {
+            if (no_msg_title != null && no_msg_title.getVisibility() == View.VISIBLE) {
                 setEmptyDetails(false);
                 setEnableFooter(VisitorsDataManager.isOnline(id_surfer));
             }
@@ -536,8 +558,10 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 if (innerConversationDataManager == null)
                     innerConversationDataManager = new InnerConversationDataManager(InnerConversationActivity.this, current_conversation);
                 //todo: change inner save data
-                for (InnerConversation innerConversation : current_conversation.innerConversationData)
+                for (InnerConversation innerConversation : current_conversation.innerConversationData) {
+                    innerConversation.timeRequest = DatesHelper.convertDateToCurrentGmt(innerConversation.timeRequest);                //delete all place holder
                     innerConversationDataManager.saveData(innerConversation);
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

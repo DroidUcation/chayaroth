@@ -50,10 +50,10 @@ public class InnerConversationProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         long rowID = dbBontact.insertOrUpdateById(Contract.InnerConversation.TABLE_NAME, values, new String[]{Contract.InnerConversation.COLUMN_ID, Contract.InnerConversation.COLUMN_ACTION_TYPE});
      /*   if (rowID > 0) {*/
-            getContext().getContentResolver().notifyChange(uri, null);
-            return uri;
+        getContext().getContentResolver().notifyChange(uri, null);
+        return uri;
        /* }*/
-       // return null;
+        // return null;
 
     }
 

@@ -206,7 +206,9 @@ public class InnerConversationDataManager {
         if (channelType != ChannelsTypes.callback && channelType != ChannelsTypes.webCall)
             innerConversation.datatype = 1;//txt msg
         innerConversation.systemMsg = systemMsg;
-       conversationDataManager.updateLastMessage(innerConversation.idSurfer, innerConversation.mess);
+        conversationDataManager.updateLastMessage(innerConversation.idSurfer, innerConversation.mess);
+        conversationDataManager.updateLastType(innerConversation.idSurfer, channelType);
+        conversationDataManager.updateLastDate(innerConversation.idSurfer, innerConversation.timeRequest);
         saveData(innerConversation);
     }
 

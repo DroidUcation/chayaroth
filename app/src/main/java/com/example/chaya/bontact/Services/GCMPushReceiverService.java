@@ -94,7 +94,6 @@ public class GCMPushReceiverService extends GcmListenerService {
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(getNotificationIcon())
                 .setContentTitle("new visitor on your website")
-                .setContentText("new visitor on your website")
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntentVisitors)
                 .setColor(getResources().getColor(R.color.purple));

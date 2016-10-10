@@ -51,7 +51,8 @@ public class DashboardFragment extends Fragment {
         getContext().registerReceiver(onlineVisitorsCountReciver, intentFilter);
         intentFilter = IntentFilter.create(getResources().getString(R.string.change_unread_conversations_action), "*/*");
         getContext().registerReceiver(newRequestsCountReciver, intentFilter);
-        unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext());
+        unread_conversation = ConversationDataManager.getAllUnreadConversations(getContext()) < 0 ? 0 : ConversationDataManager.getAllUnreadConversations(getContext());
+
         if (new_requests_count != null)
             new_requests_count.setText(String.valueOf(unread_conversation));
     }

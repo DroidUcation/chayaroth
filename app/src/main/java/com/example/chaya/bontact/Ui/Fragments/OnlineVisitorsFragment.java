@@ -48,6 +48,7 @@ public class OnlineVisitorsFragment extends Fragment {
         getContext().registerReceiver(broadcastReceiver, intentFilter);
         NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(GCMPushReceiverService.newVisitorId);
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -99,7 +100,7 @@ public class OnlineVisitorsFragment extends Fragment {
         if (noVisitorsTitle == null)
             noVisitorsTitle = (TextView) rootView.findViewById(R.id.no_visitors_title);
 
-        if (VisitorsDataManager.visitorsList.size() > 0 || (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > -1)) {
+        if (VisitorsDataManager.getVisitorsList().size() > 0 || (linearLayoutManager != null && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > -1)) {
             noVisitorsImg.setVisibility(View.GONE);
             noVisitorsTitle.setVisibility(View.GONE);
         } else {

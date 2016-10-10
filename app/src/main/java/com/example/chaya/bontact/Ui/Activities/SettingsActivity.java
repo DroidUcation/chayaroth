@@ -73,9 +73,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         vibrateVisitors.setOnCheckedChangeListener(this);
 
         ImageView logOutBtn = (ImageView) findViewById(R.id.disconnect_account_btn);
+        TextView logOutTtx = (TextView) findViewById(R.id.disconnect_account_txt);
         logOutBtn.setOnClickListener(this);
-
-        TextView about_us= (TextView) findViewById(R.id.about_us_txt);
+        logOutTtx.setOnClickListener(this);
+        TextView about_us = (TextView) findViewById(R.id.about_us_txt);
         about_us.setOnClickListener(this);
 
     }
@@ -95,10 +96,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.disconnect_account_btn:
+            case R.id.disconnect_account_txt:
                 logOut();
                 break;
             case R.id.about_us_txt:
-                Intent i= new Intent(Intent.ACTION_VIEW);
+                Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse("https://www.bontact.com"));
                 startActivity(i);
                 break;
