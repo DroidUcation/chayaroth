@@ -10,4 +10,6 @@ public class CustomApplication extends Application {
         super.onCreate();
         Intercom.initialize(this, "android_sdk-1ecf63064f44eba74a160a7617cca37c28042195", "seajbd1w");
     }
+
+
 }

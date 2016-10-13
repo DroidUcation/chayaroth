@@ -118,4 +118,20 @@ public class DatesHelper {
         }
         return null;
     }
+
+    public static boolean isBigger(String firstDateStr, String lastDateStr) {
+
+        final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        try {
+            Date firstDate = formatDate.parse(firstDateStr);
+            Date lastDate = formatDate.parse(lastDateStr);
+            if (lastDate.after(firstDate))
+                return true;
+            else
+                return false;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

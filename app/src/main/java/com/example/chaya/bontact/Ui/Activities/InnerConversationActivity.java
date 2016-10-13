@@ -1,14 +1,18 @@
 package com.example.chaya.bontact.Ui.Activities;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NotificationCompatSideChannelService;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +21,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chaya.bontact.CustomApplication;
 import com.example.chaya.bontact.Data.Contract;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.DataManagers.AgentListDataManager;
@@ -53,6 +59,8 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.List;
 
 public class InnerConversationActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
@@ -81,6 +89,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     private boolean isConversationBusy;
     int tryRequestCount;
     String assigned = null;
+    int tryCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +126,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         } else { //surfer is new
             isNew = true;
             if (token != null && id_surfer != 0) {
-                conversationDataManager.getConversationByIdFromServer(token, id_surfer, null, callResponse);
+                conversationDataManager.getConversationByIdFromServer(token, id_surfer, null, callResponse,false);
                 // innerConversationDataManager = new InnerConversationDataManager(this, id_surfer);
                 //innerConversationDataManager.getData(this, token, callResponse);
             }
@@ -174,8 +183,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-               if(count>0)
-                   SocketManager.getInstance().emitAgentTyping(current_conversation);
+                if (count > 0)
+                    SocketManager.getInstance().emitAgentTyping(current_conversation);
 
             }
 
@@ -279,6 +288,8 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.inner_conversation_menu, menu);
+        for (int i = 0; i < menu.size(); i++)
+            menu.getItem(i).getIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 //        if (isNew)
 //            menu.setGroupVisible(R.id.inner_conversation_menu, false);
         return super.onCreateOptionsMenu(menu);
@@ -369,8 +380,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         if (current_conversation == null)
             return;
 
-        sendResponseHelper = new SendResponseHelper();
-        if (!sendResponseHelper.isAllowedChannelToResponse(conversationDataManager.getConversationByIdSurfer(id_surfer), channel)) {
+        sendResponseHelper = new SendResponseHelper();if (!sendResponseHelper.isAllowedChannelToResponse(conversationDataManager.getConversationByIdSurfer(id_surfer), channel)) {
             String msg = ChannelsTypes.getNotAllowedMsgByChannelType(this, channel);
             Toast.makeText(InnerConversationActivity.this, msg, Toast.LENGTH_SHORT).show();
             return;
@@ -441,7 +451,21 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+            super.onBackPressed();
+//        else
+
+//        ActivityManager mngr = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//
+//        List<ActivityManager.RunningTaskInfo> taskList = mngr.getRunningTasks(10);
+//        if (taskList.size() == 0) {
+//            Intent intent = new Intent(this, SplashActivity.class);
+//            startActivity(intent);
+//        }
+//        if (taskList.get(1).topActivity.getClassName().equals(MainActivity.class.getName())) {
+
+
+
     }
 
     public void setEnableFooter(boolean value) {
@@ -498,7 +522,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
             if (status) {
                 isNew = false;
                 if (AgentDataManager.getAgentInstance() != null)
-                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
+                    conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null,true);
                 VisitorsDataManager.updateIsNewState(InnerConversationActivity.this, id_surfer, false);
             } else {
                 load_animations(false);
@@ -514,7 +538,7 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 String name = intent.getStringExtra(getString(R.string.typing_name_key));
                 boolean state = intent.getBooleanExtra(getString(R.string.typing_state_key), false);
                 if (name != null && state)
-                    getSupportActionBar().setSubtitle(name + " is typing...");
+                    getSupportActionBar().setSubtitle(name + " typing...");
                 else {
                     if (assigned != null)
                         getSupportActionBar().setSubtitle(getString(R.string.assign_to) + " " + assigned);
@@ -537,11 +561,12 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
     }
 
     ServerCallResponse getConversationByIdOnResponse = new ServerCallResponse() {
-        int tryCount = 0;
+
 
         @Override
         public void OnServerCallResponse(boolean isSuccsed, String response, ErrorType errorType) {
             Gson gson = new Gson();
+
             try {
                 if (response == null) {
                     retryCallGetConversationByIdFromServer();
@@ -549,15 +574,19 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                 }
                 JSONObject jsonObject = new JSONObject(response).getJSONObject("conversations");
                 current_conversation = gson.fromJson(jsonObject.toString(), Conversation.class);
-                if ((current_conversation == null || current_conversation.innerConversationData == null || current_conversation.innerConversationData.size() == 0) && tryCount < 3) {
+//                if ((current_conversation == null || current_conversation.innerConversationData == null || current_conversation.innerConversationData.size() == 0) && tryCount < 3) {
+//                    retryCallGetConversationByIdFromServer();
+//                    return;
+//                }
+                if ((current_conversation == null || current_conversation.innerConversationData == null || current_conversation.innerConversationData.size() == 0)) {
                     retryCallGetConversationByIdFromServer();
                     return;
                 }
+
                 current_conversation.lastdate = DatesHelper.convertDateToCurrentGmt(current_conversation.lastdate);
                 conversationDataManager.insertOrUpdate(current_conversation, true);
                 if (innerConversationDataManager == null)
                     innerConversationDataManager = new InnerConversationDataManager(InnerConversationActivity.this, current_conversation);
-                //todo: change inner save data
                 for (InnerConversation innerConversation : current_conversation.innerConversationData) {
                     innerConversation.timeRequest = DatesHelper.convertDateToCurrentGmt(innerConversation.timeRequest);                //delete all place holder
                     innerConversationDataManager.saveData(innerConversation);
@@ -566,8 +595,6 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
                     @Override
                     public void run() {
                         isNew = false;
-//                        drawHeader();
-                        load_animations(false);
                         setEnableFooter(true);
                     }
                 });
@@ -577,12 +604,18 @@ public class InnerConversationActivity extends AppCompatActivity implements Load
         }
 
         private void retryCallGetConversationByIdFromServer() {
-            if (tryCount < 4) {
-                tryCount++;
-                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
-            } else {
-
-            }
+            load_animations(false);
+            setEmptyDetails(true);
+            isNew = true;
+            Toast.makeText(InnerConversationActivity.this, R.string.error_invite, Toast.LENGTH_SHORT).show();
+//            if (tryCount < 4) {
+//                tryCount++;
+//                conversationDataManager.getConversationByIdFromServer(AgentDataManager.getAgentInstance().token, id_surfer, getConversationByIdOnResponse, null);
+//            } else {
+//                load_animations(false);
+//                setEmptyDetails(true);
+//                isNew = true;
+//            }
 
         }
     };

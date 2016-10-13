@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.example.chaya.bontact.CustomApplication;
 import com.example.chaya.bontact.DataManagers.AgentDataManager;
 import com.example.chaya.bontact.Helpers.AvatarHelper;
 import com.example.chaya.bontact.Helpers.CircleTransform;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onSaveInstanceState(onOrientChange);
         onOrientChange.putInt(getString(R.string.first_tab_title_key), resCurrentTitle);
     }
+
 
     @Override
     protected void onPause() {
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.string.inbox_title:
                 return R.string.app_name;
         }
-        return R.string.dashboard_title;
+        return R.string.app_name;
     }
 
     private void setupViewPager(ViewPager viewPager, int resFirstTabTitle) {

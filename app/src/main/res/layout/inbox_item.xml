@@ -29,6 +29,8 @@
         android:layout_marginStart="15dp"
         android:layout_toEndOf="@+id/avatar"
         android:layout_toRightOf="@+id/avatar"
+        android:textColor="@color/black"
+        android:textSize="17sp"
         android:text="Jenny Li" />
 
     <TextView
@@ -44,7 +46,8 @@
         android:ellipsize="end"
         android:lines="1"
         android:text="aaaaaa"
-        android:textSize="12sp" />
+        android:textColor="@color/gray_dark"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/chanelIcon"

@@ -2,6 +2,9 @@ package com.example.chaya.bontact.RecyclerViews;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,10 +55,14 @@ public class OnlineVisitorsAdapter extends RecyclerView.Adapter<OnlineVisitorsAd
             AvatarHelper.setAvatar(context, current_visitor.avatar, current_visitor.displayName, holder.avatar);
             holder.browser_icon.setImageResource(VisitorsDataManager.getBrowserIcon(current_visitor.browseType));
             holder.displayName.setText(current_visitor.displayName);
+//            holder.displayName.setTypeface(null, Typeface.BOLD);
             holder.country_flag.setImageResource(context.getResources().getIdentifier("country_" + current_visitor.country.toLowerCase(), "drawable", context.getPackageName()));
-            if (current_visitor.isNew)
+
+            if (current_visitor.isNew) {
+                final Drawable invite = holder.invite_btn.getDrawable();
+                invite.setColorFilter(context.getResources().getColor(R.color.orange_dark), PorterDuff.Mode.SRC_ATOP);
                 holder.invite_btn.setVisibility(View.VISIBLE);
-            else
+            } else
                 holder.invite_btn.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

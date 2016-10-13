@@ -184,52 +184,52 @@ public class SocketManager {
         @Override
         public void call(Object... args) {
             //Log.d("select", args.toString());
-            JSONObject jsonObject = (JSONObject) args[0];
-            try {
-                jsonObject = jsonObject.getJSONObject("visitor");
-                int idSurfer = jsonObject.optInt("idSurfer", 0);
-                int idAgent = jsonObject.getJSONObject("agentselected").optInt("id", 0);
-                if (idSurfer != 0) {
-                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    // conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, true);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            JSONObject jsonObject = (JSONObject) args[0];
+//            try {
+//                jsonObject = jsonObject.getJSONObject("visitor");
+//                int idSurfer = jsonObject.optInt("idSurfer", 0);
+//                int idAgent = jsonObject.getJSONObject("agentselected").optInt("id", 0);
+//                if (idSurfer != 0) {
+//                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+//                    // conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, true);
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
         }
     };
     Emitter.Listener unSelectConversationListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.d("un select", args.toString());
-            JSONObject jsonObject = (JSONObject) args[0];
-            try {
-                jsonObject = jsonObject.getJSONObject("visitor");
-                int idSurfer = jsonObject.optInt("idSurfer", 0);
-                int idAgent = jsonObject.optInt("agentselected", 0);
-                if (idSurfer != 0 && idAgent != AgentDataManager.getAgentInstance().getIdRep()) {
-                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    //conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, false);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            Log.d("un select", args.toString());
+//            JSONObject jsonObject = (JSONObject) args[0];
+//            try {
+//                jsonObject = jsonObject.getJSONObject("visitor");
+//                int idSurfer = jsonObject.optInt("idSurfer", 0);
+//                int idAgent = jsonObject.optInt("agentselected", 0);
+//                if (idSurfer != 0 && idAgent != AgentDataManager.getAgentInstance().getIdRep()) {
+//                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+//                    //conversationDataManager.updateSelectedByAgent(idSurfer, idAgent, false);
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
         }
     };
     Emitter.Listener unSelectConversationRepListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.d("un select", args.toString());
-            JSONObject jsonObject = (JSONObject) args[0];
-            try {
-                int idAgent = jsonObject.getInt("id");
-                if (idAgent != 0) {
-                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                    //  conversationDataManager.updateUnSelectedByAgentForAll(idAgent);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            Log.d("un select", args.toString());
+//            JSONObject jsonObject = (JSONObject) args[0];
+//            try {
+//                int idAgent = jsonObject.getInt("id");
+//                if (idAgent != 0) {
+//                    ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+//                    //  conversationDataManager.updateUnSelectedByAgentForAll(idAgent);
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
         }
     };
     Emitter.Listener visitorPushMessListener = new Emitter.Listener() {
@@ -426,26 +426,26 @@ public class SocketManager {
 
     public void emitSelectConversationState(Conversation conversation, boolean state) {
         //do in background
-        if (conversation == null)
-            return;
-        Gson gson = new Gson();
-        try {
-            JSONObject visitor;
-            String s = gson.toJson(conversation);
-            visitor = new JSONObject(s);
-            visitor.put("agentselected", new JSONObject()
-                    .put("id", AgentDataManager.getAgentInstance().getIdRep())
-                    .put("name", AgentDataManager.getAgentInstance().getName()));
-            JSONObject jsonObject = new JSONObject().put("visitor", visitor);
-            if (socket != null) {
-                if (state)
-                    socket.emit("selectConversation", jsonObject, selectConversationCallback);
-                else
-                    socket.emit("unselectConversation", jsonObject, selectConversationCallback);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        if (conversation == null)
+//            return;
+//        Gson gson = new Gson();
+//        try {
+//            JSONObject visitor;
+//            String s = gson.toJson(conversation);
+//            visitor = new JSONObject(s);
+//            visitor.put("agentselected", new JSONObject()
+//                    .put("id", AgentDataManager.getAgentInstance().getIdRep())
+//                    .put("name", AgentDataManager.getAgentInstance().getName()));
+//            JSONObject jsonObject = new JSONObject().put("visitor", visitor);
+//            if (socket != null) {
+//                if (state)
+//                    socket.emit("selectConversation", jsonObject, selectConversationCallback);
+//                else
+//                    socket.emit("unselectConversation", jsonObject, selectConversationCallback);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     Ack selectConversationCallback = new Ack() {
@@ -457,19 +457,19 @@ public class SocketManager {
     };
 
     public void refreshSelectConversation() {
-        if (socket != null) {
-            socket.emit("refreshSelectConversation", new JSONObject());
-        }
+//        if (socket != null) {
+//            socket.emit("refreshSelectConversation", new JSONObject());
+//        }
     }
 
     Emitter.Listener refreshSelectListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            int id = ConversationDataManager.selectedIdConversation;
-            if (id != 0) {
-                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
-                emitSelectConversationState(conversationDataManager.getConversationByIdSurfer(id), true);
-            }
+//            int id = ConversationDataManager.selectedIdConversation;
+//            if (id != 0) {
+//                ConversationDataManager conversationDataManager = new ConversationDataManager(context);
+//                emitSelectConversationState(conversationDataManager.getConversationByIdSurfer(id), true);
+//            }
         }
     };
 
@@ -486,7 +486,10 @@ public class SocketManager {
         try {
             JSONObject agent = new JSONObject();
             agent.put("id_Representive", idRep).put("name", name);
-            JSONObject surfer = new JSONObject(gson.toJson(conversation));
+//            String s = gson.toJson(conversation);
+//            if (s == null)
+//                return;
+            JSONObject surfer = new JSONObject().put("idSurfer", conversation.idSurfer);
             writing_data.put("surfer", surfer)
                     .put("mode", true)
                     .put("agent", agent);

@@ -19,10 +19,12 @@ import com.example.chaya.bontact.NetworkCalls.ServerCallResponse;
 import com.example.chaya.bontact.R;
 import com.google.gson.Gson;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -83,6 +85,7 @@ public class InnerConversationDataManager {
     }
 
     public boolean saveServersData(String data, ServerCallResponse callbackEmptyData) {
+
         try {
             JSONArray DataArray = new JSONArray(data);
             if (DataArray.length() == 0) {
@@ -94,6 +97,10 @@ public class InnerConversationDataManager {
 
             Gson gson = new Gson();
             InnerConversation innerConversation = null;
+
+            String lastDate = null;
+            String lastMsg = null;
+
             for (int i = 0; i < DataArray.length(); i++) {
                 String strObj = null;
                 try {
@@ -102,21 +109,36 @@ public class InnerConversationDataManager {
                     e.printStackTrace();
                 }
                 innerConversation = gson.fromJson(strObj, InnerConversation.class);
+                if (innerConversation == null)
+                    return false;
                 innerConversation.timeRequest = DatesHelper.convertDateToCurrentGmt(innerConversation.timeRequest);                //delete all place holder
+                if (lastDate == null) {
+                    lastDate = innerConversation.timeRequest;
+                    lastMsg = innerConversation.mess;
+                } else if (DatesHelper.isBigger(lastDate, innerConversation.timeRequest)) {
+                    lastDate = innerConversation.timeRequest;
+                    lastMsg = innerConversation.mess;
+                }
+
                 String selectionStr = Contract.InnerConversation.COLUMN_ID + "<0";
                 context.getContentResolver().delete(Contract.InnerConversation.INNER_CONVERSATION_URI, selectionStr, null);
                 saveData(innerConversation);
-//                if(innerConversation.getMess())
+
             }
 
-//            if (innerConversation != null && innerConversation.getMess() != null) {//check type
-//                conversationDataManager.updateLastMessage(current_conversation.idSurfer, innerConversation.getMess());
-//            }
+            if (lastMsg != null)
+                conversationDataManager.updateLastMessage(current_conversation.idSurfer, lastMsg);
+
             return true;
 
-        } catch (JSONException e) {
+        } catch (
+                JSONException e
+                )
+
+        {
             return false;
         }
+
     }
 
     public boolean saveData(InnerConversation innerConversation) {

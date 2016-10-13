@@ -1,5 +1,7 @@
 package com.example.chaya.bontact.Ui.Dialogs;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuInflater;
@@ -14,7 +16,7 @@ import com.example.chaya.bontact.R;
 
 public class EmailDialogActivity extends AppCompatActivity {
     EditText addressee_edit_text;
-   /* EditText from_edit_text;*/
+    /* EditText from_edit_text;*/
 //    EditText subject_edit_text;
     EditText content_edit_text;
     int id_surfer;
@@ -35,7 +37,10 @@ public class EmailDialogActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_email_dialog);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit_icon);
+        final Drawable exit = getResources().getDrawable(R.drawable.exit_icon);
+        exit.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(exit);
+//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.exit_icon);
         setTitle("Email");
 
         addressee_edit_text = (EditText) findViewById(R.id.edit_text_addressee);
@@ -56,6 +61,11 @@ public class EmailDialogActivity extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.email_menu, menu);
+        for (int i = 0; i < menu.size(); i++) {
+            if (menu.getItem(i).getIcon() != null)
+                menu.getItem(i).getIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -77,17 +87,15 @@ public class EmailDialogActivity extends AppCompatActivity {
     }
 
     public void sendEmail() {
-        String content=content_edit_text.getText().toString().trim();
+        String content = content_edit_text.getText().toString().trim();
 //        String subject=subject_edit_text.getText().toString().trim();
-        if(content.length()>0) {
+        if (content.length() > 0) {
             onBackPressed();
             //BACKGROUND
             SendResponseHelper sendResponseHelper = new SendResponseHelper();
             sendResponseHelper.sendEmail(this, content_edit_text.getText().toString(), id_surfer);
-        }
-        else
-        {
-            Toast.makeText(EmailDialogActivity.this,R.string.empty_email_fields_msg, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(EmailDialogActivity.this, R.string.empty_email_fields_msg, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -50,7 +50,9 @@
         android:layout_alignLeft="@+id/browser_icon"
         android:layout_alignStart="@+id/browser_icon"
         android:layout_below="@id/browser_icon"
-        android:text="Visitor" />
+        android:text="Visitor"
+        android:textColor="@color/black"
+        android:textSize="17sp"/>
 
     <TextView
         android:id="@+id/page_title"
@@ -61,8 +63,9 @@
         android:layout_below="@id/displayName"
         android:ellipsize="end"
         android:lines="1"
+
         android:text="bontact-home page"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/connect_time"

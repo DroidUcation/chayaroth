@@ -63,6 +63,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         int unread = cursor.getInt(cursor.getColumnIndex(Contract.Conversation.COLUMN_UNREAD));
 
         holder.displayName.setText(cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME)));
+        holder.displayName.setTypeface(null, Typeface.BOLD);
         AvatarHelper.setAvatar(context, cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_AVATAR)),
                 cursor.getString(cursor.getColumnIndex(Contract.Conversation.COLUMN_DISPLAY_NAME))
                 , holder.avatar);
@@ -71,7 +72,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             holder.chanelIcon.setText(icon);
         Conversation conversation = conversationDataManager.getConversationByIdSurfer(idSurfer);
         if (conversation != null && conversation.typingName != null) {
-            holder.lastSentence.setText(conversation.typingName + " is typing... ");
+            holder.lastSentence.setText(conversation.typingName + " typing... ");
             holder.lastSentence.setTextColor(context.getResources().getColor(R.color.green));;
             holder.lastSentence.setTypeface(null, Typeface.BOLD);
         } else {
@@ -98,12 +99,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         holder.unread.setText(String.valueOf(unread));
         if (unread > 0) {
             holder.unread.setVisibility(View.VISIBLE);
-            holder.displayName.setTypeface(null, Typeface.BOLD);
+//            holder.displayName.setTypeface(null, Typeface.BOLD);
             holder.lastSentence.setTypeface(null, Typeface.BOLD);
             holder.date.setTypeface(null, Typeface.BOLD);
         } else {
             holder.unread.setVisibility(View.INVISIBLE);
-            holder.displayName.setTypeface(null, Typeface.NORMAL);
+//            holder.displayName.setTypeface(null, Typeface.NORMAL);
             holder.lastSentence.setTypeface(null, Typeface.NORMAL);
             holder.date.setTypeface(null, Typeface.NORMAL);
         }

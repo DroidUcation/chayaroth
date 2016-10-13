@@ -294,10 +294,10 @@ public class ConversationDataManager {
             builder.scheme("https")
                     .authority(context.getResources().getString(R.string.base_dev_api))
                     .appendPath(context.getResources().getString(R.string.rout_api))
-                    .appendPath(context.getResources().getString(R.string.contacts_rout_api))
+//                    .appendPath(context.getResources().getString(R.string.contacts_rout_api))
                     .appendPath(context.getResources().getString(R.string.conversations_api))
-                    .appendPath(token)
-                    .appendPath(String.valueOf(current_page));
+                    .appendPath(token).appendQueryParameter("page", String.valueOf(current_page));
+//                    .appendPath(String.valueOf(current_page));
 
             String url = builder.build().toString();
 
@@ -342,7 +342,7 @@ public class ConversationDataManager {
         }
     };
 
-    public void getConversationByIdFromServer(String token, int idSurfer, ServerCallResponse regularCallback, ServerCallResponse emptyDataCallback) {
+    public void getConversationByIdFromServer(String token, int idSurfer, ServerCallResponse regularCallback, ServerCallResponse emptyDataCallback, boolean repeatSearch) {
         if (emptyDataCallback != null)
             this.innerEmptyDataCallback = emptyDataCallback;
         if (token != null) {
@@ -354,6 +354,8 @@ public class ConversationDataManager {
                     .appendPath(context.getResources().getString(R.string.conversation_by_id_api))
                     .appendPath(String.valueOf(idSurfer))
                     .appendPath(token);
+            if (repeatSearch)
+                builder.appendQueryParameter("repeat", "true");
             String url = builder.build().toString();
             if (regularCallback != null)
                 new OkHttpRequests(url, regularCallback);

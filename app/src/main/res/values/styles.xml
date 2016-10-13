@@ -55,6 +55,10 @@
 
     <style name="CustomActionBar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:padding">7dp</item>
+        <!--<item name="actionMenuTextColor">@color/white</item>-->
+        <!--<item name="android:actionMenuTextColor">@color/white</item>-->
+       <item name="android:actionBarItemBackground">@color/white</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
